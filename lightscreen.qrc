@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/icons" >
+        <file alias="Application" >images/LS.ico</file>
+        <file alias="SystemTrayFailure" >images/LSSmall.Failure.png</file>
+        <file alias="SystemTraySucess" >images/LSSmall.Sucess.png</file>
+        <file alias="SystemTray" >images/LSSmall.png</file>
+        <file alias="OpenFolder" >images/document-open-folder.png</file>
+        <file alias="Play" >images/media-playback-start.png</file>
+        <file alias="PrefixLeft" >images/object-rotate-left.png</file>
+        <file alias="PrefixRight" >images/object-rotate-right.png</file>
+    </qresource>
+    <qresource prefix="/images" >
+        <file alias="Cross" >images/crosshair.gif</file>
+    </qresource>
+    <qresource prefix="/logo" >
+        <file alias="big" >images/LSBig.png</file>
+        <file alias="small" >images/LSLSmall.png</file>
+        <file alias="mid" >images/LSMid.png</file>
+    </qresource>
+</RCC>

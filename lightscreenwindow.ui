@@ -1,0 +1,110 @@
+<ui version="4.0" >
+ <class>LightscreenWindowClass</class>
+ <widget class="QDialog" name="LightscreenWindowClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>179</width>
+    <height>103</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Lightscreen</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <property name="margin" >
+    <number>6</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QToolButton" name="screenshotPushButton" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string>Screeenshot</string>
+       </property>
+       <property name="popupMode" >
+        <enum>QToolButton::InstantPopup</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" >
+       <item>
+        <widget class="QPushButton" name="optionsPushButton" >
+         <property name="toolTip" >
+          <string>Configure Lightscreen</string>
+         </property>
+         <property name="whatsThis" >
+          <string>Opens the configuration dialog</string>
+         </property>
+         <property name="text" >
+          <string>&amp;Options</string>
+         </property>
+         <property name="flat" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="hidePushButton" >
+         <property name="toolTip" >
+          <string>Hide Lightscreen </string>
+         </property>
+         <property name="whatsThis" >
+          <string/>
+         </property>
+         <property name="text" >
+          <string>&amp;Hide</string>
+         </property>
+         <property name="flat" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="quitPushButton" >
+         <property name="toolTip" >
+          <string/>
+         </property>
+         <property name="text" >
+          <string>&amp;Quit</string>
+         </property>
+         <property name="flat" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <resources/>
+ <connections>
+  <connection>
+   <sender>quitPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>LightscreenWindowClass</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>135</x>
+     <y>79</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>71</x>
+     <y>101</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

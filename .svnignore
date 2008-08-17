@@ -1,0 +1,11 @@
+.project
+.settings
+.cproject
+release
+debug
+Makefile
+Makefile.*
+object_script.*
+ui_*
+*.o
+*.exe
