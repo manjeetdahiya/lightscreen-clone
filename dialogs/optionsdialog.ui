@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>295</width>
-    <height>264</height>
+    <width>288</width>
+    <height>263</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -19,14 +19,6 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="generalTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>271</width>
-        <height>188</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>General</string>
       </attribute>
@@ -97,28 +89,6 @@
            <property name="buddy" >
             <cstring>formatComboBox</cstring>
            </property>
-          </widget>
-         </item>
-         <item row="2" column="1" >
-          <widget class="QComboBox" name="formatComboBox" >
-           <property name="whatsThis" >
-            <string/>
-           </property>
-           <item>
-            <property name="text" >
-             <string>PNG</string>
-            </property>
-           </item>
-           <item>
-            <property name="text" >
-             <string>JPG</string>
-            </property>
-           </item>
-           <item>
-            <property name="text" >
-             <string>BMP</string>
-            </property>
-           </item>
           </widget>
          </item>
          <item row="3" column="0" >
@@ -210,6 +180,51 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
            </property>
           </widget>
          </item>
+         <item row="2" column="1" >
+          <layout class="QHBoxLayout" name="horizontalLayout_2" >
+           <property name="spacing" >
+            <number>2</number>
+           </property>
+           <property name="sizeConstraint" >
+            <enum>QLayout::SetMinimumSize</enum>
+           </property>
+           <item>
+            <widget class="QComboBox" name="formatComboBox" >
+             <property name="whatsThis" >
+              <string/>
+             </property>
+             <item>
+              <property name="text" >
+               <string>PNG</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>JPG</string>
+              </property>
+             </item>
+             <item>
+              <property name="text" >
+               <string>BMP</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="configureFormatPushButton" >
+             <property name="enabled" >
+              <bool>true</bool>
+             </property>
+             <property name="text" >
+              <string>Configure..</string>
+             </property>
+             <property name="autoDefault" >
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
         </layout>
        </item>
        <item>
@@ -235,14 +250,6 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
       </layout>
      </widget>
      <widget class="QWidget" name="hotkeyTab" >
-      <property name="geometry" >
-       <rect>
-        <x>8</x>
-        <y>28</y>
-        <width>271</width>
-        <height>188</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Hotkeys</string>
       </attribute>
@@ -355,14 +362,6 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
       </layout>
      </widget>
      <widget class="QWidget" name="moreTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>271</width>
-        <height>188</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Options</string>
       </attribute>
@@ -412,6 +411,50 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
         </widget>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4" >
+         <item>
+          <widget class="QLabel" name="languageLabel" >
+           <property name="text" >
+            <string>Language:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="languageComboBox" >
+           <item>
+            <property name="text" >
+             <string>English</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="translateLabel" >
+           <property name="text" >
+            <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;a href="http://lightscreen.sourceforge.net/language">&lt;span style=" text-decoration: underline; color:#0000ff;">More information...&lt;/span>&lt;/a>&lt;/p>&lt;/body>&lt;/html></string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout" >
          <item>
           <widget class="QLabel" name="label_3" >
@@ -440,40 +483,6 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
           <widget class="QCheckBox" name="playSoundCheckBox" >
            <property name="text" >
             <string>&amp;Sound cue</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QGridLayout" >
-         <item row="0" column="2" >
-          <widget class="QSlider" name="qualitySlider" >
-           <property name="whatsThis" >
-            <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">&#xd;&#xd;
-p, li { white-space: pre-wrap; }&#xd;&#xd;
-&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">&#xd;&#xd;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This slider goes from 0 to 100. 100 being the highest quality and 0 the lowest.&lt;/p>&#xd;&#xd;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Quality is related to file size and of course to readability and overall quality of the image.&lt;/p>&lt;/body>&lt;/html></string>
-           </property>
-           <property name="maximum" >
-            <number>100</number>
-           </property>
-           <property name="value" >
-            <number>100</number>
-           </property>
-           <property name="orientation" >
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" >
-          <widget class="QLabel" name="label_10" >
-           <property name="text" >
-            <string>Screenshot Quality:</string>
-           </property>
-           <property name="buddy" >
-            <cstring>qualitySlider</cstring>
            </property>
           </widget>
          </item>
@@ -509,7 +518,6 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
   <tabstop>prefixLineEdit</tabstop>
   <tabstop>namingComboBox</tabstop>
   <tabstop>flipPrefixPushButton</tabstop>
-  <tabstop>formatComboBox</tabstop>
   <tabstop>delaySpinBox</tabstop>
   <tabstop>startupCheckBox</tabstop>
   <tabstop>startupHideCheckBox</tabstop>
@@ -530,7 +538,6 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
   <tabstop>dxScreenCheckBox</tabstop>
   <tabstop>messageCheckBox</tabstop>
   <tabstop>playSoundCheckBox</tabstop>
-  <tabstop>qualitySlider</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>

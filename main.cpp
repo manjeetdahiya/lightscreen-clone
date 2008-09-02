@@ -1,19 +1,10 @@
-/*
- *
- * TODO .next:
- *
- * QwtGlobalHotkey
- * Rewrite Area select
- *
- *
- */
-
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QTranslator>
 #include <QLocale>
 #include <QImageWriter>
 #include <QAbstractEventDispatcher>
+#include <QTranslator>
+#include <QSettings>
 
 #include "osspecific.h"
 #include "lightscreenwindow.h"
@@ -89,25 +80,21 @@ int main(int argc, char *argv[])
   QApplication a(argc, argv);
   a.setOrganizationName("K");
   a.setApplicationName("Lightscreen");
-  a.setApplicationVersion("0.5");
+  a.setApplicationVersion("0.6-dev");
   a.setQuitOnLastWindowClosed(false);
 
-  QString locale = QLocale::system().name();
-
-  //qDebug() << "Locale: " << locale;
-
-  QTranslator translator;
-  bool loadTry = translator.load(QString("lang/lightscreen_") + locale);
-
-  if (!loadTry)
-  {
-    locale = locale.remove(2, 3); //Remove the country code and try again
-    translator.load(QString("lang/lightscreen_") + locale);
-  }
-
-  a.installTranslator(&translator);
-
   OS::singleInstance("LightscreenN");
+
+  // Localization
+  QString language = QSettings().value("options/language").toString().toLower();
+
+  if (!language.isEmpty())
+  {
+    QTranslator *translator = new QTranslator;
+    language.append(".qm");
+    translator->load(QCoreApplication::applicationDirPath()+QDir::separator()+"lang"+QDir::separator()+language);
+    qApp->installTranslator(translator);
+  }
 
   LightscreenWindow w;
 

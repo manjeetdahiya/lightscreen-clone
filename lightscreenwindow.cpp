@@ -56,6 +56,7 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
   createActions();
 
   checkForUpdates();
+
 }
 
 /*
@@ -437,7 +438,7 @@ void LightscreenWindow::updaterDone(bool result)
 }
 
 /*
- * Private 
+ * Private
  */
 
 void LightscreenWindow::applySettings()

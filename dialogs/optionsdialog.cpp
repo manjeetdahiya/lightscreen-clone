@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QUrl>
 
+#include <QDebug>
+
 #include "optionsdialog.h"
 #include "../engines/hotkeyengine.h"
 
@@ -30,7 +32,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     settings.remove("options/mode");
   }
 
-  if (!(QSettings().contains("options/tray")))
+  if (!(settings.contains("options/tray")))
   { // If there are no settings, get rid of the cancel button so that the user is forced to save settings.
     ui.buttonBox->clear();
     ui.buttonBox->addButton(QDialogButtonBox::Ok);
@@ -46,8 +48,22 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   connect(ui.openCheckBox  , SIGNAL(toggled(bool))   , ui.openHotkeyWidget  , SLOT(setEnabled(bool)));
   connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
 
+  // Getting the language entries
+  QDir lang(QCoreApplication::applicationDirPath()+QDir::separator()+"lang", "*.qm");
+  lang.setFilter(QDir::Files);
+
+  QStringList entries;
+
+  foreach (QString entry, lang.entryList())
+  {
+    entry.chop(3); // Remove the ".em"
+    entry[0] = entry.at(0).toUpper(); // Make first char uppercase
+    entries << entry;
+  }
+
+  ui.languageComboBox->addItems(entries);
+
   loadSettings();
-  //updatePreview();
 
   connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
 
@@ -165,11 +181,12 @@ void OptionsDialog::saveSettings()
   settings.setValue("flip", ui.flipPrefixPushButton->isChecked());
   settings.setValue("tray", ui.trayCheckBox->isChecked());
   settings.setValue("message", ui.messageCheckBox->isChecked());
-  settings.setValue("quality", ui.qualitySlider->value());
+  //settings.setValue("quality", ui.Slider->value());
   settings.setValue("vistaGlass", ui.vistaGlassCheckBox->isChecked());
   settings.setValue("optipng", ui.optiPngCheckBox->isChecked());
   settings.setValue("playSound", ui.playSoundCheckBox->isChecked());
   settings.setValue("dxScreen", ui.dxScreenCheckBox->isChecked());
+  settings.setValue("language", ui.languageComboBox->currentText()); // We save the explicit string because addition/removal of language files can cause it to change
   settings.endGroup();
 
   settings.beginGroup("actions");
@@ -257,7 +274,7 @@ void OptionsDialog::loadSettings()
   ui.flipPrefixPushButton->setChecked(settings.value("flip", false).toBool());
   ui.trayCheckBox->setChecked(settings.value("tray", true).toBool());
   ui.messageCheckBox->setChecked(settings.value("message").toBool());
-  ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
+  //ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
   ui.vistaGlassCheckBox->setChecked(settings.value("vistaGlass", true).toBool());
   ui.playSoundCheckBox->setChecked(settings.value("playSound", false).toBool());
   ui.dxScreenCheckBox->setChecked(settings.value("dxScreen", false).toBool());
@@ -273,11 +290,22 @@ void OptionsDialog::loadSettings()
     ui.optiPngCheckBox->setEnabled(false);
   }
 
+  QString lang = settings.value("language").toString();
+  int index = ui.languageComboBox->findText(lang, Qt::MatchExactly | Qt::MatchCaseSensitive);
+
+  qDebug() << lang;
+  qDebug() << index;
+
+  if (index == -1)
+    index = 0; // If the data is invalid then revert to the default language (English)
+
+  ui.languageComboBox->setCurrentIndex(index);
+
   settings.endGroup();
 
   settings.beginGroup("actions");
 
-  int index;
+  index = 0; // reuse
   HotkeyEngine::Hotkey screenHotkey;
   HotkeyEngine::Hotkey areaHotkey;
   HotkeyEngine::Hotkey windowHotkey;

@@ -32,7 +32,7 @@ public slots:
   void showOptions();
   void toggleVisibility(QSystemTrayIcon::ActivationReason reason = QSystemTrayIcon::DoubleClick);
   void updaterDone(bool result);
-  
+
 private:
   void applySettings();
   void compressPng(QString fileName);
@@ -46,7 +46,7 @@ protected:
   void hideEvent(QHideEvent *event);
   void closeEvent(QCloseEvent *event);
   void showEvent(QShowEvent *event);
-  
+
 private:
   bool             mReviveMain;
   ScreenshotEngine mScreenshotEngine;
@@ -54,8 +54,8 @@ private:
   QSystemTrayIcon *mTrayIcon;
   Ui::LightscreenWindowClass ui;
   Updater         *mUpdater;
-  
-  
+
+
 };
 
 #endif // LIGHTSCREENWINDOW_H
