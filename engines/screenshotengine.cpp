@@ -53,57 +53,61 @@ QPixmap ScreenshotEngine::getActiveWindow()
 }
 
 QString ScreenshotEngine::getFileName(ScreenshotEngine::Options options)
-{// TODO: Rewrite with Options in mind.
-  QString path;
-  QString prefix;
-  QString suffix;
-  QString extension;
+{
+  if (!options.directory.exists())
+    options.directory.mkpath(options.directory.path());
 
-  path = options.directory.path();
-  path = QDir::toNativeSeparators(path);
+  QString naming("%1");
 
-  if (path.at(path.size()) != QDir::separator() && !path.isEmpty())
-    path.append(QDir::separator());
+  int naming_largest = 0;
 
-  QDir dir(path);
-  if (!dir.exists())
-    dir.mkpath(path);
-
-  prefix = options.prefix;
-
-  extension = QString(getFormat(options.format)).toLower();
-
-  int type = options.naming;
-  if (type == 0)
+  switch (options.naming)
   {
-    QStringList files = QDir(path).entryList(QDir::Files);
-    QString file;
-
-    int largest = 0;
-    foreach(file, files)
+  case 0: // Numeric
+    // Iterating through the folder to find the largest numeric naming.
+    foreach(QString file, options.directory.entryList(QDir::Files))
     {
-      if (file.contains(prefix))
+      if (file.contains(options.prefix))
       {
         file.chop(file.size() - file.lastIndexOf("."));
-        file.remove(prefix);
+        file.remove(options.prefix);
 
-        if (file.toInt() > largest)
-          largest = file.toInt();
+        if (file.toInt() > naming_largest)
+          naming_largest = file.toInt();
       }
     }
 
-    suffix = QString("%1").arg(largest + 1);
+    naming = naming.arg(naming_largest + 1);
+    break;
+  case 1: // Timestamp
+    naming = naming.arg(QDateTime::currentDateTime().toTime_t());
+    break;
+  case 2: // Date
+    naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
+    break;
+  }
+
+  // %1: Path
+  // %2-%3: Naming / Prefix
+  // %4: File extension
+  QString fileName("%1%2%3.%4");
+  QString extension = QString(getFormat(options.format)).toLower();
+  QString path = QDir::toNativeSeparators(options.directory.path());
+
+  // Cleanup
+  if (path.at(path.size()-1) != QDir::separator() && !path.isEmpty())
+    path.append(QDir::separator());
+
+  if (options.flipNaming)
+  {
+    fileName = fileName.arg(path).arg(naming).arg(options.prefix).arg(extension);
   }
   else
   {
-    suffix = QString("%1").arg(QDateTime::currentDateTime().toTime_t());
+    fileName = fileName.arg(path).arg(options.prefix).arg(naming).arg(extension);
   }
 
-  if (options.flipNaming)
-    return QString("%1%2%3.%4").arg(path).arg(suffix).arg(prefix).arg(extension);
-  else
-    return QString("%1%2%3.%4").arg(path).arg(prefix).arg(suffix).arg(extension);
-
+  return fileName;
 }
 
 char* ScreenshotEngine::getFormat(int format)
@@ -111,7 +115,7 @@ char* ScreenshotEngine::getFormat(int format)
   if (format == 0)
     return "PNG";
   if (format == 1)
-    return "JPEG";
+    return "JPG";
   if (format == 2)
     return "BMP";
 
@@ -136,7 +140,6 @@ QPixmap ScreenshotEngine::getSelectedArea()
 
   if (r == QDialog::Accepted)
   {
-    qDebug() << "Dialog ends";
     return screen.copy(s.getRect());
   }
   else
@@ -171,9 +174,6 @@ ScreenshotEngine::Result ScreenshotEngine::take(ScreenshotEngine::Options option
     return disabledResult;
   }
 
-  //qDebug() << "Taking a screenshot";
-  //qDebug() << "Prefix: " << options.prefix << "\nMode:" << options.mode;
-
   QPixmap screenshot;
 
   switch (options.mode)
@@ -195,14 +195,10 @@ ScreenshotEngine::Result ScreenshotEngine::take(ScreenshotEngine::Options option
 
   bool br = screenshot.save(fileName, getFormat(options.format), options.quality);
 
-  //qDebug() << "Result: " << br;
-
   ScreenshotEngine::Result result;
   result.options  = options;
   result.result   = br;
   result.fileName = fileName;
-
-  qDebug() << screenshot.isNull();
 
   if (!screenshot.isNull() && QSettings().value("options/clipboard", true).toBool())
   {// TODO: Add UI for this option (advanced)

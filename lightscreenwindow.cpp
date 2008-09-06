@@ -2,7 +2,7 @@
  * Qt includes
  */
 
-#include <QErrorMessage>
+#include <QDebug>
 
 #include <QDate>
 #include <QDesktopServices>
@@ -16,6 +16,7 @@
 #include <QTimer>
 #include <QUrl>
 #include <QSound>
+
 
 /*
  * Lightscreen includes
@@ -136,8 +137,6 @@ void LightscreenWindow::restoreSystemTrayNotifier()
 
 void LightscreenWindow::screenshotAction(int mode)
 {
-  //qDebug() << "screenshotAction";
-
   if (!mScreenshotEngine.isEnabled())
   {
     return;
@@ -155,8 +154,6 @@ void LightscreenWindow::screenshotAction(int mode)
   if (mSettings.value("options/hide").toBool())
   {
     shouldHideWindow = isVisible();
-
-    //qDebug() << "shouldHideWindow:" << shouldHideWindow;
 
     //Hiding the main window for the screenshot
     if (shouldHideWindow)
@@ -181,17 +178,13 @@ void LightscreenWindow::screenshotAction(int mode)
     {
       if (lastMode < 0)
       {
-        //qDebug() << "activating delay";
         lastMode = mode;
         lastShouldHide = shouldHideWindow;
-
-        //qDebug() << "delayms:" << delayms;
 
         QTimer::singleShot(delayms, this, SLOT(screenshotAction()));
         return;
       } else
       {
-        //qDebug() << "mode = lastMode";
         mode = lastMode;
         shouldHideWindow = lastShouldHide;
         lastMode = -1;
@@ -251,7 +244,6 @@ void LightscreenWindow::screenshotAction(int mode)
   if (mSettings.value("options/optipng").toBool() && mSettings.value("options/format").toInt() == ScreenshotEngine::PNG)
     compressPng(screenshotResult.fileName);
 
-  //qDebug() << "/screenshotAction <<<<<<<<<<";
 }
 
 void LightscreenWindow::screenshotActionTriggered(QAction* action)

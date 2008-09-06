@@ -162,6 +162,11 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
                <string>(timestamp)</string>
               </property>
              </item>
+             <item>
+              <property name="text" >
+               <string>(date)</string>
+              </property>
+             </item>
             </widget>
            </item>
           </layout>
