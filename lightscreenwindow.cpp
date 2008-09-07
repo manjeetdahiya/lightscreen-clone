@@ -26,10 +26,7 @@
 #include "dialogs/optionsdialog.h"
 
 #include "engines/screenshotengine.h"
-#include "engines/hotkeyengine.h"
-#include "engines/action.h"
-#include "engines/actionengine.h"
-
+#include "tools/globalshortcut/globalshortcutmanager.h"
 #include "osspecific.h"
 
 #include "updater/updater.h"
@@ -53,11 +50,7 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
 
   applySettings();
 
-  // Initial hotkeys
-  createActions();
-
   checkForUpdates();
-
 }
 
 /*
@@ -137,6 +130,8 @@ void LightscreenWindow::restoreSystemTrayNotifier()
 
 void LightscreenWindow::screenshotAction(int mode)
 {
+  qDebug() << "screenshotAction:" << mode;
+
   if (!mScreenshotEngine.isEnabled())
   {
     return;
@@ -172,7 +167,7 @@ void LightscreenWindow::screenshotAction(int mode)
       delayms += 200;
     }
 
-    // The delayed functions works using static varibles lastMode and lastShouldHide
+    // The delayed functions works using static variables lastMode and lastShouldHide
     // which keep the argument so a QTimer can call this function again.
     if (delayms > 0)
     {
@@ -208,6 +203,7 @@ void LightscreenWindow::screenshotAction(int mode)
   ScreenshotEngine::Result screenshotResult;
   screenshotResult = mScreenshotEngine.take(options);
 
+  qDebug() << "Result:" << screenshotResult.result;
   // Reversing settings
   if (mSettings.value("options/hide").toBool())
   {
@@ -248,13 +244,12 @@ void LightscreenWindow::screenshotAction(int mode)
 
 void LightscreenWindow::screenshotActionTriggered(QAction* action)
 {
-  //qDebug() << "Action from BUTTON.. (Mode:" << action->data().toInt() << ")";
   screenshotAction(action->data().toInt());
 }
 
 void LightscreenWindow::showOptions()
 {
-  ActionEngine::instance()->clear(this);
+  GlobalShortcutManager::clear();
   mScreenshotEngine.setEnabled(false);
   OptionsDialog d;
   d.exec();
@@ -310,7 +305,7 @@ void LightscreenWindow::showAbout()
 }
 
 void LightscreenWindow::showHotkeyError(QStringList hotkeys)
-{
+{ //TODO: QWT: Replicate this using the GlobalShortcutManager
   static bool dontShow = false;
 
   if (dontShow)
@@ -429,6 +424,9 @@ void LightscreenWindow::updaterDone(bool result)
 
 }
 
+void LightscreenWindow::windowHotkey() { screenshotAction(1); }
+void LightscreenWindow::areaHotkey()   { screenshotAction(2); }
+
 /*
  * Private
  */
@@ -436,13 +434,13 @@ void LightscreenWindow::updaterDone(bool result)
 void LightscreenWindow::applySettings()
 {
   if (!QSettings().contains("file/format"))
-    showOptions(); // There are no options (or the options config is invalid or incomplete)
+    showOptions(); // There are no options (or the options config is invalid or incomplete) TODO: May change with new format options
 
   mSettings.sync();
 
   mTrayIcon->setVisible(mSettings.value("options/tray").toBool());
 
-  createActions();
+  connectHotkeys();
 
 #ifdef Q_WS_WIN
   // Windows startup settings
@@ -488,67 +486,23 @@ void LightscreenWindow::compressPng(QString fileName)
   //qDebug() << "Calling OptiPNG";
 }
 
-void LightscreenWindow::createActions()
+void LightscreenWindow::connectHotkeys()
 {
-  QStringList actionNameList;
-  actionNameList << tr("screen") << tr("window") << tr("area") << tr("open")
-      << tr("directory");
+  if (mSettings.value("actions/screen/hotkey").toBool())
+    GlobalShortcutManager::instance()->connect(mSettings.value("actions/screen/hotkey").value<QKeySequence>()  , this, SLOT(screenshotAction()));
 
-  bool error = false;
-  QStringList failures;
+  if (mSettings.value("actions/area/hotkey").toBool())
+    GlobalShortcutManager::instance()->connect(mSettings.value("actions/area/hotkey").value<QKeySequence>()    , this, SLOT(areaHotkey()));
 
-  ActionEngine::instance()->clear(this);
+  if (mSettings.value("actions/window/hotkey").toBool())
+    GlobalShortcutManager::instance()->connect(mSettings.value("actions/window/hotkey").value<QKeySequence>()  , this, SLOT(windowHotkey()));
 
-  mSettings.beginGroup("actions");
-  Q_FOREACH(QString action, actionNameList)
-  {
-    mSettings.beginGroup(action);
-    if (mSettings.value("enabled").toBool())
-    {
-      int code;
 
-      HotkeyEngine::Hotkey key;
-      key.key = HotkeyEngine::indexToKey(mSettings.value("index").toInt());
-      key.ctrl = mSettings.value("ctrl").toBool();
-      key.alt = mSettings.value("alt").toBool();
-      key.shift = mSettings.value("shift").toBool();
-      code = HotkeyEngine::registerHotkey(this, key);
+  if (mSettings.value("actions/open/hotkey").toBool())
+    GlobalShortcutManager::instance()->connect(mSettings.value("actions/open/hotkey").value<QKeySequence>()     , this, SLOT(show()));
 
-      if (code> 0)
-      {
-        Action *screenshotAction = new Action(code);
-
-        int mode = actionNameList.indexOf(action);
-
-        screenshotAction->setMode(mode);
-
-        if (mode < 3)
-        {
-          connect(screenshotAction, SIGNAL(triggered(int)), this, SLOT(screenshotAction(int)));
-        }
-        else
-        {
-          connect(screenshotAction, SIGNAL(triggered(int)), this, SLOT(action(int)));
-        }
-
-        ActionEngine::instance()->add(screenshotAction);
-      }
-      else
-      {
-        //qDebug() << "Hotkey error?";
-        error = true;
-        failures << action;
-      }
-    }
-
-    mSettings.endGroup();
-  }
-
-  mSettings.endGroup();
-
-  if (error)
-    showHotkeyError(failures);
-
+  if (mSettings.value("actions/directory/hotkey").toBool())
+    GlobalShortcutManager::instance()->connect(mSettings.value("actions/directory/hotkey").value<QKeySequence>(), this, SLOT(goToFolder()));
 }
 
 void LightscreenWindow::createScreenshotButtonMenu()
@@ -667,3 +621,4 @@ void LightscreenWindow::showEvent(QShowEvent *event)
 {
   restoreGeometry(mSettings.value("geometry").toByteArray());
 }
+

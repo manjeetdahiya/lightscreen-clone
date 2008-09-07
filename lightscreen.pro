@@ -1,10 +1,7 @@
 TEMPLATE = app
 TARGET = lightscreen
 HEADERS += updater/updater.h \
-    engines/hotkeyengine.h \
     dialogs/areaselector.h \
-    engines/actionengine.h \
-    engines/action.h \
     engines/screenshotengine.h \
     dialogs/optionsdialog.h \
     dialogs/aboutdialog.h \
@@ -12,10 +9,7 @@ HEADERS += updater/updater.h \
     osspecific.h \
     lightscreenwindow.h
 SOURCES += updater/updater.cpp \
-    engines/hotkeyengine.cpp \
-    engines/actionengine.cpp \
     dialogs/areaselector.cpp \
-    engines/action.cpp \
     engines/screenshotengine.cpp \
     dialogs/optionsdialog.cpp \
     dialogs/aboutdialog.cpp \
@@ -34,3 +28,4 @@ QT += network \
     core \
     gui
 win32:LIBS += libgdi32
+include($$PWD/tools/globalshortcut/globalshortcut.pri)

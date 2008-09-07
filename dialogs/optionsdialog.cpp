@@ -9,7 +9,6 @@
 #include <QDebug>
 
 #include "optionsdialog.h"
-#include "../engines/hotkeyengine.h"
 
 OptionsDialog::OptionsDialog(QWidget *parent) :
   QDialog(parent)
@@ -20,7 +19,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   QSettings settings;
 
-  // Importing settings from previous versions.
+  // Importing settings from previous versions. TODO: QWT: WTF?
   if (settings.contains("application/optionsLastTab"))
   {
     settings.remove("application");
@@ -191,45 +190,32 @@ void OptionsDialog::saveSettings()
 
   settings.beginGroup("actions");
 
-  settings.beginGroup(tr("screen"));
-  settings.setValue("enabled", ui.screenCheckBox->isChecked());
-  settings.setValue("ctrl", ui.screenHotkeyWidget->hotkey().ctrl);
-  settings.setValue("alt", ui.screenHotkeyWidget->hotkey().alt);
-  settings.setValue("shift", ui.screenHotkeyWidget->hotkey().shift);
-  settings.setValue("index", HotkeyEngine::keyToIndex(ui.screenHotkeyWidget->hotkey().key));
+
+  settings.beginGroup("screen");
+    settings.setValue("enabled", ui.screenCheckBox->isChecked());
+    settings.setValue("hotkey", ui.screenHotkeyWidget->hotkey());
   settings.endGroup();
 
-  settings.beginGroup(tr("window"));
-  settings.setValue("enabled", ui.windowCheckBox->isChecked());
-  settings.setValue("ctrl", ui.windowHotkeyWidget->hotkey().ctrl);
-  settings.setValue("alt", ui.windowHotkeyWidget->hotkey().alt);
-  settings.setValue("shift", ui.windowHotkeyWidget->hotkey().shift);
-  settings.setValue("index", HotkeyEngine::keyToIndex(ui.windowHotkeyWidget->hotkey().key));
-  settings.endGroup();
-
-  settings.beginGroup(tr("area"));
+  settings.beginGroup("area");
   settings.setValue("enabled", ui.areaCheckBox->isChecked());
-  settings.setValue("ctrl", ui.areaHotkeyWidget->hotkey().ctrl);
-  settings.setValue("alt", ui.areaHotkeyWidget->hotkey().alt);
-  settings.setValue("shift", ui.areaHotkeyWidget->hotkey().shift);
-  settings.setValue("index", HotkeyEngine::keyToIndex(ui.areaHotkeyWidget->hotkey().key));
+    settings.setValue("hotkey", ui.areaHotkeyWidget->hotkey());
   settings.endGroup();
 
-  settings.beginGroup(tr("open"));
+  settings.beginGroup("window");
+  settings.setValue("enabled", ui.windowCheckBox->isChecked());
+    settings.setValue("hotkey", ui.windowHotkeyWidget->hotkey());
+  settings.endGroup();
+
+  settings.beginGroup("open");
   settings.setValue("enabled", ui.openCheckBox->isChecked());
-  settings.setValue("ctrl", ui.openHotkeyWidget->hotkey().ctrl);
-  settings.setValue("alt", ui.openHotkeyWidget->hotkey().alt);
-  settings.setValue("shift", ui.openHotkeyWidget->hotkey().shift);
-  settings.setValue("index", HotkeyEngine::keyToIndex(ui.openHotkeyWidget->hotkey().key));
+    settings.setValue("hotkey", ui.openHotkeyWidget->hotkey());
   settings.endGroup();
 
-  settings.beginGroup(tr("directory"));
+  settings.beginGroup("directory");
   settings.setValue("enabled", ui.directoryCheckBox->isChecked());
-  settings.setValue("ctrl", ui.directoryHotkeyWidget->hotkey().ctrl);
-  settings.setValue("alt", ui.directoryHotkeyWidget->hotkey().alt);
-  settings.setValue("shift", ui.directoryHotkeyWidget->hotkey().shift);
-  settings.setValue("index", HotkeyEngine::keyToIndex(ui.directoryHotkeyWidget->hotkey().key));
+    settings.setValue("hotkey", ui.directoryHotkeyWidget->hotkey());
   settings.endGroup();
+
 
   settings.endGroup();
 }
@@ -306,11 +292,6 @@ void OptionsDialog::loadSettings()
   settings.beginGroup("actions");
 
   index = 0; // reuse
-  HotkeyEngine::Hotkey screenHotkey;
-  HotkeyEngine::Hotkey areaHotkey;
-  HotkeyEngine::Hotkey windowHotkey;
-  HotkeyEngine::Hotkey openHotkey;
-  HotkeyEngine::Hotkey directoryHotkey;
 
   // This toggle is for the first run
   ui.screenCheckBox->toggle();
@@ -319,63 +300,38 @@ void OptionsDialog::loadSettings()
   ui.openCheckBox->toggle();
   ui.directoryCheckBox->toggle();
 
-  settings.beginGroup(tr("screen"));
-  ui.screenCheckBox->setChecked(settings.value("enabled", true).toBool());
-  screenHotkey.ctrl = settings.value("ctrl", false).toBool();
-  screenHotkey.alt = settings.value("alt", false).toBool();
-  screenHotkey.shift = settings.value("shift", false).toBool();
-  index = settings.value("index", 0).toInt();
-  screenHotkey.key = HotkeyEngine::indexToKey(index);
+  settings.beginGroup("screen");
+    ui.screenCheckBox->setChecked(settings.value("enabled", true).toBool());
+    ui.screenHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::Key_Print)).value<QKeySequence>());
   settings.endGroup();
 
-  settings.beginGroup(tr("area"));
-  ui.areaCheckBox->setChecked(settings.value("enabled", false).toBool());
-  areaHotkey.ctrl = settings.value("ctrl", true).toBool();
-  areaHotkey.alt = settings.value("alt", false).toBool();
-  areaHotkey.shift = settings.value("shift", false).toBool();
-  index = settings.value("index", 0).toInt();
-  areaHotkey.key = HotkeyEngine::indexToKey(index);
+  settings.beginGroup("area");
+    ui.areaCheckBox->setChecked(settings.value("enabled").toBool());
+    ui.areaHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_Print)).value<QKeySequence>());
   settings.endGroup();
 
-  settings.beginGroup(tr("window"));
-  ui.windowCheckBox->setChecked(settings.value("enabled", false).toBool());
-  windowHotkey.ctrl = settings.value("ctrl", false).toBool();
-  windowHotkey.alt = settings.value("alt", true).toBool();
-  windowHotkey.shift = settings.value("shift", false).toBool();
-  index = settings.value("index", 0).toInt();
-  windowHotkey.key = HotkeyEngine::indexToKey(index);
+  settings.beginGroup("window");
+    ui.windowCheckBox->setChecked(settings.value("enabled").toBool());
+    ui.windowHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::SHIFT + Qt::Key_Print)).value<QKeySequence>());
   settings.endGroup();
 
-  settings.beginGroup(tr("open"));
-  ui.openCheckBox->setChecked(settings.value("enabled", false).toBool());
-  openHotkey.ctrl = settings.value("ctrl", true).toBool();
-  openHotkey.alt = settings.value("alt", false).toBool();
-  openHotkey.shift = settings.value("shift", false).toBool();
-  index = settings.value("index", HotkeyEngine::keyToIndex(HotkeyEngine::KPrior)).toInt();
-  openHotkey.key = HotkeyEngine::indexToKey(index);
+  settings.beginGroup("open");
+    ui.openCheckBox->setChecked(settings.value("enabled").toBool());
+    ui.openHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_PageUp)).value<QKeySequence>());
   settings.endGroup();
 
-  settings.beginGroup(tr("directory"));
-  ui.directoryCheckBox->setChecked(settings.value("enabled", false).toBool());
-  directoryHotkey.ctrl = settings.value("ctrl", false).toBool();
-  directoryHotkey.alt = settings.value("alt", false).toBool();
-  directoryHotkey.shift = settings.value("shift", true).toBool();
-  index = settings.value("index", HotkeyEngine::keyToIndex(HotkeyEngine::KPrior)).toInt();
-  directoryHotkey.key = HotkeyEngine::indexToKey(index);
+  settings.beginGroup("directory");
+    ui.directoryCheckBox->setChecked(settings.value("enabled").toBool());
+    ui.directoryHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::SHIFT + Qt::Key_PageUp)).value<QKeySequence>());
   settings.endGroup();
 
-  settings.endGroup();
 
-  ui.screenHotkeyWidget->setHotkey(screenHotkey);
-  ui.areaHotkeyWidget->setHotkey(areaHotkey);
-  ui.windowHotkeyWidget->setHotkey(windowHotkey);
-  ui.openHotkeyWidget->setHotkey(openHotkey);
-  ui.directoryHotkeyWidget->setHotkey(directoryHotkey);
+  settings.endGroup();
 }
 
 bool OptionsDialog::hotkeyCollision()
 {
-  // Check for hotkey collision
+  // Check for hotkey collision (there's probably a better way to do this...=)
 
   if (ui.screenCheckBox->isChecked())
   {

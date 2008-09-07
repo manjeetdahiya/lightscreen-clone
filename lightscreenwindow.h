@@ -19,6 +19,7 @@ public:
 
 public slots:
   void action(int mode = 3);
+  void areaHotkey();
   bool closingWithoutTray();
   void goToFolder();
   void messageClicked();
@@ -32,11 +33,12 @@ public slots:
   void showOptions();
   void toggleVisibility(QSystemTrayIcon::ActivationReason reason = QSystemTrayIcon::DoubleClick);
   void updaterDone(bool result);
+  void windowHotkey();
 
 private:
   void applySettings();
   void compressPng(QString fileName);
-  void createActions();
+  void connectHotkeys();
   void createScreenshotButtonMenu();
   void createTrayIcon();
   void checkForUpdates();

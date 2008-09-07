@@ -3,7 +3,6 @@
 
 #include <QtGui/QDialog>
 #include "ui_optionsdialog.h"
-#include "../engines/hotkeyengine.h"
 
 class QAbstractButton;
 class OptionsDialog : public QDialog
@@ -25,7 +24,7 @@ public slots:
 
 private:
   bool hotkeyCollision();
-  
+
 private:
     Ui::OptionsDialog ui;
 
