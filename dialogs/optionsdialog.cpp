@@ -173,19 +173,26 @@ void OptionsDialog::saveSettings()
   settings.endGroup();
 
   settings.beginGroup("options");
-  settings.setValue("startup", ui.startupCheckBox->isChecked());
+  settings.setValue("startup"    , ui.startupCheckBox->isChecked());
   settings.setValue("startupHide", ui.startupHideCheckBox->isChecked());
-  settings.setValue("hide", ui.hideCheckBox->isChecked());
-  settings.setValue("delay", ui.delaySpinBox->value());
-  settings.setValue("flip", ui.flipPrefixPushButton->isChecked());
-  settings.setValue("tray", ui.trayCheckBox->isChecked());
-  settings.setValue("message", ui.messageCheckBox->isChecked());
-  //settings.setValue("quality", ui.Slider->value());
-  settings.setValue("vistaGlass", ui.vistaGlassCheckBox->isChecked());
-  settings.setValue("optipng", ui.optiPngCheckBox->isChecked());
-  settings.setValue("playSound", ui.playSoundCheckBox->isChecked());
-  settings.setValue("dxScreen", ui.dxScreenCheckBox->isChecked());
-  settings.setValue("language", ui.languageComboBox->currentText()); // We save the explicit string because addition/removal of language files can cause it to change
+  settings.setValue("hide"       , ui.hideCheckBox->isChecked());
+  settings.setValue("delay"      , ui.delaySpinBox->value());
+  settings.setValue("flip"       , ui.flipPrefixPushButton->isChecked());
+  settings.setValue("tray"       , ui.trayCheckBox->isChecked());
+  settings.setValue("message"    , ui.messageCheckBox->isChecked());
+  settings.setValue("quality"    , ui.qualitySlider->value());
+  settings.setValue("playSound"  , ui.playSoundCheckBox->isChecked());
+  // We save the explicit string because addition/removal of language files can cause it to change
+  settings.setValue("language"   , ui.languageComboBox->currentText());
+  // This settings is inverted because the first iteration of the Updater did not have a settings but instead relied on the messagebox choice of the user.
+  settings.setValue("disableUpdater", !ui.updaterCheckBox->isChecked());
+
+  // Advanced
+  settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
+  settings.setValue("dxScreen"   , ui.dxScreenCheckBox->isChecked());
+  settings.setValue("clipboard"  , ui.clipboardCheckBox->isChecked());
+  settings.setValue("vistaGlass" , ui.vistaGlassCheckBox->isChecked());
+  settings.setValue("optipng"    , ui.optiPngCheckBox->isChecked());
   settings.endGroup();
 
   settings.beginGroup("actions");
@@ -193,26 +200,26 @@ void OptionsDialog::saveSettings()
 
   settings.beginGroup("screen");
     settings.setValue("enabled", ui.screenCheckBox->isChecked());
-    settings.setValue("hotkey", ui.screenHotkeyWidget->hotkey());
+    settings.setValue("hotkey" , ui.screenHotkeyWidget->hotkey());
   settings.endGroup();
 
   settings.beginGroup("area");
-  settings.setValue("enabled", ui.areaCheckBox->isChecked());
+  settings.setValue("enabled" , ui.areaCheckBox->isChecked());
     settings.setValue("hotkey", ui.areaHotkeyWidget->hotkey());
   settings.endGroup();
 
   settings.beginGroup("window");
-  settings.setValue("enabled", ui.windowCheckBox->isChecked());
+  settings.setValue("enabled" , ui.windowCheckBox->isChecked());
     settings.setValue("hotkey", ui.windowHotkeyWidget->hotkey());
   settings.endGroup();
 
   settings.beginGroup("open");
-  settings.setValue("enabled", ui.openCheckBox->isChecked());
+  settings.setValue("enabled" , ui.openCheckBox->isChecked());
     settings.setValue("hotkey", ui.openHotkeyWidget->hotkey());
   settings.endGroup();
 
   settings.beginGroup("directory");
-  settings.setValue("enabled", ui.directoryCheckBox->isChecked());
+  settings.setValue("enabled" , ui.directoryCheckBox->isChecked());
     settings.setValue("hotkey", ui.directoryHotkeyWidget->hotkey());
   settings.endGroup();
 
@@ -260,12 +267,16 @@ void OptionsDialog::loadSettings()
   ui.flipPrefixPushButton->setChecked(settings.value("flip", false).toBool());
   ui.trayCheckBox->setChecked(settings.value("tray", true).toBool());
   ui.messageCheckBox->setChecked(settings.value("message").toBool());
-  //ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
-  ui.vistaGlassCheckBox->setChecked(settings.value("vistaGlass", true).toBool());
+  ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
   ui.playSoundCheckBox->setChecked(settings.value("playSound", false).toBool());
-  ui.dxScreenCheckBox->setChecked(settings.value("dxScreen", false).toBool());
+  ui.updaterCheckBox->setChecked(!settings.value("disableUpdater", false).toBool());
 
+  // Advanced
+  ui.clipboardCheckBox->setChecked(settings.value("clipboard", true).toBool());
+  ui.vistaGlassCheckBox->setChecked(settings.value("vistaGlass", true).toBool());
+  ui.dxScreenCheckBox->setChecked(settings.value("dxScreen", false).toBool());
   ui.optiPngCheckBox->setChecked(settings.value("optipng", true).toBool());
+  ui.warnHideCheckBox->setChecked(!settings.value("disableHideAlert", false).toBool());
 
   if (QFile::exists("optipng.exe")) //TODO: Change value when cross-platform
   {

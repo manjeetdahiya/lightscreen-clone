@@ -39,7 +39,7 @@ QPixmap ScreenshotEngine::getActiveWindow()
     return QPixmap();
 
   if (fWindow == GetDesktopWindow())
-    return getWholeScreen(); //TODO: Don't really know if it can happen, check.
+    return getWholeScreen();
 
   /*
     if (IsZoomed(fWindow) != 0) // If the window is maximized, just get the whole screen.
@@ -201,7 +201,7 @@ ScreenshotEngine::Result ScreenshotEngine::take(ScreenshotEngine::Options option
   result.fileName = fileName;
 
   if (!screenshot.isNull() && QSettings().value("options/clipboard", true).toBool())
-  {// TODO: Add UI for this option (advanced)
+  {
     qApp->clipboard()->setPixmap(screenshot);
   }
 

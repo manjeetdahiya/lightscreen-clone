@@ -17,7 +17,6 @@
 #include <QUrl>
 #include <QSound>
 
-
 /*
  * Lightscreen includes
  */
@@ -53,6 +52,10 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
   checkForUpdates();
 }
 
+LightscreenWindow::~LightscreenWindow()
+{
+  GlobalShortcutManager::instance()->clear();
+}
 /*
  * Slots
  */
@@ -434,7 +437,7 @@ void LightscreenWindow::areaHotkey()   { screenshotAction(2); }
 void LightscreenWindow::applySettings()
 {
   if (!QSettings().contains("file/format"))
-    showOptions(); // There are no options (or the options config is invalid or incomplete) TODO: May change with new format options
+    showOptions(); // There are no options (or the options config is invalid or incomplete)
 
   mSettings.sync();
 
@@ -456,14 +459,10 @@ void LightscreenWindow::applySettings()
     if (mSettings.value("options/startupHide").toBool())
     entry.append(" -h"); // command to automatically hide.
 
-    //qDebug() << "Creating LS run entry";
-    //qDebug() << entry;
-
     init.setValue("Lightscreen", entry);
   }
   else
   {
-    //qDebug() << "Removing LS run entry";
     init.remove("Lightscreen");
   }
 
@@ -482,8 +481,6 @@ void LightscreenWindow::compressPng(QString fileName)
 
   optipng->setWorkingDirectory(QCoreApplication::applicationDirPath());
   optipng->start("optipng", args);
-
-  //qDebug() << "Calling OptiPNG";
 }
 
 void LightscreenWindow::connectHotkeys()

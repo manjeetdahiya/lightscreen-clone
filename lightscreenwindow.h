@@ -16,6 +16,7 @@ class LightscreenWindow : public QDialog
 
 public:
   LightscreenWindow(QWidget *parent = 0);
+  ~LightscreenWindow();
 
 public slots:
   void action(int mode = 3);

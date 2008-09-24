@@ -13,6 +13,9 @@ public:
   void setHotkey(QKeySequence hotkey);
   QKeySequence hotkey();
 
+public slots:
+  void printScreenPressed();
+
 signals:
   void invalidHotkeyError();
 

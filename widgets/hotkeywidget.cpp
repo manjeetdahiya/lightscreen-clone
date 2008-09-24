@@ -3,10 +3,11 @@
 #include <QKeySequence>
 #include <QKeyEvent>
 #include <QFocusEvent>
-#include <QCoreApplication>
+#include <QApplication>
+
+#include <QDebug>
 
 #include "hotkeywidget.h"
-#include "../tools/globalshortcut/globalshortcutmanager.h"
 
 //TODO: QWT: Fix Printscreen
 HotkeyWidget::HotkeyWidget(QWidget *parent)
@@ -123,3 +124,10 @@ bool HotkeyWidget::isModifier(int key) const
   }
   return false;
 }
+
+void HotkeyWidget::printScreenPressed()
+{
+  qDebug() << "Pressed?";
+  keyPressEvent(new QKeyEvent(QEvent::KeyPress, Qt::Key_Print , QApplication::keyboardModifiers()));
+}
+
