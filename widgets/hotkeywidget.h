@@ -13,9 +13,6 @@ public:
   void setHotkey(QKeySequence hotkey);
   QKeySequence hotkey();
 
-public slots:
-  void printScreenPressed();
-
 signals:
   void invalidHotkeyError();
 
@@ -29,9 +26,10 @@ private slots:
 
 protected:
   // Event overrides:
-  void focusInEvent(QFocusEvent *event);
-  void focusOutEvent(QFocusEvent *event);
-  void keyPressEvent(QKeyEvent *e);
+  bool event(QEvent* event);
+#ifdef Q_WS_WIN
+  bool winEvent(MSG * message, long * result);
+#endif
 
 private:
   QKeySequence mHotkey;

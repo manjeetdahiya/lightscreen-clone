@@ -9,26 +9,70 @@
 
 AreaSelector::AreaSelector()
 {
+  setWindowFlags(Qt::WindowStaysOnTopHint);
   setCursor(Qt::CrossCursor);
 
-  mPixmapLabel = 0;
+  drawBackground();
+}
 
-  QPixmap p = QPixmap::grabWindow(QApplication::desktop()->winId());
+QRect AreaSelector::getRect()
+{
+  return mRect;
+}
 
-  // Save the original desktop pixmap
-  mDesktopPixmap = p;
+bool AreaSelector::event(QEvent *event)
+{
+  if (event->type() == QEvent::Show)
+  {
+    setWindowState(Qt::WindowFullScreen);
+  }
+  if (event->type() == QEvent::MouseButtonRelease)
+  {
+    accept();
+  }
+  if (event->type() == QEvent::MouseButtonPress)
+  {
+    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 
-  //Transforming the pixmap to make the user notice the change between desktop and area selector
-  QPainter painter(&p);
+    if (mouseEvent->button() != Qt::LeftButton)
+      reject();
+
+    mOrigin = mouseEvent->pos();
+    mRect = QRect(mOrigin, QSize());
+  }
+  if (event->type() == QEvent::MouseMove)
+  {
+    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+    mRect = QRect(mOrigin, mouseEvent->pos()).normalized();
+    update();
+  }
+  if (event->type() == QEvent::Paint)
+  {
+    QPainter painter(this);
+    drawRectangleSelector(painter);
+  }
+
+  return QDialog::event(event);
+}
+
+// Drawing slots
+
+void AreaSelector::drawBackground()
+{
+  QPixmap desktop = QPixmap::grabWindow(QApplication::desktop()->winId());
+  mCleanDesktop = desktop;
+
+  //Transforming the pixmap to make the user notice the change between desktop and area selector (85% transparent black overlay)
+  QPainter painter(&desktop);
   painter.setBrush(QBrush(QColor(0, 0, 0, 85), Qt::SolidPattern));
-  painter.drawRect(p.rect());
+  painter.drawRect(desktop.rect());
 
   painter.setRenderHint(QPainter::Antialiasing);
 
   //Drawing the explanatory text.
-  QRect textRect = p.rect();
+  QRect textRect = desktop.rect();
   QString text = tr("Lightscreen screen area mode:\nUse your mouse to draw a rectangle to screenshot or exit pressing\nany key or using the right or middle mouse buttons.");
-  textRect.setHeight(qRound(p.rect().height() / 10)); // We get a decently sized rect where the text should be drawn (centered)
+  textRect.setHeight(qRound(desktop.rect().height() / 10)); // We get a decently sized rect where the text should be drawn (centered)
 
   // We draw the white contrasting background for the text, using the same text and options to get the boundingRect that the text will have.
   painter.setPen(QPen(Qt::white));
@@ -47,68 +91,21 @@ AreaSelector::AreaSelector()
   painter.setPen(QPen(Qt::black));
   painter.drawText(textRect, Qt::AlignCenter, text);
 
-  mOriginalPixmap = p;
-
-#ifdef Q_WS_WIN
-  // Windows-specific: Set the window always on top
-  ::SetWindowPos(winId(), HWND_TOPMOST, 200, 200, 100, 100, SWP_SHOWWINDOW);
-  SetForegroundWindow(winId());
-#endif
-
-  QTimer::singleShot(0, this, SLOT(setFullScreen()));
+  QPalette newPalette = palette();
+  newPalette.setBrush(backgroundRole(), QBrush(desktop));
+  setPalette(newPalette);
 }
 
-QRect AreaSelector::getRect()
+void AreaSelector::drawRectangleSelector(QPainter &painter)
 {
-  return mRect;
-}
-
-
-void AreaSelector::paintEvent(QPaintEvent *event)
-{
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-
-  // Draw the altered pixmap
-  painter.drawPixmap(rect(), mOriginalPixmap);
-
   // Draw the "light" version, the target, in the moused rect
-  painter.setPen(QPen(QBrush(QColor(255, 0, 0, 140)), 2));
-  painter.drawPixmap(mRect, mDesktopPixmap, mRect);
+  painter.drawPixmap(mRect, mCleanDesktop, mRect);
 
   // Border
+  painter.setPen(QPen(QBrush(QColor(255, 0, 0, 130)), 2));
   painter.drawRect(mRect);
 
   // Draw the size in the bottom right of the selection rect
   QString text = tr("%1 x %2 px ").arg(mRect.width()).arg(mRect.height());
   painter.drawText(mRect, Qt::AlignBottom | Qt::AlignRight, text);
-}
-
-void AreaSelector::setFullScreen()
-{
-  setWindowState(Qt::WindowFullScreen);
-}
-
-void AreaSelector::mousePressEvent(QMouseEvent *event)
-{
-  if (event->button() != Qt::LeftButton)
-  {
-    mRect = QRect(QPoint(0, 0), QSize());
-    accept();
-  }
-
-  mOrigin = event->pos();
-  mRect = QRect(mOrigin, QSize());
-}
-
-void AreaSelector::mouseMoveEvent(QMouseEvent *event)
-{
-  mRect = QRect(mOrigin, event->pos()).normalized();
-  update();
-}
-
-void AreaSelector::mouseReleaseEvent(QMouseEvent *event)
-{
-  event->ignore();
-  accept();
 }

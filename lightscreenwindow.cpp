@@ -254,8 +254,8 @@ void LightscreenWindow::showOptions()
 {
   GlobalShortcutManager::clear();
   mScreenshotEngine.setEnabled(false);
-  OptionsDialog d;
-  d.exec();
+  OptionsDialog optionsDialog(this);
+  optionsDialog.exec();
   mScreenshotEngine.setEnabled(true);
 
   applySettings();

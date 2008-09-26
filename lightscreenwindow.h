@@ -22,6 +22,7 @@ public slots:
   void action(int mode = 3);
   void areaHotkey();
   bool closingWithoutTray();
+  void checkForUpdates();
   void goToFolder();
   void messageClicked();
   void restoreSystemTrayNotifier();
@@ -42,7 +43,6 @@ private:
   void connectHotkeys();
   void createScreenshotButtonMenu();
   void createTrayIcon();
-  void checkForUpdates();
 
 protected:
   //Events:

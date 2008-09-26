@@ -42,6 +42,8 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   connect(ui.flipPrefixPushButton, SIGNAL(toggled(bool))   , this, SLOT(flipButtonToggled(bool)));
 
+  connect(ui.aboutPushButton, SIGNAL(clicked()), parent, SLOT(showAbout()));
+
   connect(ui.screenCheckBox, SIGNAL(toggled(bool))   , ui.screenHotkeyWidget, SLOT(setEnabled(bool)));
   connect(ui.areaCheckBox  , SIGNAL(toggled(bool))   , ui.areaHotkeyWidget  , SLOT(setEnabled(bool)));
   connect(ui.windowCheckBox, SIGNAL(toggled(bool))   , ui.windowHotkeyWidget, SLOT(setEnabled(bool)));
