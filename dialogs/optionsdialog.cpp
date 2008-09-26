@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include "optionsdialog.h"
+#include "../osspecific.h"
 
 OptionsDialog::OptionsDialog(QWidget *parent) :
   QDialog(parent)
@@ -53,6 +54,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   QStringList entries;
 
+  entries << "English"; // Set here and not the .ui because it the items would get reset when calling retranslateUi
   foreach (QString entry, lang.entryList())
   {
     entry.chop(3); // Remove the ".em"
@@ -61,6 +63,8 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   }
 
   ui.languageComboBox->addItems(entries);
+
+  connect(ui.languageComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
 
   loadSettings();
 
@@ -153,8 +157,14 @@ void OptionsDialog::flipButtonToggled(bool checked)
     ui.hboxLayout->addWidget(ui.prefixLineEdit);
     ui.hboxLayout->addWidget(ui.namingComboBox);
   }
-  setUpdatesEnabled(true);// Avoids flicker
+  setUpdatesEnabled(true); // Avoids flicker
 }
+
+void OptionsDialog::languageChange(QString language)
+{ //TODO: Recalculate window size when switching translations
+  OS::translate(language);
+}
+
 
 void OptionsDialog::openUrl(QString url)
 {
@@ -290,9 +300,6 @@ void OptionsDialog::loadSettings()
   QString lang = settings.value("language").toString();
   int index = ui.languageComboBox->findText(lang, Qt::MatchExactly | Qt::MatchCaseSensitive);
 
-  qDebug() << lang;
-  qDebug() << index;
-
   if (index == -1)
     index = 0; // If the data is invalid then revert to the default language (English)
 
@@ -423,3 +430,12 @@ bool OptionsDialog::hotkeyCollision()
   return false;
 }
 
+void OptionsDialog::changeEvent(QEvent* event)
+{
+    if (event->type() == QEvent::LanguageChange)
+    {
+        ui.retranslateUi(this);
+    }
+
+    QDialog::changeEvent(event);
+}

@@ -17,10 +17,14 @@ public slots:
   void browse();
   void dialogButtonClicked(QAbstractButton *button);
   void flipButtonToggled(bool checked);
+  void languageChange(QString language);
   void openUrl(QString url);
   void saveSettings();
   void startupRelatedStateChange(int state);
   void trayRelatedStateChange(int state);
+
+protected:
+  void changeEvent(QEvent *event);
 
 private:
   bool hotkeyCollision();

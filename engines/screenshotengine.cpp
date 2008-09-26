@@ -133,14 +133,14 @@ QPixmap ScreenshotEngine::getSelectedArea()
 
   QPixmap screen = QPixmap::grabWindow(QApplication::desktop()->winId());
 
-  AreaSelector s;
-  int r = s.exec();
+  AreaSelector selector;
+  int r = selector.exec();
 
   alreadySelecting = false;
 
   if (r == QDialog::Accepted)
   {
-    return screen.copy(s.getRect());
+    return screen.copy(selector.getRect());
   }
   else
   {

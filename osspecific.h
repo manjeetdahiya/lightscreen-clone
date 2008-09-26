@@ -5,6 +5,9 @@
 #include <QLibrary>
 #include <string>
 #include <QDesktopWidget>
+#include <QTranslator>
+
+#include <QDebug>
 
 #ifdef Q_WS_WIN
 #include <windows.h>
@@ -27,7 +30,7 @@ static PtrDwmIsCompositionEnabled pDwmIsCompositionEnabled = 0;
 
 class OS
 {
-  
+
 public:
   OS() { }
 
@@ -35,27 +38,27 @@ static void vistaGlass(QWidget* target)
 {
 #ifdef Q_WS_WIN
   QLibrary dwmapi("dwmapi");
-  
+
   if (QSysInfo::WindowsVersion == QSysInfo::WV_VISTA)
   { // Glass frame only for Windows Vista
-    
+
     pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)dwmapi.resolve("DwmIsCompositionEnabled");
 
     BOOL enabled;
     pDwmIsCompositionEnabled(&enabled);
-    
+
     if (enabled)
     {
       pDwmExtendFrameIntoClientArea = (PtrDwmExtendFrameIntoClientArea)dwmapi.resolve("DwmExtendFrameIntoClientArea");
-      
+
       MARGINS margins =
       {-1}; //setting it to -1 makes the glass available throughout the entire window
-      
+
       pDwmExtendFrameIntoClientArea(target->winId(), &margins);
       target->setAttribute(Qt::WA_NoSystemBackground);
     }
   }
-  
+
   dwmapi.unload();
 #else
   Q_UNUSED(target)
@@ -67,22 +70,22 @@ static bool singleInstance(QString name)
 {
 #ifdef Q_WS_WIN
   WCHAR* mutexName = (WCHAR*)name.toAscii().data();
-  
+
   HANDLE mutex = ::CreateMutex(NULL, FALSE, mutexName);
-  
+
   if (!mutex)
     return false;
-  
+
   bool alreadyExists = (::GetLastError() == ERROR_ALREADY_EXISTS);
- 
+
   std::wstring str = QString("Lightscreen").toStdWString();
   HWND hLsWnd = ::FindWindow(NULL, str.c_str());
-  
+
   if (hLsWnd)
   {
     ::PostMessage(hLsWnd, WM_QUIT, 0, 0);
   }
-  
+
   return alreadyExists;
 #else
   Q_UNUSED(name)
@@ -96,11 +99,11 @@ static QPixmap grabWindow(WId winId)
 
   RECT rcWindow;
   GetWindowRect(winId, &rcWindow);
-  
+
   if (IsZoomed(winId))
   {
     if (QSysInfo::WindowsVersion == QSysInfo::WV_VISTA)
-    {// TODO: WTF!
+    {// TODO: WTF! (Test this for 0.6!)
       rcWindow.right += 8;
       rcWindow.left -= 8;
       rcWindow.top += 8;
@@ -114,7 +117,7 @@ static QPixmap grabWindow(WId winId)
       rcWindow.bottom -= 4;
     }
   }
-  
+
   HDC hdcMem = CreateCompatibleDC(hdcScreen);
   HBITMAP hbmCapture = CreateCompatibleBitmap(hdcScreen, rcWindow.right - rcWindow.left, rcWindow.bottom - rcWindow.top);
   SelectObject(hdcMem, hbmCapture);
@@ -165,7 +168,7 @@ static QPixmap getDxScreen()
   //Display Mode (d3dDipMode)
   if(FAILED(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT,&d3dDipMode)))
       return QPixmap();
-  
+
   //GetDestinationTargetSurface
   if(FAILED(m_pd3dDevice->CreateOffscreenPlainSurface((rc.right - rc.left),
                                                      (rc.bottom - rc.top),
@@ -200,6 +203,24 @@ static QPixmap getDxScreen()
 #endif
 }
 
+static void translate(QString language)
+{
+  static QTranslator *translator = 0;
+
+  if (translator) {
+   qApp->removeTranslator(translator);
+   delete translator;
+   translator = 0;
+  }
+
+  if (language.compare("English", Qt::CaseInsensitive) == 0 || language.isEmpty())
+    return;
+
+  translator = new QTranslator;
+  translator->load(language, "lang");
+
+  qApp->installTranslator(translator);
+}
 };
 
 #endif /*OSSPECIFIC_H_*/

@@ -387,13 +387,7 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="languageComboBox" >
-           <item>
-            <property name="text" >
-             <string>English</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="languageComboBox" />
          </item>
          <item>
           <widget class="QLabel" name="translateLabel" >

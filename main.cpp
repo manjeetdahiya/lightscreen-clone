@@ -3,7 +3,6 @@
 #include <QLocale>
 #include <QImageWriter>
 #include <QAbstractEventDispatcher>
-#include <QTranslator>
 #include <QSettings>
 
 #include "osspecific.h"
@@ -47,13 +46,7 @@ int main(int argc, char *argv[])
   // Localization
   QString language = QSettings().value("options/language").toString().toLower();
 
-  if (!language.isEmpty())
-  {
-    QTranslator *translator = new QTranslator;
-    language.append(".qm");
-    translator->load(QCoreApplication::applicationDirPath()+QDir::separator()+"lang"+QDir::separator()+language);
-    qApp->installTranslator(translator);
-  }
+  OS::translate(language);
 
   LightscreenWindow w;
 

@@ -66,8 +66,6 @@ QRect AreaSelector::getRect()
 
 void AreaSelector::paintEvent(QPaintEvent *event)
 {
-  //qDebug() << "PaintEvent called: " << mRect.height();
-
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
 

@@ -309,6 +309,7 @@ void LightscreenWindow::showAbout()
 
 void LightscreenWindow::showHotkeyError(QStringList hotkeys)
 { //TODO: QWT: Replicate this using the GlobalShortcutManager
+  /*
   static bool dontShow = false;
 
   if (dontShow)
@@ -369,6 +370,7 @@ void LightscreenWindow::showHotkeyError(QStringList hotkeys)
       mSettings.setValue(QString("actions/%1/enabled").arg(hotkey), false);
     }
   }
+  */
 }
 
 void LightscreenWindow::toggleVisibility(
@@ -600,6 +602,16 @@ void LightscreenWindow::checkForUpdates()
 }
 
 // Events
+
+void LightscreenWindow::changeEvent(QEvent* event)
+{
+    if (event->type() == QEvent::LanguageChange)
+    {
+        ui.retranslateUi(this);
+    }
+
+    QDialog::changeEvent(event);
+}
 
 void LightscreenWindow::hideEvent(QHideEvent *event)
 {
