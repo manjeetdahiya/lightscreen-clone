@@ -13,7 +13,7 @@
 #include "../dialogs/areaselector.h"
 #include "screenshotengine.h"
 
-#include "../osspecific.h"
+#include "../os.h"
 
 ScreenshotEngine::ScreenshotEngine()
 {
@@ -46,7 +46,7 @@ QPixmap ScreenshotEngine::getActiveWindow()
     return getWholeScreen();
   */
 
-  return OS::grabWindow(GetForegroundWindow());
+  return os::grabWindow(GetForegroundWindow());
 #else
   return QPixmap::grabWindow(QApplication::desktop()->winId());
 #endif
@@ -138,7 +138,7 @@ QPixmap ScreenshotEngine::getSelectedArea()
 
   alreadySelecting = false;
 
-  if (result == QDialog::Accepted)
+  if (result == QDialog::Accepted && selector.getRect().isValid())
   {
     return screen.copy(selector.getRect());
   }
@@ -152,7 +152,7 @@ QPixmap ScreenshotEngine::getWholeScreen(bool directx)
 {
   if (directx)
   {
-    return OS::getDxScreen();
+    return os::getDxScreen();
   }
   else
   {

@@ -5,7 +5,7 @@
 #include <QAbstractEventDispatcher>
 #include <QSettings>
 
-#include "osspecific.h"
+#include "os.h"
 #include "lightscreenwindow.h"
 
 #include <stdio.h>
@@ -41,12 +41,12 @@ int main(int argc, char *argv[])
   a.setApplicationVersion("0.6-dev");
   a.setQuitOnLastWindowClosed(false);
 
-  OS::singleInstance("LightscreenN");
+  os::singleInstance("LightscreenN");
 
   // Localization
   QString language = QSettings().value("options/language").toString().toLower();
 
-  OS::translate(language);
+  os::translate(language);
 
   LightscreenWindow w;
 

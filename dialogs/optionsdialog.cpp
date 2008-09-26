@@ -9,7 +9,7 @@
 #include <QDebug>
 
 #include "optionsdialog.h"
-#include "../osspecific.h"
+#include "../os.h"
 
 OptionsDialog::OptionsDialog(QWidget *parent) :
   QDialog(parent)
@@ -164,7 +164,7 @@ void OptionsDialog::flipButtonToggled(bool checked)
 
 void OptionsDialog::languageChange(QString language)
 { //TODO: Recalculate window size when switching translations
-  OS::translate(language);
+  os::translate(language);
 }
 
 

@@ -26,7 +26,7 @@
 
 #include "engines/screenshotengine.h"
 #include "tools/globalshortcut/globalshortcutmanager.h"
-#include "osspecific.h"
+#include "os.h"
 
 #include "updater/updater.h"
 
@@ -35,7 +35,7 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
 {
 
   if (mSettings.value("options/vistaGlass", true).toBool())
-    OS::vistaGlass(this);
+    os::vistaGlass(this);
 
   ui.setupUi(this);
 
@@ -373,8 +373,7 @@ void LightscreenWindow::showHotkeyError(QStringList hotkeys)
   */
 }
 
-void LightscreenWindow::toggleVisibility(
-    QSystemTrayIcon::ActivationReason reason)
+void LightscreenWindow::toggleVisibility(QSystemTrayIcon::ActivationReason reason)
 {
   if (reason != QSystemTrayIcon::DoubleClick)
     return;
@@ -388,15 +387,7 @@ void LightscreenWindow::toggleVisibility(
   } else
   {
     show();
-
-#ifdef Q_WS_WIN
-    SetForegroundWindow(winId());
-#endif
   }
-
-  if (mSettings.value("options/vistaGlass", true).toBool())
-    OS::vistaGlass(this); // Fixes black background bug?
-
 }
 
 void LightscreenWindow::updaterDone(bool result)
@@ -629,5 +620,10 @@ void LightscreenWindow::closeEvent(QCloseEvent *event)
 void LightscreenWindow::showEvent(QShowEvent *event)
 {
   restoreGeometry(mSettings.value("geometry").toByteArray());
+
+  if (mSettings.value("options/vistaGlass", true).toBool())
+    os::vistaGlass(this); // Fixes black background bug?
+
+  QDialog::showEvent(event);
 }
 

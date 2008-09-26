@@ -1,13 +1,12 @@
-#ifndef OSSPECIFIC_H_
-#define OSSPECIFIC_H_
-
 #include <QWidget>
+#include <QApplication>
 #include <QLibrary>
-#include <string>
 #include <QDesktopWidget>
 #include <QTranslator>
 
 #include <QDebug>
+
+#include <string>
 
 #ifdef Q_WS_WIN
 #include <windows.h>
@@ -28,13 +27,10 @@ static PtrDwmIsCompositionEnabled pDwmIsCompositionEnabled = 0;
 
 #endif
 
-class OS
-{
+#include "os.h"
 
-public:
-  OS() { }
 
-static void vistaGlass(QWidget* target)
+void os::vistaGlass(QWidget* target)
 {
 #ifdef Q_WS_WIN
   QLibrary dwmapi("dwmapi");
@@ -66,7 +62,7 @@ static void vistaGlass(QWidget* target)
 }
 
 
-static bool singleInstance(QString name)
+bool os::singleInstance(QString name)
 {
 #ifdef Q_WS_WIN
   WCHAR* mutexName = (WCHAR*)name.toAscii().data();
@@ -92,7 +88,7 @@ static bool singleInstance(QString name)
 #endif
 }
 
-static QPixmap grabWindow(WId winId)
+QPixmap os::grabWindow(WId winId)
 {
   #ifdef Q_WS_WIN
   HDC hdcScreen = GetDC(NULL);
@@ -137,7 +133,7 @@ static QPixmap grabWindow(WId winId)
 #endif
 }
 
-static QPixmap getDxScreen()
+QPixmap os::getDxScreen()
 {
 #if Q_WS_WINDOWS
   //RenderTargetSurface.
@@ -157,7 +153,7 @@ static QPixmap getDxScreen()
 
   //Get the client rectangle
   RECT rc;
-  GetClientRect(myhWnd, &rc);
+  GetClientRect (myhWnd, &rc);
   ClientToScreen(myhWnd, LPPOINT(&rc.left));
   ClientToScreen(myhWnd, LPPOINT(&rc.right));
 
@@ -186,24 +182,22 @@ static QPixmap getDxScreen()
 
   //Save the DestinationTargetSurface into memory (as a bitmap)
   if(FAILED(D3DXSaveSurfaceToFileInMemory(&bufferedImage,
-                                        D3DXIFF_BMP,
+                                         D3DXIFF_BMP,
                                          pDestinationTargetSurface,
                                          NULL,
                                          NULL)))
    return QPixmap();
 
-  //Release Resources
   pRenderTargetSurface->Release();
   pDestinationTargetSurface->Release();
 
-  //Return HBITMAT
   return QPixmap::fromWinHBITMAP(hbm);
 #else
   return QPixmap::grabWindow(QApplication::desktop()->winId());
 #endif
 }
 
-static void translate(QString language)
+void os::translate(QString language)
 {
   static QTranslator *translator = 0;
 
@@ -221,6 +215,3 @@ static void translate(QString language)
 
   qApp->installTranslator(translator);
 }
-};
-
-#endif /*OSSPECIFIC_H_*/
