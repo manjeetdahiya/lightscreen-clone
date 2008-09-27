@@ -1,9 +1,8 @@
-
-#include <QTimer>
-#include <QKeySequence>
-#include <QKeyEvent>
-#include <QFocusEvent>
 #include <QApplication>
+#include <QFocusEvent>
+#include <QKeyEvent>
+#include <QKeySequence>
+#include <QTimer>
 
 #include <QDebug>
 

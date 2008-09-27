@@ -1,11 +1,10 @@
-#include <QSettings>
+#include <QDate>
 #include <QHttp>
 #include <QSettings>
-#include <QDate>
 
 #include "updater.h"
 
-#define LS_CURRENT_VERSION 0.5
+#define LS_CURRENT_VERSION 0.6
 
 Updater::Updater(QObject *parent) : QObject(parent)
 {
@@ -37,12 +36,18 @@ void Updater::httpDone(bool result)
   QSettings().setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
 
   if (version > LS_CURRENT_VERSION)
-  { // New version available
-    emit done(true);
-  }
+    emit done(true);// New version available
   else
-  {
     emit done(false);
-  }
-
 }
+
+Updater* Updater::mInstance = 0;
+
+Updater *Updater::instance()
+{
+  if (!mInstance)
+    mInstance = new Updater();
+
+  return mInstance;
+}
+

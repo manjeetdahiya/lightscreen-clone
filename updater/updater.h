@@ -11,15 +11,17 @@ public:
 	Updater(QObject *parent = 0);
 
 	bool check();
-	
+	static Updater *instance();
+
 signals:
-  void done(bool result); 
-	
+  void done(bool result);
+
 private slots:
   void httpDone(bool result);
 
 private:
   QHttp mHttp;
+  static Updater* mInstance;
 
 };
 

@@ -2,20 +2,19 @@
  * Qt includes
  */
 
-#include <QDebug>
-
 #include <QDate>
+#include <QDebug>
 #include <QDesktopServices>
 #include <QFileInfo>
 #include <QHttp>
-#include <QMessageBox>
 #include <QMenu>
+#include <QMessageBox>
 #include <QProcess>
 #include <QSettings>
+#include <QSound>
 #include <QSystemTrayIcon>
 #include <QTimer>
 #include <QUrl>
-#include <QSound>
 
 /*
  * Lightscreen includes
@@ -113,12 +112,9 @@ void LightscreenWindow::goToFolder()
   QString folder = mSettings.value("file/target").toString();
 
   if (folder.isEmpty())
-  {
     QDesktopServices::openUrl(QUrl(QApplication::applicationDirPath()));
-  } else
-  {
+  else
     QDesktopServices::openUrl(QUrl(folder));
-  }
 }
 
 void LightscreenWindow::messageClicked()
@@ -136,9 +132,7 @@ void LightscreenWindow::screenshotAction(int mode)
   qDebug() << "screenshotAction:" << mode;
 
   if (!mScreenshotEngine.isEnabled())
-  {
     return;
-  }
 
   // Applying pre-screenshot settings
   if (mSettings.value("options/hide").toBool())
@@ -163,12 +157,9 @@ void LightscreenWindow::screenshotAction(int mode)
 
     // When on Windows Vista, the window takes a little bit longer to hide
     if (QSysInfo::WindowsVersion == QSysInfo::WV_VISTA)
-    {
       delayms += 400;
-    } else
-    {
+    else
       delayms += 200;
-    }
 
     // The delayed functions works using static variables lastMode and lastShouldHide
     // which keep the argument so a QTimer can call this function again.
@@ -193,14 +184,14 @@ void LightscreenWindow::screenshotAction(int mode)
 
   // Populating the option object that will then be passed to the screenshot engine
   ScreenshotEngine::Options options;
-  options.format = mSettings.value("file/format").toInt();
-  options.prefix = mSettings.value("file/prefix").toString();
-  options.directory = QDir(mSettings.value("file/target").toString());
-  options.naming = mSettings.value("file/naming").toInt();
-  options.mode = mode;
-  options.quality = mSettings.value("options/quality" , 100).toInt();
+  options.format     = mSettings.value("file/format").toInt();
+  options.prefix     = mSettings.value("file/prefix").toString();
+  options.directory  = QDir(mSettings.value("file/target").toString());
+  options.naming     = mSettings.value("file/naming").toInt();
+  options.mode       = mode;
+  options.quality    = mSettings.value("options/quality" , 100).toInt();
   options.flipNaming = mSettings.value("options/flip" , false).toBool();
-  options.directX = mSettings.value("options/dxScreen", false).toBool();
+  options.directX    = mSettings.value("options/dxScreen", false).toBool();
 
   // Taking the screenshot and saving the result.
   ScreenshotEngine::Result screenshotResult;
@@ -217,6 +208,7 @@ void LightscreenWindow::screenshotAction(int mode)
 
     lastMode = -1;
   }
+
   // Showing message.
   if (mSettings.value("options/message").toBool())
     showScreenshotMessage(screenshotResult.result, screenshotResult.fileName);
@@ -225,7 +217,7 @@ void LightscreenWindow::screenshotAction(int mode)
     showTrayNotifier(screenshotResult.result);
 
   if (mSettings.value("options/playSound", false).toBool())
-  {
+  { //TODO: Cross-platform -- see freedesktop.org? mac?
     if (screenshotResult.result)
     {
       QSound sound("Media/notify.wav");
@@ -291,12 +283,9 @@ void LightscreenWindow::showScreenshotMessage(bool result, QString fileName)
 void LightscreenWindow::showTrayNotifier(bool result)
 {
   if (result)
-  {
     mTrayIcon->setIcon(QIcon(":/icons/SystemTraySucess"));
-  } else
-  {
+  else
     mTrayIcon->setIcon(QIcon(":/icons/SystemTrayFailure"));
-  }
 
   QTimer::singleShot(1500, this, SLOT(restoreSystemTrayNotifier()));
 }
@@ -384,7 +373,8 @@ void LightscreenWindow::toggleVisibility(QSystemTrayIcon::ActivationReason reaso
       return;
 
     hide();
-  } else
+  }
+  else
   {
     show();
   }
@@ -400,26 +390,22 @@ void LightscreenWindow::updaterDone(bool result)
   msgBox.setText(tr("There's a new version of Lightscreen available.<br>Would you like to see more information?<br>(<em>You can turn this notification off</em>)"));
   msgBox.setIcon(QMessageBox::Information);
 
-  QPushButton *yesButton = msgBox.addButton(QMessageBox::Yes);
-  QPushButton *turnOffButton = msgBox.addButton(tr("Turn Off"),
-      QMessageBox::ActionRole);
-  QPushButton *remindButton = msgBox.addButton(tr("Remind Me Later"),
-      QMessageBox::RejectRole);
+  QPushButton *yesButton     = msgBox.addButton(QMessageBox::Yes);
+  QPushButton *turnOffButton = msgBox.addButton(tr("Turn Off"),        QMessageBox::ActionRole);
+  QPushButton *remindButton  = msgBox.addButton (tr("Remind Me Later"), QMessageBox::RejectRole);
 
   Q_UNUSED(remindButton);
 
   msgBox.exec();
 
   if (msgBox.clickedButton() == yesButton)
-  {
     QDesktopServices::openUrl(QUrl("http://lightscreen.sourceforge.net/new-version"));
-  } else if (msgBox.clickedButton() == turnOffButton)
-  {
+  else if (msgBox.clickedButton() == turnOffButton)
     mSettings.setValue("disableUpdater", true);
-  }
 
 }
 
+// Aliases
 void LightscreenWindow::windowHotkey() { screenshotAction(1); }
 void LightscreenWindow::areaHotkey()   { screenshotAction(2); }
 
@@ -470,6 +456,8 @@ void LightscreenWindow::compressPng(QString fileName)
   args << fileName;
 
   QProcess* optipng = new QProcess(this);
+
+  // Delete the QProcess once it's done.
   connect(optipng, SIGNAL(finished(int, QProcess::ExitStatus)), optipng, SLOT(deleteLater()));
 
   optipng->setWorkingDirectory(QCoreApplication::applicationDirPath());
@@ -587,9 +575,8 @@ void LightscreenWindow::checkForUpdates()
   if (mSettings.value("disableUpdater", false).toBool())
     return;
 
-  mUpdater = new Updater(this);
-  connect(mUpdater, SIGNAL(done(bool)), this, SLOT(updaterDone(bool)));
-  mUpdater->check();
+  connect(Updater::instance(), SIGNAL(done(bool)), this, SLOT(updaterDone(bool)));
+  Updater::instance()->check();
 }
 
 // Events
@@ -597,9 +584,7 @@ void LightscreenWindow::checkForUpdates()
 void LightscreenWindow::changeEvent(QEvent* event)
 {
     if (event->type() == QEvent::LanguageChange)
-    {
         ui.retranslateUi(this);
-    }
 
     QDialog::changeEvent(event);
 }

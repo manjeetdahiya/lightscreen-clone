@@ -1,5 +1,8 @@
-#include <QtGui>
-#include <QRubberBand>
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QPixmap>
 
 #ifdef Q_WS_WIN
 #include "windows.h"

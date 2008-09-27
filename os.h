@@ -4,11 +4,11 @@
 
 namespace os
 {
-  void vistaGlass(QWidget *target);
+  QPixmap getDxScreen();
+  QPixmap grabWindow(WId winId);
   bool singleInstance(QString name);
   void translate(QString language);
-  QPixmap grabWindow(WId winId);
-  QPixmap getDxScreen();
+  void vistaGlass(QWidget *target);
 };
 
 #endif /*OS_H_*/

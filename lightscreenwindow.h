@@ -29,10 +29,10 @@ public slots:
   void screenshotAction(int mode = 0);
   void screenshotActionTriggered(QAction* action);
   void showAbout();
-  void showScreenshotMessage(bool result, QString fileName);
-  void showTrayNotifier(bool result);
   void showHotkeyError(QStringList hotkeys);
   void showOptions();
+  void showScreenshotMessage(bool result, QString fileName);
+  void showTrayNotifier(bool result);
   void toggleVisibility(QSystemTrayIcon::ActivationReason reason = QSystemTrayIcon::DoubleClick);
   void updaterDone(bool result);
   void windowHotkey();
@@ -57,8 +57,6 @@ private:
   QSettings        mSettings;
   QSystemTrayIcon *mTrayIcon;
   Ui::LightscreenWindowClass ui;
-  Updater         *mUpdater;
-
 
 };
 

@@ -1,8 +1,6 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QLocale>
-#include <QImageWriter>
-#include <QAbstractEventDispatcher>
 #include <QSettings>
 
 #include "os.h"

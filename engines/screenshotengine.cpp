@@ -1,10 +1,10 @@
 #include <QApplication>
+#include <QClipboard>
 #include <QDateTime>
+#include <QDebug>
 #include <QDesktopWidget>
 #include <QPixmap>
-#include <QClipboard>
 #include <QSettings>
-#include <QDebug>
 
 #ifdef Q_WS_WIN
 #include <windows.h>
@@ -40,11 +40,6 @@ QPixmap ScreenshotEngine::getActiveWindow()
 
   if (fWindow == GetDesktopWindow())
     return getWholeScreen();
-
-  /*
-    if (IsZoomed(fWindow) != 0) // If the window is maximized, just get the whole screen.
-    return getWholeScreen();
-  */
 
   return os::grabWindow(GetForegroundWindow());
 #else
@@ -99,13 +94,9 @@ QString ScreenshotEngine::getFileName(ScreenshotEngine::Options options)
     path.append(QDir::separator());
 
   if (options.flipNaming)
-  {
     fileName = fileName.arg(path).arg(naming).arg(options.prefix).arg(extension);
-  }
   else
-  {
     fileName = fileName.arg(path).arg(options.prefix).arg(naming).arg(extension);
-  }
 
   return fileName;
 }
@@ -139,25 +130,17 @@ QPixmap ScreenshotEngine::getSelectedArea()
   alreadySelecting = false;
 
   if (result == QDialog::Accepted && selector.getRect().isValid())
-  {
     return screen.copy(selector.getRect());
-  }
   else
-  {
     return QPixmap();
-  }
 }
 
 QPixmap ScreenshotEngine::getWholeScreen(bool directx)
 {
   if (directx)
-  {
     return os::getDxScreen();
-  }
   else
-  {
     return QPixmap::grabWindow(QApplication::desktop()->winId());
-  }
 }
 
 ScreenshotEngine::Result ScreenshotEngine::lastScreenshot()
@@ -201,9 +184,7 @@ ScreenshotEngine::Result ScreenshotEngine::take(ScreenshotEngine::Options option
   result.fileName = fileName;
 
   if (!screenshot.isNull() && QSettings().value("options/clipboard", true).toBool())
-  {
     qApp->clipboard()->setPixmap(screenshot);
-  }
 
   mLastResult = result;
   return result;

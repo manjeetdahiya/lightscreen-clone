@@ -122,7 +122,7 @@ void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
    if (ui.buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
    {
      QMessageBox msgBox;
-     msgBox.setWindowTitle(tr("Lightscreen"));
+     msgBox.setWindowTitle(tr("Lightscreen - Options"));
      msgBox.setText(tr("Restoring the default options will cause you to lose all of your current configuration."));
      msgBox.setIcon(QMessageBox::Warning);
 
@@ -252,9 +252,7 @@ void OptionsDialog::trayRelatedStateChange(int state)
   ui.messageCheckBox->setEnabled(state);
 
   if (!state)
-  {
     ui.messageCheckBox->setChecked(false);
-  }
 }
 
 /*
@@ -291,13 +289,9 @@ void OptionsDialog::loadSettings()
   ui.warnHideCheckBox->setChecked(!settings.value("disableHideAlert", false).toBool());
 
   if (QFile::exists("optipng.exe")) //TODO: Change value when cross-platform
-  {
     ui.optiPngCheckBox->setEnabled(true);
-  }
   else
-  {
     ui.optiPngCheckBox->setEnabled(false);
-  }
 
   QString lang = settings.value("language").toString();
   int index = ui.languageComboBox->findText(lang, Qt::MatchExactly | Qt::MatchCaseSensitive);
@@ -435,9 +429,7 @@ bool OptionsDialog::hotkeyCollision()
 void OptionsDialog::changeEvent(QEvent* event)
 {
     if (event->type() == QEvent::LanguageChange)
-    {
         ui.retranslateUi(this);
-    }
 
     QDialog::changeEvent(event);
 }
