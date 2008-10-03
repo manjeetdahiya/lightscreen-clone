@@ -14,8 +14,8 @@
 #include "../tools/globalshortcut/globalshortcutmanager.h"
 
 //TODO: QWT: Fix Printscreen
-HotkeyWidget::HotkeyWidget(QWidget *parent)
-    : QPushButton(parent)
+HotkeyWidget::HotkeyWidget(QWidget *parent) :
+  QPushButton(parent)
 {
   mHotkey = QKeySequence();
   mShowingError = false;
@@ -36,10 +36,10 @@ QKeySequence HotkeyWidget::hotkey()
 
 void HotkeyWidget::setHotkeyText()
 {
-    QString hotkeyText = mHotkey.toString(QKeySequence::NativeText);
+  QString hotkeyText = mHotkey.toString(QKeySequence::NativeText);
 
-    setText(hotkeyText);
-    parentWidget()->setFocus();
+  setText(hotkeyText);
+  parentWidget()->setFocus();
 }
 
 bool HotkeyWidget::event(QEvent *event)
@@ -60,7 +60,7 @@ bool HotkeyWidget::event(QEvent *event)
   }
   if (event->type() == QEvent::KeyPress)
   {
-    QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+    QKeyEvent *keyEvent = static_cast<QKeyEvent*> (event);
 
     if (isModifier(keyEvent->key()))
       return true;
@@ -79,30 +79,30 @@ bool HotkeyWidget::event(QEvent *event)
 bool HotkeyWidget::winEvent(MSG *message, long *result)
 {
   qDebug() << "winEvent";
-// TODO: Not working!
+  // TODO: Not working!
   /*if (message->message == WM_KEYUP || message->message == WM_SYSKEYUP)
-  { // Windows sends the printscreen key a syskey event, and Qt won't catch it.
+   { // Windows sends the printscreen key a syskey event, and Qt won't catch it.
 
-    int vk = message->wParam;
+   int vk = message->wParam;
 
-    if (vk == VK_SNAPSHOT)
-    {
-      QFlags<Qt::KeyboardModifier> keyboardModifiers;
+   if (vk == VK_SNAPSHOT)
+   {
+   QFlags<Qt::KeyboardModifier> keyboardModifiers;
 
-      if (GetAsyncKeyState(VK_CONTROL) < 0)
-        keyboardModifiers = keyboardModifiers | Qt::ControlModifier;
-      if (GetAsyncKeyState(VK_SHIFT) < 0)
-        keyboardModifiers = keyboardModifiers | Qt::ShiftModifier;
-      if (GetAsyncKeyState(VK_LMENU) < 0)
-        keyboardModifiers = keyboardModifiers | Qt::AltModifier;
+   if (GetAsyncKeyState(VK_CONTROL) < 0)
+   keyboardModifiers = keyboardModifiers | Qt::ControlModifier;
+   if (GetAsyncKeyState(VK_SHIFT) < 0)
+   keyboardModifiers = keyboardModifiers | Qt::ShiftModifier;
+   if (GetAsyncKeyState(VK_LMENU) < 0)
+   keyboardModifiers = keyboardModifiers | Qt::AltModifier;
 
-      QCoreApplication::postEvent(this, new QKeyEvent(QEvent::KeyPress, Qt::Key_Print, keyboardModifiers));
-    }
+   QCoreApplication::postEvent(this, new QKeyEvent(QEvent::KeyPress, Qt::Key_Print, keyboardModifiers));
+   }
 
-    qDebug() << "winEvent WM_KEYUP or SYSKEUP! - " << vk;
+   qDebug() << "winEvent WM_KEYUP or SYSKEUP! - " << vk;
 
-    return false;
-  }*/
+   return false;
+   }*/
 
   return false;
 }
@@ -128,7 +128,7 @@ void HotkeyWidget::hideError()
 QKeySequence HotkeyWidget::getKeySequence(QKeyEvent* event) const
 {
   return QKeySequence((isValid(event->key()) ? event->key() : 0)
-                      + (event->modifiers() & ~Qt::KeypadModifier));
+      + (event->modifiers() & ~Qt::KeypadModifier));
 }
 
 /**
@@ -136,7 +136,8 @@ QKeySequence HotkeyWidget::getKeySequence(QKeyEvent* event) const
  */
 bool HotkeyWidget::isValid(int key) const
 {
-  switch (key) {
+  switch (key)
+  {
   case 0:
   case Qt::Key_unknown:
     return false;
@@ -150,7 +151,8 @@ bool HotkeyWidget::isValid(int key) const
  */
 bool HotkeyWidget::isModifier(int key) const
 {
-  switch (key) {
+  switch (key)
+  {
   case Qt::Key_Shift:
   case Qt::Key_Control:
   case Qt::Key_Meta:

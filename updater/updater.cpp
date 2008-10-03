@@ -6,7 +6,8 @@
 
 #define LS_CURRENT_VERSION 0.6
 
-Updater::Updater(QObject *parent) : QObject(parent)
+Updater::Updater(QObject *parent) :
+  QObject(parent)
 {
   connect(&mHttp, SIGNAL(done(bool)), this, SLOT(httpDone(bool)));
 }
@@ -16,7 +17,8 @@ Updater::Updater(QObject *parent) : QObject(parent)
  */
 bool Updater::check()
 {
-  if (QSettings().value("lastUpdateCheck").toInt()+7 > QDate::currentDate().dayOfYear())
+  if (QSettings().value("lastUpdateCheck").toInt() + 7
+      > QDate::currentDate().dayOfYear())
     return false; // If 7 days have not passed since the last update check.
 
   mHttp.setHost("lightscreen.sourceforge.net");

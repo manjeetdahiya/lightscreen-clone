@@ -13,7 +13,7 @@
 #include "../dialogs/areaselector.h"
 #include "screenshotengine.h"
 
-#include "../os.h"
+#include "../tools/os.h"
 
 ScreenshotEngine::ScreenshotEngine()
 {
@@ -36,10 +36,10 @@ QPixmap ScreenshotEngine::getActiveWindow()
   HWND fWindow = GetForegroundWindow();
 
   if (fWindow == NULL)
-    return QPixmap();
+  return QPixmap();
 
   if (fWindow == GetDesktopWindow())
-    return getWholeScreen();
+  return getWholeScreen();
 
   return os::grabWindow(GetForegroundWindow());
 #else
@@ -60,45 +60,44 @@ QString ScreenshotEngine::getFileName(ScreenshotEngine::Options options)
   {
   case 0: // Numeric
     // Iterating through the folder to find the largest numeric naming.
-    foreach(QString file, options.directory.entryList(QDir::Files))
+    foreach(QString file, options.directory.entryList(QDir::Files)){
+    if (file.contains(options.prefix))
     {
-      if (file.contains(options.prefix))
-      {
-        file.chop(file.size() - file.lastIndexOf("."));
-        file.remove(options.prefix);
+      file.chop(file.size() - file.lastIndexOf("."));
+      file.remove(options.prefix);
 
-        if (file.toInt() > naming_largest)
-          naming_largest = file.toInt();
-      }
+      if (file.toInt()> naming_largest)
+      naming_largest = file.toInt();
     }
-
-    naming = naming.arg(naming_largest + 1);
-    break;
-  case 1: // Timestamp
-    naming = naming.arg(QDateTime::currentDateTime().toTime_t());
-    break;
-  case 2: // Date
-    naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
-    break;
   }
 
-  // %1: Path
-  // %2-%3: Naming / Prefix
-  // %4: File extension
-  QString fileName("%1%2%3.%4");
-  QString extension = QString(getFormat(options.format)).toLower();
-  QString path = QDir::toNativeSeparators(options.directory.path());
+  naming = naming.arg(naming_largest + 1);
+  break;
+  case 1: // Timestamp
+  naming = naming.arg(QDateTime::currentDateTime().toTime_t());
+  break;
+  case 2: // Date
+  naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
+  break;
+}
 
-  // Cleanup
-  if (path.at(path.size()-1) != QDir::separator() && !path.isEmpty())
-    path.append(QDir::separator());
+// %1: Path
+// %2-%3: Naming / Prefix
+// %4: File extension
+QString fileName("%1%2%3.%4");
+QString extension = QString(getFormat(options.format)).toLower();
+QString path = QDir::toNativeSeparators(options.directory.path());
 
-  if (options.flipNaming)
-    fileName = fileName.arg(path).arg(naming).arg(options.prefix).arg(extension);
-  else
-    fileName = fileName.arg(path).arg(options.prefix).arg(naming).arg(extension);
+// Cleanup
+if (path.at(path.size()-1) != QDir::separator() && !path.isEmpty())
+path.append(QDir::separator());
 
-  return fileName;
+if (options.flipNaming)
+fileName = fileName.arg(path).arg(naming).arg(options.prefix).arg(extension);
+else
+fileName = fileName.arg(path).arg(options.prefix).arg(naming).arg(extension);
+
+return fileName;
 }
 
 char* ScreenshotEngine::getFormat(int format)
@@ -148,7 +147,8 @@ ScreenshotEngine::Result ScreenshotEngine::lastScreenshot()
   return mLastResult;
 }
 
-ScreenshotEngine::Result ScreenshotEngine::take(ScreenshotEngine::Options options)
+ScreenshotEngine::Result ScreenshotEngine::take(
+    ScreenshotEngine::Options options)
 {
   if (!mEnabled)
   {
@@ -176,14 +176,16 @@ ScreenshotEngine::Result ScreenshotEngine::take(ScreenshotEngine::Options option
 
   QString fileName = getFileName(options);
 
-  bool br = screenshot.save(fileName, getFormat(options.format), options.quality);
+  bool br = screenshot.save(fileName, getFormat(options.format),
+      options.quality);
 
   ScreenshotEngine::Result result;
-  result.options  = options;
-  result.result   = br;
+  result.options = options;
+  result.result = br;
   result.fileName = fileName;
 
-  if (!screenshot.isNull() && QSettings().value("options/clipboard", true).toBool())
+  if (!screenshot.isNull()
+      && QSettings().value("options/clipboard", true).toBool())
     qApp->clipboard()->setPixmap(screenshot);
 
   mLastResult = result;

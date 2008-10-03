@@ -26,7 +26,7 @@
        <item>
         <layout class="QGridLayout" >
          <item row="0" column="0" >
-          <widget class="QLabel" name="label_4" >
+          <widget class="QLabel" name="directoryLabel" >
            <property name="text" >
             <string>Directory:</string>
            </property>
@@ -46,7 +46,7 @@
           </widget>
          </item>
          <item row="1" column="0" >
-          <widget class="QLabel" name="label_2" >
+          <widget class="QLabel" name="filenameLabel" >
            <property name="toolTip" >
             <string>The prefix for the screenshot file</string>
            </property>
@@ -76,7 +76,7 @@
           </widget>
          </item>
          <item row="2" column="0" >
-          <widget class="QLabel" name="label" >
+          <widget class="QLabel" name="formatLabel" >
            <property name="toolTip" >
             <string>The file format for the screenshot</string>
            </property>
@@ -92,7 +92,7 @@
           </widget>
          </item>
          <item row="3" column="0" >
-          <widget class="QLabel" name="label_6" >
+          <widget class="QLabel" name="delayLabel" >
            <property name="text" >
             <string>Delay:</string>
            </property>
@@ -418,7 +418,7 @@ p, li { white-space: pre-wrap; }
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout" >
          <item>
-          <widget class="QLabel" name="label_3" >
+          <widget class="QLabel" name="notifyLabel" >
            <property name="text" >
             <string>Notify with:</string>
            </property>
@@ -452,7 +452,7 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5" >
          <item>
-          <widget class="QLabel" name="label_11" >
+          <widget class="QLabel" name="qualityLabel" >
            <property name="text" >
             <string>Screenshot Quality:</string>
            </property>
@@ -504,13 +504,6 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
          </property>
          <property name="text" >
           <string>Optimize PNG screenshots.</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="vistaGlassCheckBox" >
-         <property name="text" >
-          <string>Use transparent windows.</string>
          </property>
         </widget>
        </item>

@@ -39,7 +39,10 @@ void AreaSelector::drawBackground()
 
   //Drawing the explanatory text.
   QRect textRect = desktop.rect();
-  QString text = tr("Lightscreen screen area mode:\nUse your mouse to draw a rectangle to screenshot or exit pressing\nany key or using the right or middle mouse buttons.");
+  QString
+      text =
+          tr(
+              "Lightscreen screen area mode:\nUse your mouse to draw a rectangle to screenshot or exit pressing\nany key or using the right or middle mouse buttons.");
   textRect.setHeight(qRound(desktop.rect().height() / 10)); // We get a decently sized rect where the text should be drawn (centered)
 
   // We draw the white contrasting background for the text, using the same text and options to get the boundingRect that the text will have.
@@ -86,13 +89,14 @@ bool AreaSelector::event(QEvent *event)
   {
     setWindowState(Qt::WindowFullScreen);
   }
-  if (event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::KeyPress)
+  if (event->type() == QEvent::MouseButtonRelease || event->type()
+      == QEvent::KeyPress)
   {
     accept();
   }
   if (event->type() == QEvent::MouseButtonPress)
   {
-    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+    QMouseEvent *mouseEvent = static_cast<QMouseEvent*> (event);
 
     if (mouseEvent->button() != Qt::LeftButton)
       reject();
@@ -102,7 +106,7 @@ bool AreaSelector::event(QEvent *event)
   }
   if (event->type() == QEvent::MouseMove)
   {
-    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+    QMouseEvent *mouseEvent = static_cast<QMouseEvent*> (event);
     mRect = QRect(mOrigin, mouseEvent->pos()).normalized();
     update();
   }

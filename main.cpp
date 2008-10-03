@@ -3,7 +3,7 @@
 #include <QLocale>
 #include <QSettings>
 
-#include "os.h"
+#include "tools/os.h"
 #include "lightscreenwindow.h"
 
 #include <stdio.h>
@@ -34,10 +34,11 @@ int main(int argc, char *argv[])
   qInstallMsgHandler(myMessageOutput);
 
   QApplication a(argc, argv);
-  a.setOrganizationName("K");
+  a.setOrganizationName("Lightscreen");
   a.setApplicationName("Lightscreen");
   a.setApplicationVersion("0.6-dev");
   a.setQuitOnLastWindowClosed(false);
+  QSettings::setDefaultFormat(QSettings::IniFormat);
 
   os::singleInstance("LightscreenN");
 

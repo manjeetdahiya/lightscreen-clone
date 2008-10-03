@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = lightscreen
-HEADERS += os.h \
+HEADERS += tools/os.h \
     updater/updater.h \
     dialogs/areaselector.h \
     engines/screenshotengine.h \
@@ -8,7 +8,7 @@ HEADERS += os.h \
     dialogs/aboutdialog.h \
     widgets/hotkeywidget.h \
     lightscreenwindow.h
-SOURCES += os.cpp \
+SOURCES += tools/os.cpp \
     updater/updater.cpp \
     dialogs/areaselector.cpp \
     engines/screenshotengine.cpp \

@@ -9,7 +9,7 @@
 #include <QDebug>
 
 #include "optionsdialog.h"
-#include "../os.h"
+#include "../tools/os.h"
 
 OptionsDialog::OptionsDialog(QWidget *parent) :
   QDialog(parent)
@@ -20,72 +20,54 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   QSettings settings;
 
-  // Importing settings from previous versions. TODO: QWT: WTF?
-  if (settings.contains("application/optionsLastTab"))
-  {
-    settings.remove("application");
-    settings.setValue("actions/screen/alt", settings.value("hotkey/modifiers/alt", false).toBool());
-    settings.setValue("actions/screen/ctrl", settings.value("hotkey/modifiers/ctrl", false).toBool());
-    settings.setValue("actions/screen/shift", settings.value("hotkey/modifiers/shift", false).toBool());
-    settings.setValue("actions/screen/index", settings.value("hotkey/key", 0).toInt());
-    settings.remove("hotkey");
-    settings.remove("options/mode");
-  }
-
   if (!(settings.contains("options/tray")))
   { // If there are no settings, get rid of the cancel button so that the user is forced to save settings.
     ui.buttonBox->clear();
     ui.buttonBox->addButton(QDialogButtonBox::Ok);
   }
 
-  connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*))   , this, SLOT(dialogButtonClicked(QAbstractButton*)));
+  connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(dialogButtonClicked(QAbstractButton*)));
 
-  connect(ui.flipPrefixPushButton, SIGNAL(toggled(bool))   , this, SLOT(flipButtonToggled(bool)));
+  connect(ui.flipPrefixPushButton, SIGNAL(toggled(bool)), this, SLOT(flipButtonToggled(bool)));
 
   connect(ui.aboutPushButton, SIGNAL(clicked()), parent, SLOT(showAbout()));
 
-  connect(ui.screenCheckBox, SIGNAL(toggled(bool))   , ui.screenHotkeyWidget, SLOT(setEnabled(bool)));
-  connect(ui.areaCheckBox  , SIGNAL(toggled(bool))   , ui.areaHotkeyWidget  , SLOT(setEnabled(bool)));
-  connect(ui.windowCheckBox, SIGNAL(toggled(bool))   , ui.windowHotkeyWidget, SLOT(setEnabled(bool)));
-  connect(ui.openCheckBox  , SIGNAL(toggled(bool))   , ui.openHotkeyWidget  , SLOT(setEnabled(bool)));
+  connect(ui.screenCheckBox, SIGNAL(toggled(bool)), ui.screenHotkeyWidget, SLOT(setEnabled(bool)));
+  connect(ui.areaCheckBox, SIGNAL(toggled(bool)), ui.areaHotkeyWidget, SLOT(setEnabled(bool)));
+  connect(ui.windowCheckBox, SIGNAL(toggled(bool)), ui.windowHotkeyWidget, SLOT(setEnabled(bool)));
+  connect(ui.openCheckBox, SIGNAL(toggled(bool)), ui.openHotkeyWidget, SLOT(setEnabled(bool)));
   connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
 
   // Getting the language entries
-  QDir lang(QCoreApplication::applicationDirPath()+QDir::separator()+"lang", "*.qm");
+  QDir lang(
+      QCoreApplication::applicationDirPath() + QDir::separator() + "lang",
+      "*.qm");
   lang.setFilter(QDir::Files);
 
   QStringList entries;
 
   entries << "English"; // Set here and not the .ui because it the items would get reset when calling retranslateUi
-  foreach (QString entry, lang.entryList())
-  {
-    entry.chop(3); // Remove the ".em"
-    entry[0] = entry.at(0).toUpper(); // Make first char uppercase
-    entries << entry;
-  }
+  foreach (QString entry, lang.entryList()){
+  entry.chop(3); // Remove the ".em"
+  entry[0] = entry.at(0).toUpper(); // Make first char uppercase
+  entries << entry;
+}
 
-  ui.languageComboBox->addItems(entries);
+ui.languageComboBox->addItems(entries);
 
-  connect(ui.languageComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
+connect(ui.languageComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
 
-  loadSettings();
+loadSettings();
 
-  connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
+connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
 
-  connect(ui.startupCheckBox, SIGNAL(stateChanged(int)), this, SLOT(startupRelatedStateChange(int)));
-  connect(ui.trayCheckBox, SIGNAL(stateChanged(int)), this, SLOT(trayRelatedStateChange(int)));
+connect(ui.startupCheckBox, SIGNAL(stateChanged(int)), this, SLOT(startupRelatedStateChange(int)));
+connect(ui.trayCheckBox, SIGNAL(stateChanged(int)), this, SLOT(trayRelatedStateChange(int)));
 
-  connect(ui.browsePushButton, SIGNAL(clicked()), this, SLOT(browse()));
+connect(ui.browsePushButton, SIGNAL(clicked()), this, SLOT(browse()));
 
-  startupRelatedStateChange(ui.startupCheckBox->checkState());
-  trayRelatedStateChange(ui.trayCheckBox->checkState());
-
-  if (QSysInfo::WindowsVersion != QSysInfo::WV_VISTA)
-  {
-    ui.vistaGlassCheckBox->setVisible(false);
-    ui.vistaGlassCheckBox->setChecked(false);
-  }
-
+startupRelatedStateChange(ui.startupCheckBox->checkState());
+trayRelatedStateChange(ui.trayCheckBox->checkState());
 }
 
 /*
@@ -96,8 +78,8 @@ void OptionsDialog::accepted()
 {
   if (hotkeyCollision())
   {
-    QMessageBox::critical(0, tr("Hotkey conflict"),
-        tr("You have assigned the same hotkeys to more than one action."));
+    QMessageBox::critical(0, tr("Hotkey conflict"), tr(
+        "You have assigned the same hotkeys to more than one action."));
     return;
   }
 
@@ -107,8 +89,8 @@ void OptionsDialog::accepted()
 
 void OptionsDialog::browse()
 {
-  QString fileName = QFileDialog::getExistingDirectory(this,
-      tr("Select where you want to save the screenshots"),
+  QString fileName = QFileDialog::getExistingDirectory(this, tr(
+      "Select where you want to save the screenshots"),
       ui.targetLineEdit->text());
 
   if (fileName.isEmpty())
@@ -119,26 +101,30 @@ void OptionsDialog::browse()
 
 void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
 {
-   if (ui.buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
-   {
-     QMessageBox msgBox;
-     msgBox.setWindowTitle(tr("Lightscreen - Options"));
-     msgBox.setText(tr("Restoring the default options will cause you to lose all of your current configuration."));
-     msgBox.setIcon(QMessageBox::Warning);
+  if (ui.buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole)
+  {
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Lightscreen - Options"));
+    msgBox.setText(
+        tr(
+            "Restoring the default options will cause you to lose all of your current configuration."));
+    msgBox.setIcon(QMessageBox::Warning);
 
-     QPushButton *restoreButton     = msgBox.addButton(tr("Restore"), QMessageBox::ActionRole);
-     QPushButton *dontRestoreButton = msgBox.addButton(tr("Don't Restore"), QMessageBox::ActionRole);
+    QPushButton *restoreButton = msgBox.addButton(tr("Restore"),
+        QMessageBox::ActionRole);
+    QPushButton *dontRestoreButton = msgBox.addButton(tr("Don't Restore"),
+        QMessageBox::ActionRole);
 
-     msgBox.exec();
+    msgBox.exec();
 
-     Q_UNUSED(restoreButton)
+    Q_UNUSED(restoreButton)
 
-     if (msgBox.clickedButton() == dontRestoreButton)
-         return;
+    if (msgBox.clickedButton() == dontRestoreButton)
+      return;
 
-     QSettings().clear();
-     accept();
-   }
+    QSettings().clear();
+    accept();
+  }
 }
 
 void OptionsDialog::flipButtonToggled(bool checked)
@@ -163,10 +149,9 @@ void OptionsDialog::flipButtonToggled(bool checked)
 }
 
 void OptionsDialog::languageChange(QString language)
-{ //TODO: Recalculate window size when switching translations
+{
   os::translate(language);
 }
-
 
 void OptionsDialog::openUrl(QString url)
 {
@@ -185,56 +170,53 @@ void OptionsDialog::saveSettings()
   settings.endGroup();
 
   settings.beginGroup("options");
-  settings.setValue("startup"    , ui.startupCheckBox->isChecked());
+  settings.setValue("startup", ui.startupCheckBox->isChecked());
   settings.setValue("startupHide", ui.startupHideCheckBox->isChecked());
-  settings.setValue("hide"       , ui.hideCheckBox->isChecked());
-  settings.setValue("delay"      , ui.delaySpinBox->value());
-  settings.setValue("flip"       , ui.flipPrefixPushButton->isChecked());
-  settings.setValue("tray"       , ui.trayCheckBox->isChecked());
-  settings.setValue("message"    , ui.messageCheckBox->isChecked());
-  settings.setValue("quality"    , ui.qualitySlider->value());
-  settings.setValue("playSound"  , ui.playSoundCheckBox->isChecked());
+  settings.setValue("hide", ui.hideCheckBox->isChecked());
+  settings.setValue("delay", ui.delaySpinBox->value());
+  settings.setValue("flip", ui.flipPrefixPushButton->isChecked());
+  settings.setValue("tray", ui.trayCheckBox->isChecked());
+  settings.setValue("message", ui.messageCheckBox->isChecked());
+  settings.setValue("quality", ui.qualitySlider->value());
+  settings.setValue("playSound", ui.playSoundCheckBox->isChecked());
   // We save the explicit string because addition/removal of language files can cause it to change
-  settings.setValue("language"   , ui.languageComboBox->currentText());
+  settings.setValue("language", ui.languageComboBox->currentText());
   // This settings is inverted because the first iteration of the Updater did not have a settings but instead relied on the messagebox choice of the user.
   settings.setValue("disableUpdater", !ui.updaterCheckBox->isChecked());
 
   // Advanced
   settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
-  settings.setValue("dxScreen"   , ui.dxScreenCheckBox->isChecked());
-  settings.setValue("clipboard"  , ui.clipboardCheckBox->isChecked());
-  settings.setValue("vistaGlass" , ui.vistaGlassCheckBox->isChecked());
-  settings.setValue("optipng"    , ui.optiPngCheckBox->isChecked());
+  settings.setValue("dxScreen", ui.dxScreenCheckBox->isChecked());
+  settings.setValue("clipboard", ui.clipboardCheckBox->isChecked());
+  settings.setValue("optipng", ui.optiPngCheckBox->isChecked());
   settings.endGroup();
 
   settings.beginGroup("actions");
 
-
   settings.beginGroup("screen");
-    settings.setValue("enabled", ui.screenCheckBox->isChecked());
-    settings.setValue("hotkey" , ui.screenHotkeyWidget->hotkey());
+  settings.setValue("enabled", ui.screenCheckBox->isChecked());
+  settings.setValue("hotkey", ui.screenHotkeyWidget->hotkey());
   settings.endGroup();
 
   settings.beginGroup("area");
-  settings.setValue("enabled" , ui.areaCheckBox->isChecked());
-    settings.setValue("hotkey", ui.areaHotkeyWidget->hotkey());
+  settings.setValue("enabled", ui.areaCheckBox->isChecked());
+  settings.setValue("hotkey", ui.areaHotkeyWidget->hotkey());
   settings.endGroup();
 
   settings.beginGroup("window");
-  settings.setValue("enabled" , ui.windowCheckBox->isChecked());
-    settings.setValue("hotkey", ui.windowHotkeyWidget->hotkey());
+  settings.setValue("enabled", ui.windowCheckBox->isChecked());
+  settings.setValue("hotkey", ui.windowHotkeyWidget->hotkey());
   settings.endGroup();
 
   settings.beginGroup("open");
-  settings.setValue("enabled" , ui.openCheckBox->isChecked());
-    settings.setValue("hotkey", ui.openHotkeyWidget->hotkey());
+  settings.setValue("enabled", ui.openCheckBox->isChecked());
+  settings.setValue("hotkey", ui.openHotkeyWidget->hotkey());
   settings.endGroup();
 
   settings.beginGroup("directory");
-  settings.setValue("enabled" , ui.directoryCheckBox->isChecked());
-    settings.setValue("hotkey", ui.directoryHotkeyWidget->hotkey());
+  settings.setValue("enabled", ui.directoryCheckBox->isChecked());
+  settings.setValue("hotkey", ui.directoryHotkeyWidget->hotkey());
   settings.endGroup();
-
 
   settings.endGroup();
 }
@@ -266,7 +248,8 @@ void OptionsDialog::loadSettings()
   ui.formatComboBox->setCurrentIndex(settings.value("format", 1).toInt());
   ui.prefixLineEdit->setText(settings.value("prefix", "screenshot.").toString());
   ui.namingComboBox->setCurrentIndex(settings.value("naming", 0).toInt());
-  ui.targetLineEdit->setText(settings.value("target").toString());
+  ui.targetLineEdit->setText(settings.value("target", QDir::homePath()
+      + QDir::separator() + "screenshots").toString()); // Defaults to $HOME$/screenshots
   settings.endGroup();
 
   settings.beginGroup("options");
@@ -279,14 +262,15 @@ void OptionsDialog::loadSettings()
   ui.messageCheckBox->setChecked(settings.value("message").toBool());
   ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
   ui.playSoundCheckBox->setChecked(settings.value("playSound", false).toBool());
-  ui.updaterCheckBox->setChecked(!settings.value("disableUpdater", false).toBool());
+  ui.updaterCheckBox->setChecked(
+      !settings.value("disableUpdater", false).toBool());
 
   // Advanced
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", true).toBool());
-  ui.vistaGlassCheckBox->setChecked(settings.value("vistaGlass", true).toBool());
   ui.dxScreenCheckBox->setChecked(settings.value("dxScreen", false).toBool());
   ui.optiPngCheckBox->setChecked(settings.value("optipng", true).toBool());
-  ui.warnHideCheckBox->setChecked(!settings.value("disableHideAlert", false).toBool());
+  ui.warnHideCheckBox->setChecked(
+      !settings.value("disableHideAlert", false).toBool());
 
   if (QFile::exists("optipng.exe")) //TODO: Change value when cross-platform
     ui.optiPngCheckBox->setEnabled(true);
@@ -294,7 +278,8 @@ void OptionsDialog::loadSettings()
     ui.optiPngCheckBox->setEnabled(false);
 
   QString lang = settings.value("language").toString();
-  int index = ui.languageComboBox->findText(lang, Qt::MatchExactly | Qt::MatchCaseSensitive);
+  int index = ui.languageComboBox->findText(lang, Qt::MatchExactly
+      | Qt::MatchCaseSensitive);
 
   if (index == -1)
     index = 0; // If the data is invalid then revert to the default language (English)
@@ -305,8 +290,6 @@ void OptionsDialog::loadSettings()
 
   settings.beginGroup("actions");
 
-  index = 0; // reuse
-
   // This toggle is for the first run
   ui.screenCheckBox->toggle();
   ui.areaCheckBox->toggle();
@@ -315,30 +298,34 @@ void OptionsDialog::loadSettings()
   ui.directoryCheckBox->toggle();
 
   settings.beginGroup("screen");
-    ui.screenCheckBox->setChecked(settings.value("enabled", true).toBool());
-    ui.screenHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::Key_Print)).value<QKeySequence>());
+  ui.screenCheckBox->setChecked(settings.value("enabled", true).toBool());
+  ui.screenHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(
+      Qt::Key_Print)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("area");
-    ui.areaCheckBox->setChecked(settings.value("enabled").toBool());
-    ui.areaHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_Print)).value<QKeySequence>());
+  ui.areaCheckBox->setChecked(settings.value("enabled").toBool());
+  ui.areaHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL
+      + Qt::Key_Print)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("window");
-    ui.windowCheckBox->setChecked(settings.value("enabled").toBool());
-    ui.windowHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::SHIFT + Qt::Key_Print)).value<QKeySequence>());
+  ui.windowCheckBox->setChecked(settings.value("enabled").toBool());
+  ui.windowHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(
+      Qt::SHIFT + Qt::Key_Print)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("open");
-    ui.openCheckBox->setChecked(settings.value("enabled").toBool());
-    ui.openHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_PageUp)).value<QKeySequence>());
+  ui.openCheckBox->setChecked(settings.value("enabled").toBool());
+  ui.openHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL
+      + Qt::Key_PageUp)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("directory");
-    ui.directoryCheckBox->setChecked(settings.value("enabled").toBool());
-    ui.directoryHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::SHIFT + Qt::Key_PageUp)).value<QKeySequence>());
+  ui.directoryCheckBox->setChecked(settings.value("enabled").toBool());
+  ui.directoryHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(
+      Qt::SHIFT + Qt::Key_PageUp)).value<QKeySequence> ());
   settings.endGroup();
-
 
   settings.endGroup();
 }
@@ -349,77 +336,97 @@ bool OptionsDialog::hotkeyCollision()
 
   if (ui.screenCheckBox->isChecked())
   {
-    if (ui.screenHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey() && ui.areaCheckBox->isChecked())
+    if (ui.screenHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey()
+        && ui.areaCheckBox->isChecked())
       return true;
 
-    if (ui.screenHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey() && ui.windowCheckBox->isChecked())
+    if (ui.screenHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey()
+        && ui.windowCheckBox->isChecked())
       return true;
 
-    if (ui.screenHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey() && ui.openCheckBox->isChecked())
+    if (ui.screenHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey()
+        && ui.openCheckBox->isChecked())
       return true;
 
-    if (ui.screenHotkeyWidget->hotkey() == ui.directoryHotkeyWidget->hotkey() && ui.directoryCheckBox->isChecked())
-              return true;
+    if (ui.screenHotkeyWidget->hotkey() == ui.directoryHotkeyWidget->hotkey()
+        && ui.directoryCheckBox->isChecked())
+      return true;
   }
 
   if (ui.areaCheckBox->isChecked())
   {
-    if (ui.areaHotkeyWidget->hotkey() == ui.screenHotkeyWidget->hotkey() && ui.screenCheckBox->isChecked())
+    if (ui.areaHotkeyWidget->hotkey() == ui.screenHotkeyWidget->hotkey()
+        && ui.screenCheckBox->isChecked())
       return true;
 
-    if (ui.areaHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey() && ui.windowCheckBox->isChecked())
+    if (ui.areaHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey()
+        && ui.windowCheckBox->isChecked())
       return true;
 
-    if (ui.areaHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey() && ui.openCheckBox->isChecked())
+    if (ui.areaHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey()
+        && ui.openCheckBox->isChecked())
       return true;
 
-    if (ui.areaHotkeyWidget->hotkey() == ui.directoryHotkeyWidget->hotkey() && ui.directoryCheckBox->isChecked())
+    if (ui.areaHotkeyWidget->hotkey() == ui.directoryHotkeyWidget->hotkey()
+        && ui.directoryCheckBox->isChecked())
       return true;
   }
 
   if (ui.windowCheckBox->isChecked())
   {
-    if (ui.windowHotkeyWidget->hotkey() == ui.screenHotkeyWidget->hotkey() && ui.screenCheckBox->isChecked())
+    if (ui.windowHotkeyWidget->hotkey() == ui.screenHotkeyWidget->hotkey()
+        && ui.screenCheckBox->isChecked())
       return true;
 
-    if (ui.windowHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey() && ui.areaCheckBox->isChecked())
+    if (ui.windowHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey()
+        && ui.areaCheckBox->isChecked())
       return true;
 
-    if (ui.windowHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey() && ui.openCheckBox->isChecked())
+    if (ui.windowHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey()
+        && ui.openCheckBox->isChecked())
       return true;
 
-    if (ui.windowHotkeyWidget->hotkey() == ui.directoryHotkeyWidget->hotkey() && ui.directoryCheckBox->isChecked())
-          return true;
+    if (ui.windowHotkeyWidget->hotkey() == ui.directoryHotkeyWidget->hotkey()
+        && ui.directoryCheckBox->isChecked())
+      return true;
   }
 
   if (ui.openCheckBox->isChecked())
   {
-    if (ui.openHotkeyWidget->hotkey() == ui.screenHotkeyWidget->hotkey() && ui.screenCheckBox->isChecked())
+    if (ui.openHotkeyWidget->hotkey() == ui.screenHotkeyWidget->hotkey()
+        && ui.screenCheckBox->isChecked())
       return true;
 
-    if (ui.openHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey() && ui.areaCheckBox->isChecked())
+    if (ui.openHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey()
+        && ui.areaCheckBox->isChecked())
       return true;
 
-    if (ui.openHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey() && ui.windowCheckBox->isChecked())
+    if (ui.openHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey()
+        && ui.windowCheckBox->isChecked())
       return true;
 
-    if (ui.openHotkeyWidget->hotkey() == ui.directoryHotkeyWidget->hotkey() && ui.directoryCheckBox->isChecked())
+    if (ui.openHotkeyWidget->hotkey() == ui.directoryHotkeyWidget->hotkey()
+        && ui.directoryCheckBox->isChecked())
       return true;
 
   }
 
   if (ui.directoryCheckBox->isChecked())
   {
-    if (ui.directoryHotkeyWidget->hotkey() == ui.screenHotkeyWidget->hotkey() && ui.screenCheckBox->isChecked())
+    if (ui.directoryHotkeyWidget->hotkey() == ui.screenHotkeyWidget->hotkey()
+        && ui.screenCheckBox->isChecked())
       return true;
 
-    if (ui.directoryHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey() && ui.areaCheckBox->isChecked())
+    if (ui.directoryHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey()
+        && ui.areaCheckBox->isChecked())
       return true;
 
-    if (ui.directoryHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey() && ui.windowCheckBox->isChecked())
+    if (ui.directoryHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey()
+        && ui.windowCheckBox->isChecked())
       return true;
 
-    if (ui.directoryHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey() && ui.openCheckBox->isChecked())
+    if (ui.directoryHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey()
+        && ui.openCheckBox->isChecked())
       return true;
   }
 
@@ -428,8 +435,8 @@ bool OptionsDialog::hotkeyCollision()
 
 void OptionsDialog::changeEvent(QEvent* event)
 {
-    if (event->type() == QEvent::LanguageChange)
-        ui.retranslateUi(this);
+  if (event->type() == QEvent::LanguageChange)
+    ui.retranslateUi(this);
 
-    QDialog::changeEvent(event);
+  QDialog::changeEvent(event);
 }
