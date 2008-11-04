@@ -49,6 +49,7 @@ public:
     int quality;
     bool flipNaming;
     bool directX;
+    bool currentMonitor;
   };
 
   struct Result

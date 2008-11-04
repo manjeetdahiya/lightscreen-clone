@@ -198,6 +198,7 @@ void LightscreenWindow::screenshotAction(int mode)
   options.quality    = mSettings.value("options/quality", 100).toInt();
   options.flipNaming = mSettings.value("options/flip", false).toBool();
   options.directX    = mSettings.value("options/dxScreen", false).toBool();
+  options.currentMonitor = mSettings.value("options/currentMonitor", false).toBool();
 
   // Taking the screenshot and saving the result.
   ScreenshotEngine::Result screenshotResult;

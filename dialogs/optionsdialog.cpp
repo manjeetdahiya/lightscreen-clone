@@ -198,6 +198,7 @@ void OptionsDialog::saveSettings()
   settings.setValue("dxScreen", ui.dxScreenCheckBox->isChecked());
   settings.setValue("clipboard", ui.clipboardCheckBox->isChecked());
   settings.setValue("optipng", ui.optiPngCheckBox->isChecked());
+  settings.setValue("currentMonitor", ui.currentMonitorCheckBox->isChecked());
   settings.endGroup();
 
   settings.beginGroup("actions");
@@ -276,13 +277,18 @@ void OptionsDialog::loadSettings()
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", true).toBool());
   ui.dxScreenCheckBox->setChecked(settings.value("dxScreen", false).toBool());
   ui.optiPngCheckBox->setChecked(settings.value("optipng", true).toBool());
-  ui.warnHideCheckBox->setChecked(
-      !settings.value("disableHideAlert", false).toBool());
+  ui.warnHideCheckBox->setChecked(!settings.value("disableHideAlert", false).toBool());
+  ui.currentMonitorCheckBox->setChecked(settings.value("currentMonitor", false).toBool());
 
   if (QFile::exists("optipng.exe")) //TODO: Change value when cross-platform
+  {
     ui.optiPngCheckBox->setEnabled(true);
+  }
   else
+  {
     ui.optiPngCheckBox->setEnabled(false);
+    ui.optiPngCheckBox->setText(ui.optiPngCheckBox->text() + tr(" (File not found)"));
+  }
 
   QString lang = settings.value("language").toString();
   int index = ui.languageComboBox->findText(lang, Qt::MatchExactly | Qt::MatchCaseSensitive);
