@@ -1,82 +1,86 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>LightscreenWindowClass</class>
- <widget class="QDialog" name="LightscreenWindowClass" >
-  <property name="geometry" >
+ <widget class="QDialog" name="LightscreenWindowClass">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>179</width>
-    <height>103</height>
+    <width>168</width>
+    <height>95</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Lightscreen</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
-   <property name="margin" >
-    <number>6</number>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>2</number>
+   </property>
+   <property name="margin">
+    <number>2</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" >
+    <layout class="QHBoxLayout">
      <item>
-      <widget class="QToolButton" name="screenshotPushButton" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+      <widget class="QToolButton" name="screenshotPushButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="text" >
+       <property name="text">
         <string>Screenshot</string>
        </property>
-       <property name="popupMode" >
+       <property name="popupMode">
         <enum>QToolButton::InstantPopup</enum>
        </property>
       </widget>
      </item>
      <item>
-      <layout class="QVBoxLayout" >
+      <layout class="QVBoxLayout">
        <item>
-        <widget class="QPushButton" name="optionsPushButton" >
-         <property name="toolTip" >
+        <widget class="QPushButton" name="optionsPushButton">
+         <property name="toolTip">
           <string>Configure Lightscreen</string>
          </property>
-         <property name="whatsThis" >
+         <property name="whatsThis">
           <string>Opens the configuration dialog</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>&amp;Options</string>
          </property>
-         <property name="flat" >
+         <property name="flat">
           <bool>false</bool>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="hidePushButton" >
-         <property name="toolTip" >
+        <widget class="QPushButton" name="hidePushButton">
+         <property name="toolTip">
           <string>Hide Lightscreen </string>
          </property>
-         <property name="whatsThis" >
+         <property name="whatsThis">
           <string/>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>&amp;Hide</string>
          </property>
-         <property name="flat" >
+         <property name="flat">
           <bool>false</bool>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="quitPushButton" >
-         <property name="toolTip" >
+        <widget class="QPushButton" name="quitPushButton">
+         <property name="toolTip">
           <string/>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>&amp;Quit</string>
          </property>
-         <property name="flat" >
+         <property name="flat">
           <bool>false</bool>
          </property>
         </widget>
@@ -87,7 +91,7 @@
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections>
   <connection>
@@ -96,11 +100,11 @@
    <receiver>LightscreenWindowClass</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>135</x>
      <y>79</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>71</x>
      <y>101</y>
     </hint>

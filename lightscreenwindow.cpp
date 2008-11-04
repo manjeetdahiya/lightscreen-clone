@@ -23,9 +23,9 @@
 #include "dialogs/aboutdialog.h"
 #include "dialogs/optionsdialog.h"
 
-#include "engines/screenshotengine.h"
 #include "tools/globalshortcut/globalshortcutmanager.h"
 #include "tools/os.h"
+#include "tools/screenshot.h"
 
 #include "updater/updater.h"
 
@@ -136,9 +136,6 @@ void LightscreenWindow::screenshotAction(int mode)
 {
   qDebug() << "screenshotAction:" << mode;
 
-  if (!mScreenshotEngine.isEnabled())
-    return;
-
   // Applying pre-screenshot settings
   if (mSettings.value("options/hide").toBool())
     mTrayIcon->hide();
@@ -189,7 +186,8 @@ void LightscreenWindow::screenshotAction(int mode)
   }
 
   // Populating the option object that will then be passed to the screenshot engine
-  ScreenshotEngine::Options options;
+  Screenshot::Options options;
+  options.file       = mSettings.value("file/enabled").toBool();
   options.format     = mSettings.value("file/format").toInt();
   options.prefix     = mSettings.value("file/prefix").toString();
   options.directory  = QDir(mSettings.value("file/target").toString());
@@ -199,10 +197,15 @@ void LightscreenWindow::screenshotAction(int mode)
   options.flipNaming = mSettings.value("options/flip", false).toBool();
   options.directX    = mSettings.value("options/dxScreen", false).toBool();
   options.currentMonitor = mSettings.value("options/currentMonitor", false).toBool();
+  options.clipboard  = mSettings.value("options/clipboard", true).toBool();
+  options.preview    = mSettings.value("options/preview", false).toBool();
 
   // Taking the screenshot and saving the result.
-  ScreenshotEngine::Result screenshotResult;
-  screenshotResult = mScreenshotEngine.take(options);
+  Screenshot screenshot(options);
+
+  Screenshot::Result screenshotResult;
+
+  screenshotResult = screenshot.take();
 
   qDebug() << "Result:" << screenshotResult.result;
 
@@ -244,7 +247,7 @@ void LightscreenWindow::screenshotAction(int mode)
     return;
 
   if (mSettings.value("options/optipng").toBool()
-   && mSettings.value("options/format").toInt() == ScreenshotEngine::PNG)
+   && mSettings.value("options/format").toInt() == Screenshot::PNG)
     compressPng(screenshotResult.fileName);
 
 }
@@ -257,10 +260,8 @@ void LightscreenWindow::screenshotActionTriggered(QAction* action)
 void LightscreenWindow::showOptions()
 {
   GlobalShortcutManager::clear();
-  mScreenshotEngine.setEnabled(false);
   OptionsDialog optionsDialog(this);
   optionsDialog.exec();
-  mScreenshotEngine.setEnabled(true);
 
   applySettings();
 }

@@ -1,3 +1,5 @@
+
+
 #include <QApplication>
 #include <QClipboard>
 #include <QDateTime>
@@ -11,26 +13,16 @@
 #endif
 
 #include "../dialogs/areaselector.h"
-#include "screenshotengine.h"
+#include "../dialogs/previewdialog.h"
+#include "screenshot.h"
 
-#include "../tools/os.h"
+#include "os.h"
 
-ScreenshotEngine::ScreenshotEngine()
+Screenshot::Screenshot(Screenshot::Options options) : options(options)
 {
-  mEnabled = true;
 }
 
-void ScreenshotEngine::setEnabled(bool enabled)
-{
-  mEnabled = enabled;
-}
-
-bool ScreenshotEngine::isEnabled()
-{
-  return mEnabled;
-}
-
-QPixmap ScreenshotEngine::getActiveWindow()
+QPixmap Screenshot::getActiveWindow()
 {
 #ifdef Q_WS_WIN
   HWND fWindow = GetForegroundWindow();
@@ -47,7 +39,7 @@ QPixmap ScreenshotEngine::getActiveWindow()
 #endif
 }
 
-QString ScreenshotEngine::getFileName(ScreenshotEngine::Options options)
+QString Screenshot::getFileName()
 {
   if (!options.directory.exists())
     options.directory.mkpath(options.directory.path());
@@ -85,7 +77,7 @@ QString ScreenshotEngine::getFileName(ScreenshotEngine::Options options)
 // %2-%3: Naming / Prefix
 // %4: File extension
 QString fileName("%1%2%3.%4");
-QString extension = QString(getFormat(options.format)).toLower();
+QString extension = QString(formatString()).toLower();
 QString path = QDir::toNativeSeparators(options.directory.path());
 
 // Cleanup
@@ -100,19 +92,19 @@ fileName = fileName.arg(path).arg(options.prefix).arg(naming).arg(extension);
 return fileName;
 }
 
-char* ScreenshotEngine::getFormat(int format)
+char* Screenshot::formatString()
 {
-  if (format == 0)
+  if (options.format == 0)
     return "PNG";
-  if (format == 1)
+  if (options.format == 1)
     return "JPG";
-  if (format == 2)
+  if (options.format == 2)
     return "BMP";
 
   return "PNG"; //default
 }
 
-QPixmap ScreenshotEngine::getSelectedArea()
+QPixmap Screenshot::getSelectedArea()
 {
   static bool alreadySelecting = false; // Prevents multiple AreaSelector instances
 
@@ -134,60 +126,57 @@ QPixmap ScreenshotEngine::getSelectedArea()
     return QPixmap();
 }
 
-QPixmap ScreenshotEngine::getWholeScreen(bool directx)
+QPixmap Screenshot::getWholeScreen()
 {
-  if (directx)
+  if (options.directX)
     return os::getDxScreen();
   else
     return QPixmap::grabWindow(QApplication::desktop()->winId());
 }
 
-ScreenshotEngine::Result ScreenshotEngine::lastScreenshot()
+Screenshot::Result Screenshot::take()
 {
-  return mLastResult;
-}
-
-ScreenshotEngine::Result ScreenshotEngine::take(
-    ScreenshotEngine::Options options)
-{
-  if (!mEnabled)
-  {
-    ScreenshotEngine::Result disabledResult;
-    disabledResult.result = false;
-    return disabledResult;
-  }
-
   QPixmap screenshot;
 
   switch (options.mode)
   {
-  case ScreenshotEngine::WholeScreen:
-    screenshot = getWholeScreen(options.directX);
+  case Screenshot::WholeScreen:
+    screenshot = getWholeScreen();
     break;
 
-  case ScreenshotEngine::SelectedArea:
+  case Screenshot::SelectedArea:
     screenshot = getSelectedArea();
     break;
 
-  case ScreenshotEngine::ActiveWindow:
+  case Screenshot::ActiveWindow:
     screenshot = getActiveWindow();
     break;
   }
 
-  QString fileName = getFileName(options);
+  QString fileName;
+  bool    action;
 
-  bool br = screenshot.save(fileName, getFormat(options.format),
-      options.quality);
+  if (options.file)
+  {
+    fileName = getFileName();
+    action   = screenshot.save(fileName, formatString(), options.quality);
+  }
+  else
+  {
+    QString fileName = "";
+    action   = !screenshot.isNull();
+  }
 
-  ScreenshotEngine::Result result;
-  result.options = options;
-  result.result = br;
+  Screenshot::Result result;
+  result.options  = options;
+  result.result   = action;
   result.fileName = fileName;
 
-  if (!screenshot.isNull()
-      && QSettings().value("options/clipboard", true).toBool())
+  if (action && options.preview)
+    new PreviewDialog(screenshot);
+
+  if (action && options.clipboard)
     qApp->clipboard()->setPixmap(screenshot);
 
-  mLastResult = result;
   return result;
 }

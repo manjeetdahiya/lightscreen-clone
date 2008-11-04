@@ -6,7 +6,6 @@
 #include <QSettings>
 
 #include "ui_lightscreenwindow.h"
-#include "engines/screenshotengine.h"
 
 class QHttp;
 class Updater;
@@ -53,7 +52,6 @@ protected:
 
 private:
   bool             mReviveMain;
-  ScreenshotEngine mScreenshotEngine;
   QSettings        mSettings;
   QSystemTrayIcon *mTrayIcon;
   Ui::LightscreenWindowClass ui;
