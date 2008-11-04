@@ -36,6 +36,8 @@ public:
 		return QObject::receivers(SIGNAL(activated())) > 0;
 	}
 
+	bool isValid() const;
+
 signals:
 	void activated();
 

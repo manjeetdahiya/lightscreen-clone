@@ -35,14 +35,9 @@ void AreaSelector::drawBackground()
   painter.setBrush(QBrush(QColor(0, 0, 0, 85), Qt::SolidPattern));
   painter.drawRect(desktop.rect());
 
-  painter.setRenderHint(QPainter::Antialiasing);
-
   //Drawing the explanatory text.
   QRect textRect = desktop.rect();
-  QString
-      text =
-          tr(
-              "Lightscreen screen area mode:\nUse your mouse to draw a rectangle to screenshot or exit pressing\nany key or using the right or middle mouse buttons.");
+  QString text = tr("Lightscreen screen area mode:\nUse your mouse to draw a rectangle to screenshot or exit pressing\nany key or using the right or middle mouse buttons.");
   textRect.setHeight(qRound(desktop.rect().height() / 10)); // We get a decently sized rect where the text should be drawn (centered)
 
   // We draw the white contrasting background for the text, using the same text and options to get the boundingRect that the text will have.
@@ -50,7 +45,7 @@ void AreaSelector::drawBackground()
   painter.setBrush(QBrush(QColor(255, 255, 255, 180), Qt::SolidPattern));
   QRectF bRect = painter.boundingRect(textRect, Qt::AlignCenter, text);
 
-  // These four calls provide a 3px padding for the rect
+  // These four calls provide padding for the rect
   bRect.setHeight(bRect.height() + 8.0f);
   bRect.setWidth(bRect.width() + 8.0f);
   bRect.setX(bRect.x() - 4.0f);
@@ -58,10 +53,11 @@ void AreaSelector::drawBackground()
 
   painter.drawRoundedRect(bRect, 8, 8);
 
-  // We draw the text:
+  // Draw the text:
   painter.setPen(QPen(Qt::black));
   painter.drawText(textRect, Qt::AlignCenter, text);
 
+  // Set our pixmap as the background of the widget.
   QPalette newPalette = palette();
   newPalette.setBrush(backgroundRole(), QBrush(desktop));
   setPalette(newPalette);
@@ -73,7 +69,7 @@ void AreaSelector::drawRectangleSelector(QPainter &painter)
   painter.drawPixmap(mRect, mCleanDesktop, mRect);
 
   // Border
-  painter.setPen(QPen(QBrush(QColor(255, 0, 0, 130)), 2));
+  painter.setPen(QPen(QBrush(QColor(255, 0, 0, 180)), 2));
   painter.drawRect(mRect);
 
   // Draw the size in the bottom right of the selection rect
@@ -89,8 +85,8 @@ bool AreaSelector::event(QEvent *event)
   {
     setWindowState(Qt::WindowFullScreen);
   }
-  if (event->type() == QEvent::MouseButtonRelease || event->type()
-      == QEvent::KeyPress)
+  if (event->type() == QEvent::MouseButtonRelease
+   || event->type() == QEvent::KeyPress)
   {
     accept();
   }

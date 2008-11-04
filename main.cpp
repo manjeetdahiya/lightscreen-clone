@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
   QApplication a(argc, argv);
   a.setOrganizationName("Lightscreen");
-  a.setApplicationName("Lightscreen");
+  a.setApplicationName ("Lightscreen");
   a.setApplicationVersion("0.6-dev");
   a.setQuitOnLastWindowClosed(false);
   QSettings::setDefaultFormat(QSettings::IniFormat);

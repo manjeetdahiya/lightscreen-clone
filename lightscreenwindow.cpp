@@ -32,7 +32,6 @@
 LightscreenWindow::LightscreenWindow(QWidget *parent) :
   QDialog(parent)
 {
-
   os::vistaGlass(this);
 
   ui.setupUi(this);
@@ -54,6 +53,7 @@ LightscreenWindow::~LightscreenWindow()
 {
   GlobalShortcutManager::instance()->clear();
 }
+
 /*
  * Slots
  */
@@ -109,7 +109,7 @@ bool LightscreenWindow::closingWithoutTray()
     return false;
   }
 
-  return true;// Cancel
+  return true; // Cancel
 }
 
 void LightscreenWindow::goToFolder()
@@ -190,20 +190,21 @@ void LightscreenWindow::screenshotAction(int mode)
 
   // Populating the option object that will then be passed to the screenshot engine
   ScreenshotEngine::Options options;
-  options.format = mSettings.value("file/format").toInt();
-  options.prefix = mSettings.value("file/prefix").toString();
-  options.directory = QDir(mSettings.value("file/target").toString());
-  options.naming = mSettings.value("file/naming").toInt();
-  options.mode = mode;
-  options.quality = mSettings.value("options/quality", 100).toInt();
+  options.format     = mSettings.value("file/format").toInt();
+  options.prefix     = mSettings.value("file/prefix").toString();
+  options.directory  = QDir(mSettings.value("file/target").toString());
+  options.naming     = mSettings.value("file/naming").toInt();
+  options.mode       = mode;
+  options.quality    = mSettings.value("options/quality", 100).toInt();
   options.flipNaming = mSettings.value("options/flip", false).toBool();
-  options.directX = mSettings.value("options/dxScreen", false).toBool();
+  options.directX    = mSettings.value("options/dxScreen", false).toBool();
 
   // Taking the screenshot and saving the result.
   ScreenshotEngine::Result screenshotResult;
   screenshotResult = mScreenshotEngine.take(options);
 
   qDebug() << "Result:" << screenshotResult.result;
+
   // Reversing settings
   if (mSettings.value("options/hide").toBool())
   {
@@ -222,6 +223,7 @@ void LightscreenWindow::screenshotAction(int mode)
   if (mSettings.value("options/tray").toBool())
     showTrayNotifier(screenshotResult.result);
 
+#ifdef Q_WS_WIN
   if (mSettings.value("options/playSound", false).toBool())
   { //TODO: Cross-platform -- see freedesktop.org? mac?
     if (screenshotResult.result)
@@ -235,12 +237,13 @@ void LightscreenWindow::screenshotAction(int mode)
       sound.play();
     }
   }
+#endif
 
   if (!screenshotResult.result)
     return;
 
-  if (mSettings.value("options/optipng").toBool() && mSettings.value(
-      "options/format").toInt() == ScreenshotEngine::PNG)
+  if (mSettings.value("options/optipng").toBool()
+   && mSettings.value("options/format").toInt() == ScreenshotEngine::PNG)
     compressPng(screenshotResult.fileName);
 
 }
@@ -273,8 +276,7 @@ void LightscreenWindow::showScreenshotMessage(bool result, QString fileName)
 
     if (mSettings.value("file/target").toString().isEmpty())
     {
-      message
-          = QDir::toNativeSeparators(QCoreApplication::applicationDirPath());
+      message = QDir::toNativeSeparators(QCoreApplication::applicationDirPath());
     }
     else
     {
@@ -284,7 +286,7 @@ void LightscreenWindow::showScreenshotMessage(bool result, QString fileName)
   }
   else
   {
-    title = tr("The screenshot was not taken");
+    title   = tr("The screenshot was not taken");
     message = tr("There was an error or you did not select a valid area.");
   }
 
@@ -308,36 +310,30 @@ void LightscreenWindow::showAbout()
 }
 
 void LightscreenWindow::showHotkeyError(QStringList hotkeys)
-{ //TODO: QWT: Replicate this using the GlobalShortcutManager
-  /*
+{
    static bool dontShow = false;
 
    if (dontShow)
    return;
 
    QString messageText;
-   QString changeString = tr("Change the hotkey");
-   QString disableString = tr("Disable the hotkey");
 
-   messageText
-   = tr("Some hotkeys could not be registered, they might already be in use");
+   messageText = tr("Some hotkeys could not be registered, they might already be in use");
 
    if (hotkeys.count() > 1)
    {
-   changeString += "s";
-   disableString += "s";
+     messageText += tr("<br>The failed hotkeys are the following:<ul>");
 
-   messageText += tr("<br>The failed hotkeys are the following:<ul>");
+     foreach(QString hotkey, hotkeys)
+     {
+       messageText += QString("%1%2%3").arg("<li><b>").arg(hotkey).arg("</b></li>");
+     }
 
-   foreach(QString hotkey, hotkeys)
-   {
-   messageText += QString("%1%2%3").arg("<li><b>").arg(hotkey).arg("</b></li>");
+    messageText += tr("</ul>");
    }
-
-   messageText += tr("</ul>");
-   } else
+   else
    {
-   messageText += tr("<br>The failed hotkey is the <b>%1</b>").arg(hotkeys[0]);
+    messageText += tr("<br>The failed hotkey is <b>%1</b>").arg(hotkeys[0]);
    }
 
    messageText += tr("<br><i>What do you want to do?</i>");
@@ -346,35 +342,32 @@ void LightscreenWindow::showHotkeyError(QStringList hotkeys)
    msgBox.setWindowTitle(tr("Lightscreen"));
    msgBox.setText(messageText);
 
-   QPushButton *changeButton = msgBox.addButton(changeString,
-   QMessageBox::ActionRole);
-   QPushButton *disableButton = msgBox.addButton(disableString,
-   QMessageBox::ActionRole);
-   QPushButton *exitButton = msgBox.addButton(tr("Quit Lightscreen"),
-   QMessageBox::ActionRole);
+   QPushButton *changeButton  = msgBox.addButton(tr("Change"), QMessageBox::ActionRole);
+   QPushButton *disableButton = msgBox.addButton(tr("Disable"), QMessageBox::ActionRole);
+   QPushButton *exitButton    = msgBox.addButton(tr("Quit"),  QMessageBox::ActionRole);
 
    msgBox.exec();
 
    if (msgBox.clickedButton() == exitButton)
    {
-   //qWarning() << "Exiting due to hotkey conflict.";
-   dontShow = true;
-   QTimer::singleShot(10, this, SLOT(accept()));;
-   } else if (msgBox.clickedButton() == changeButton)
-   {
-   showOptions();
-   } else if (msgBox.clickedButton() == disableButton)
-   {
-   foreach(QString hotkey, hotkeys)
-   {
-   mSettings.setValue(QString("actions/%1/enabled").arg(hotkey), false);
+     dontShow = true;
+     QTimer::singleShot(10, this, SLOT(accept()));;
    }
+   else if (msgBox.clickedButton() == changeButton)
+   {
+    showOptions();
    }
-   */
+   else if (msgBox.clickedButton() == disableButton)
+   {
+     foreach(QString hotkey, hotkeys)
+     {
+      mSettings.setValue(QString("actions/%1/enabled").arg(hotkey), false);
+     }
+   }
+
 }
 
-void LightscreenWindow::toggleVisibility(
-    QSystemTrayIcon::ActivationReason reason)
+void LightscreenWindow::toggleVisibility(QSystemTrayIcon::ActivationReason reason)
 {
   if (reason != QSystemTrayIcon::DoubleClick)
     return;
@@ -400,24 +393,19 @@ void LightscreenWindow::updaterDone(bool result)
 
   QMessageBox msgBox;
   msgBox.setWindowTitle(tr("Lightscreen"));
-  msgBox.setText(
-      tr(
-          "There's a new version of Lightscreen available.<br>Would you like to see more information?<br>(<em>You can turn this notification off</em>)"));
+  msgBox.setText(tr("There's a new version of Lightscreen available.<br>Would you like to see more information?<br>(<em>You can turn this notification off</em>)"));
   msgBox.setIcon(QMessageBox::Information);
 
-  QPushButton *yesButton = msgBox.addButton(QMessageBox::Yes);
-  QPushButton *turnOffButton = msgBox.addButton(tr("Turn Off"),
-      QMessageBox::ActionRole);
-  QPushButton *remindButton = msgBox.addButton(tr("Remind Me Later"),
-      QMessageBox::RejectRole);
+  QPushButton *yesButton     = msgBox.addButton(QMessageBox::Yes);
+  QPushButton *turnOffButton = msgBox.addButton(tr("Turn Off"), QMessageBox::ActionRole);
+  QPushButton *remindButton  = msgBox.addButton(tr("Remind Me Later"), QMessageBox::RejectRole);
 
   Q_UNUSED(remindButton);
 
   msgBox.exec();
 
   if (msgBox.clickedButton() == yesButton)
-    QDesktopServices::openUrl(QUrl(
-        "http://lightscreen.sourceforge.net/new-version"));
+    QDesktopServices::openUrl(QUrl("http://lightscreen.sourceforge.net/new-version"));
   else if (msgBox.clickedButton() == turnOffButton)
     mSettings.setValue("disableUpdater", true);
 
@@ -428,6 +416,7 @@ void LightscreenWindow::windowHotkey()
 {
   screenshotAction(1);
 }
+
 void LightscreenWindow::areaHotkey()
 {
   screenshotAction(2);
@@ -460,7 +449,7 @@ void LightscreenWindow::applySettings()
     QString entry = QDir::toNativeSeparators(QApplication::applicationFilePath());
 
     if (mSettings.value("options/startupHide").toBool())
-    entry.append(" -h"); // command to automatically hide.
+      entry.append(" -h"); // command to automatically hide.
 
     init.setValue("Lightscreen", entry);
   }
@@ -490,25 +479,39 @@ void LightscreenWindow::compressPng(QString fileName)
 
 void LightscreenWindow::connectHotkeys()
 {
-  if (mSettings.value("actions/screen/hotkey").toBool())
-    GlobalShortcutManager::instance()->connect(mSettings.value(
+  // Set to true because if the hotkey is disabled it show an error.
+  bool screen = true, area = true, window = true, open = true, directory = true;
+
+  if (mSettings.value("actions/screen/enabled").toBool())
+    screen = GlobalShortcutManager::instance()->connect(mSettings.value(
         "actions/screen/hotkey").value<QKeySequence> (), this, SLOT(screenshotAction()));
 
-  if (mSettings.value("actions/area/hotkey").toBool())
-    GlobalShortcutManager::instance()->connect(mSettings.value(
+  if (mSettings.value("actions/area/enabled").toBool())
+    area   = GlobalShortcutManager::instance()->connect(mSettings.value(
         "actions/area/hotkey").value<QKeySequence> (), this, SLOT(areaHotkey()));
 
-  if (mSettings.value("actions/window/hotkey").toBool())
-    GlobalShortcutManager::instance()->connect(mSettings.value(
+  if (mSettings.value("actions/window/enabled").toBool())
+    window = GlobalShortcutManager::instance()->connect(mSettings.value(
         "actions/window/hotkey").value<QKeySequence> (), this, SLOT(windowHotkey()));
 
-  if (mSettings.value("actions/open/hotkey").toBool())
-    GlobalShortcutManager::instance()->connect(mSettings.value(
+  if (mSettings.value("actions/open/enabled").toBool())
+    open   = GlobalShortcutManager::instance()->connect(mSettings.value(
         "actions/open/hotkey").value<QKeySequence> (), this, SLOT(show()));
 
-  if (mSettings.value("actions/directory/hotkey").toBool())
-    GlobalShortcutManager::instance()->connect(mSettings.value(
+  if (mSettings.value("actions/directory/enabled").toBool())
+    directory = GlobalShortcutManager::instance()->connect(mSettings.value(
         "actions/directory/hotkey").value<QKeySequence> (), this, SLOT(goToFolder()));
+
+  QStringList failed;
+  if (!screen)    failed << "screen";
+  if (!area)      failed << "area";
+  if (!window)    failed << "window";
+  if (!open)      failed << "open";
+  if (!directory) failed << "directory";
+
+  if (!failed.isEmpty())
+    showHotkeyError(failed);
+
 }
 
 void LightscreenWindow::createScreenshotButtonMenu()

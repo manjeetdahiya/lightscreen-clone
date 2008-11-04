@@ -10,6 +10,7 @@
 
 #include "optionsdialog.h"
 #include "../tools/os.h"
+#include "../updater/updater.h"
 
 OptionsDialog::OptionsDialog(QWidget *parent) :
   QDialog(parent)
@@ -18,10 +19,15 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   setModal(true);
 
+#ifndef Q_WS_WIN
+  ui.playSoundCheckBox->setVisible(false);
+  ui.playSoundCheckBox->setChecked(false);
+#endif
+
   QSettings settings;
 
-  if (!(settings.contains("options/tray")))
-  { // If there are no settings, get rid of the cancel button so that the user is forced to save settings.
+  if (!settings.contains("options/tray"))
+  { // If there are no settings, get rid of the cancel button so that the user is forced to save them
     ui.buttonBox->clear();
     ui.buttonBox->addButton(QDialogButtonBox::Ok);
   }
@@ -30,44 +36,47 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   connect(ui.flipPrefixPushButton, SIGNAL(toggled(bool)), this, SLOT(flipButtonToggled(bool)));
 
-  connect(ui.aboutPushButton, SIGNAL(clicked()), parent, SLOT(showAbout()));
+  connect(ui.aboutPushButton       , SIGNAL(clicked()), parent, SLOT(showAbout()));
+  connect(ui.checkUpdatesPushButton, SIGNAL(clicked()), this  , SLOT(checkUpdatesNow()));
 
-  connect(ui.screenCheckBox, SIGNAL(toggled(bool)), ui.screenHotkeyWidget, SLOT(setEnabled(bool)));
-  connect(ui.areaCheckBox, SIGNAL(toggled(bool)), ui.areaHotkeyWidget, SLOT(setEnabled(bool)));
-  connect(ui.windowCheckBox, SIGNAL(toggled(bool)), ui.windowHotkeyWidget, SLOT(setEnabled(bool)));
-  connect(ui.openCheckBox, SIGNAL(toggled(bool)), ui.openHotkeyWidget, SLOT(setEnabled(bool)));
+  connect(ui.screenCheckBox   , SIGNAL(toggled(bool)), ui.screenHotkeyWidget   , SLOT(setEnabled(bool)));
+  connect(ui.areaCheckBox     , SIGNAL(toggled(bool)), ui.areaHotkeyWidget     , SLOT(setEnabled(bool)));
+  connect(ui.windowCheckBox   , SIGNAL(toggled(bool)), ui.windowHotkeyWidget   , SLOT(setEnabled(bool)));
+  connect(ui.openCheckBox     , SIGNAL(toggled(bool)), ui.openHotkeyWidget     , SLOT(setEnabled(bool)));
   connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
 
+  connect(ui.translateLabel, SIGNAL(linkActivated(QString)), this, SLOT(openUrl(QString)));
+
   // Getting the language entries
-  QDir lang(
-      QCoreApplication::applicationDirPath() + QDir::separator() + "lang",
-      "*.qm");
+  QDir lang(QCoreApplication::applicationDirPath() + "/lang", "*.qm");
   lang.setFilter(QDir::Files);
 
   QStringList entries;
 
   entries << "English"; // Set here and not the .ui because it the items would get reset when calling retranslateUi
-  foreach (QString entry, lang.entryList()){
-  entry.chop(3); // Remove the ".em"
-  entry[0] = entry.at(0).toUpper(); // Make first char uppercase
-  entries << entry;
-}
 
-ui.languageComboBox->addItems(entries);
+  foreach (QString entry, lang.entryList())
+  {
+    entry.chop(3); // Remove the ".em"
+    entry[0] = entry.at(0).toUpper(); // Make first char uppercase
+    entries << entry;
+  }
 
-connect(ui.languageComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
+  ui.languageComboBox->addItems(entries);
 
-loadSettings();
+  connect(ui.languageComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
 
-connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
+  loadSettings();
 
-connect(ui.startupCheckBox, SIGNAL(stateChanged(int)), this, SLOT(startupRelatedStateChange(int)));
-connect(ui.trayCheckBox, SIGNAL(stateChanged(int)), this, SLOT(trayRelatedStateChange(int)));
+  connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
 
-connect(ui.browsePushButton, SIGNAL(clicked()), this, SLOT(browse()));
+  connect(ui.startupCheckBox, SIGNAL(stateChanged(int)), this, SLOT(startupRelatedStateChange(int)));
+  connect(ui.trayCheckBox   , SIGNAL(stateChanged(int)), this, SLOT(trayRelatedStateChange(int)));
 
-startupRelatedStateChange(ui.startupCheckBox->checkState());
-trayRelatedStateChange(ui.trayCheckBox->checkState());
+  connect(ui.browsePushButton, SIGNAL(clicked()), this, SLOT(browse()));
+
+  startupRelatedStateChange(ui.startupCheckBox->checkState());
+  trayRelatedStateChange(ui.trayCheckBox->checkState());
 }
 
 /*
@@ -78,8 +87,7 @@ void OptionsDialog::accepted()
 {
   if (hotkeyCollision())
   {
-    QMessageBox::critical(0, tr("Hotkey conflict"), tr(
-        "You have assigned the same hotkeys to more than one action."));
+    QMessageBox::critical(0, tr("Hotkey conflict"), tr("You have assigned the same hotkeys to more than one action."));
     return;
   }
 
@@ -89,14 +97,17 @@ void OptionsDialog::accepted()
 
 void OptionsDialog::browse()
 {
-  QString fileName = QFileDialog::getExistingDirectory(this, tr(
-      "Select where you want to save the screenshots"),
-      ui.targetLineEdit->text());
+  QString fileName = QFileDialog::getExistingDirectory(this, tr("Select where you want to save the screenshots"), ui.targetLineEdit->text());
 
   if (fileName.isEmpty())
     return;
 
   ui.targetLineEdit->setText(fileName);
+}
+
+void OptionsDialog::checkUpdatesNow()
+{
+  Updater::instance()->check();
 }
 
 void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
@@ -105,15 +116,11 @@ void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
   {
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("Lightscreen - Options"));
-    msgBox.setText(
-        tr(
-            "Restoring the default options will cause you to lose all of your current configuration."));
+    msgBox.setText(tr("Restoring the default options will cause you to lose all of your current configuration."));
     msgBox.setIcon(QMessageBox::Warning);
 
-    QPushButton *restoreButton = msgBox.addButton(tr("Restore"),
-        QMessageBox::ActionRole);
-    QPushButton *dontRestoreButton = msgBox.addButton(tr("Don't Restore"),
-        QMessageBox::ActionRole);
+    QPushButton *restoreButton     = msgBox.addButton(tr("Restore"), QMessageBox::ActionRole);
+    QPushButton *dontRestoreButton = msgBox.addButton(tr("Don't Restore"), QMessageBox::ActionRole);
 
     msgBox.exec();
 
@@ -130,6 +137,7 @@ void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
 void OptionsDialog::flipButtonToggled(bool checked)
 {
   setUpdatesEnabled(false);
+
   ui.hboxLayout->removeWidget(ui.prefixLineEdit);
   ui.hboxLayout->removeWidget(ui.namingComboBox);
 
@@ -145,6 +153,7 @@ void OptionsDialog::flipButtonToggled(bool checked)
     ui.hboxLayout->addWidget(ui.prefixLineEdit);
     ui.hboxLayout->addWidget(ui.namingComboBox);
   }
+
   setUpdatesEnabled(true); // Avoids flicker
 }
 
@@ -248,8 +257,7 @@ void OptionsDialog::loadSettings()
   ui.formatComboBox->setCurrentIndex(settings.value("format", 1).toInt());
   ui.prefixLineEdit->setText(settings.value("prefix", "screenshot.").toString());
   ui.namingComboBox->setCurrentIndex(settings.value("naming", 0).toInt());
-  ui.targetLineEdit->setText(settings.value("target", QDir::homePath()
-      + QDir::separator() + "screenshots").toString()); // Defaults to $HOME$/screenshots
+  ui.targetLineEdit->setText(settings.value("target", QDir::homePath() + "/screenshots").toString()); // Defaults to $HOME$/screenshots
   settings.endGroup();
 
   settings.beginGroup("options");
@@ -262,8 +270,7 @@ void OptionsDialog::loadSettings()
   ui.messageCheckBox->setChecked(settings.value("message").toBool());
   ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
   ui.playSoundCheckBox->setChecked(settings.value("playSound", false).toBool());
-  ui.updaterCheckBox->setChecked(
-      !settings.value("disableUpdater", false).toBool());
+  ui.updaterCheckBox->setChecked(!settings.value("disableUpdater", false).toBool());
 
   // Advanced
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", true).toBool());
@@ -278,8 +285,7 @@ void OptionsDialog::loadSettings()
     ui.optiPngCheckBox->setEnabled(false);
 
   QString lang = settings.value("language").toString();
-  int index = ui.languageComboBox->findText(lang, Qt::MatchExactly
-      | Qt::MatchCaseSensitive);
+  int index = ui.languageComboBox->findText(lang, Qt::MatchExactly | Qt::MatchCaseSensitive);
 
   if (index == -1)
     index = 0; // If the data is invalid then revert to the default language (English)
@@ -299,32 +305,27 @@ void OptionsDialog::loadSettings()
 
   settings.beginGroup("screen");
   ui.screenCheckBox->setChecked(settings.value("enabled", true).toBool());
-  ui.screenHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(
-      Qt::Key_Print)).value<QKeySequence> ());
+  ui.screenHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::Key_Print)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("area");
   ui.areaCheckBox->setChecked(settings.value("enabled").toBool());
-  ui.areaHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL
-      + Qt::Key_Print)).value<QKeySequence> ());
+  ui.areaHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_Print)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("window");
   ui.windowCheckBox->setChecked(settings.value("enabled").toBool());
-  ui.windowHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(
-      Qt::SHIFT + Qt::Key_Print)).value<QKeySequence> ());
+  ui.windowHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::SHIFT + Qt::Key_Print)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("open");
   ui.openCheckBox->setChecked(settings.value("enabled").toBool());
-  ui.openHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL
-      + Qt::Key_PageUp)).value<QKeySequence> ());
+  ui.openHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL+ Qt::Key_PageUp)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("directory");
   ui.directoryCheckBox->setChecked(settings.value("enabled").toBool());
-  ui.directoryHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(
-      Qt::SHIFT + Qt::Key_PageUp)).value<QKeySequence> ());
+  ui.directoryHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::SHIFT + Qt::Key_PageUp)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.endGroup();
@@ -436,7 +437,9 @@ bool OptionsDialog::hotkeyCollision()
 void OptionsDialog::changeEvent(QEvent* event)
 {
   if (event->type() == QEvent::LanguageChange)
+  { // TODO: Resize to minimum logical size?
     ui.retranslateUi(this);
+  }
 
   QDialog::changeEvent(event);
 }

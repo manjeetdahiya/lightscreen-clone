@@ -29,6 +29,7 @@ static PtrDwmIsCompositionEnabled pDwmIsCompositionEnabled = 0;
 
 #include "os.h"
 
+
 QPixmap os::getDxScreen()
 {
 #if Q_WS_WINDOWS

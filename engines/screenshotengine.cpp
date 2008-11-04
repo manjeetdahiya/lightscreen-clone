@@ -89,7 +89,7 @@ QString extension = QString(getFormat(options.format)).toLower();
 QString path = QDir::toNativeSeparators(options.directory.path());
 
 // Cleanup
-if (path.at(path.size()-1) != QDir::separator() && !path.isEmpty())
+if (QDir::toNativeSeparators(path.at(path.size()-1)) != QDir::separator() && !path.isEmpty())
 path.append(QDir::separator());
 
 if (options.flipNaming)

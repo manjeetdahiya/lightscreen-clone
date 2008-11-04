@@ -22,14 +22,11 @@ private:
 
 private slots:
   void hideError();
- // void sysKeyPress(Qt::Key key, QFlags<Qt::KeyboardModifier> keyboardModifiers);
+  void printKeyPress();
 
 protected:
   // Event overrides:
   bool event(QEvent* event);
-#ifdef Q_WS_WIN
-  bool winEvent(MSG * message, long * result);
-#endif
 
 private:
   QKeySequence mHotkey;

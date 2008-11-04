@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>OptionsDialog</class>
- <widget class="QDialog" name="OptionsDialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="OptionsDialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,163 +10,163 @@
     <height>255</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Options - Lightscreen</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" >
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QTabWidget" name="tabWidget" >
-     <property name="currentIndex" >
-      <number>0</number>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>3</number>
      </property>
-     <widget class="QWidget" name="generalTab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="generalTab">
+      <attribute name="title">
        <string>General</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_4" >
+      <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <layout class="QGridLayout" >
-         <item row="0" column="0" >
-          <widget class="QLabel" name="directoryLabel" >
-           <property name="text" >
+        <layout class="QGridLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="directoryLabel">
+           <property name="text">
             <string>Directory:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>targetLineEdit</cstring>
            </property>
           </widget>
          </item>
-         <item row="0" column="1" >
-          <widget class="QLineEdit" name="targetLineEdit" >
-           <property name="styleSheet" >
-            <string notr="true" />
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="targetLineEdit">
+           <property name="styleSheet">
+            <string notr="true"/>
            </property>
           </widget>
          </item>
-         <item row="1" column="0" >
-          <widget class="QLabel" name="filenameLabel" >
-           <property name="toolTip" >
+         <item row="1" column="0">
+          <widget class="QLabel" name="filenameLabel">
+           <property name="toolTip">
             <string>The prefix for the screenshot file</string>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Filename:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>prefixLineEdit</cstring>
            </property>
           </widget>
          </item>
-         <item row="0" column="2" >
-          <widget class="QPushButton" name="browsePushButton" >
-           <property name="text" >
+         <item row="0" column="2">
+          <widget class="QPushButton" name="browsePushButton">
+           <property name="text">
             <string/>
            </property>
-           <property name="icon" >
-            <iconset resource="../lightscreen.qrc" >
+           <property name="icon">
+            <iconset resource="../lightscreen.qrc">
              <normaloff>:/icons/OpenFolder</normaloff>:/icons/OpenFolder</iconset>
            </property>
-           <property name="autoDefault" >
+           <property name="autoDefault">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="2" column="0" >
-          <widget class="QLabel" name="formatLabel" >
-           <property name="toolTip" >
+         <item row="2" column="0">
+          <widget class="QLabel" name="formatLabel">
+           <property name="toolTip">
             <string>The file format for the screenshot</string>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Format:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>formatComboBox</cstring>
            </property>
           </widget>
          </item>
-         <item row="3" column="0" >
-          <widget class="QLabel" name="delayLabel" >
-           <property name="text" >
+         <item row="3" column="0">
+          <widget class="QLabel" name="delayLabel">
+           <property name="text">
             <string>Delay:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>delaySpinBox</cstring>
            </property>
           </widget>
          </item>
-         <item row="3" column="1" >
-          <widget class="QSpinBox" name="delaySpinBox" >
-           <property name="whatsThis" >
-            <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">&#xd;&#xd;
-p, li { white-space: pre-wrap; }&#xd;&#xd;
-&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">&#xd;&#xd;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">Selecting anything other than 0 in this option will cause the program to &lt;span style=" font-weight:600;">wait&lt;/span> that amount of seconds before taking the screenshot.&lt;/p>&lt;/body>&lt;/html></string>
+         <item row="3" column="1">
+          <widget class="QSpinBox" name="delaySpinBox">
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;Selecting anything other than 0 in this option will cause the program to &lt;span style=&quot; font-weight:600;&quot;&gt;wait&lt;/span&gt; that amount of seconds before taking the screenshot.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="specialValueText" >
+           <property name="specialValueText">
             <string>no delay</string>
            </property>
-           <property name="accelerated" >
+           <property name="accelerated">
             <bool>true</bool>
            </property>
-           <property name="suffix" >
+           <property name="suffix">
             <string> seconds</string>
            </property>
-           <property name="prefix" >
+           <property name="prefix">
             <string/>
            </property>
-           <property name="maximum" >
+           <property name="maximum">
             <number>32767</number>
            </property>
           </widget>
          </item>
-         <item row="1" column="1" >
-          <layout class="QHBoxLayout" >
+         <item row="1" column="1">
+          <layout class="QHBoxLayout">
            <item>
-            <widget class="QLineEdit" name="prefixLineEdit" >
-             <property name="whatsThis" >
-              <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">&#xd;&#xd;
-p, li { white-space: pre-wrap; }&#xd;&#xd;
-&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">&#xd;&#xd;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">The prefix will be inserted before the &lt;span style=" font-style:italic;">Naming&lt;/span> in the screenshot file and it is usually used to distinguish files.&lt;/p>&#xd;&#xd;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">It &lt;span style=" font-style:italic;">can&lt;/span> be left blank.&lt;/p>&lt;/body>&lt;/html></string>
+            <widget class="QLineEdit" name="prefixLineEdit">
+             <property name="whatsThis">
+              <string>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;The prefix will be inserted before the &lt;span style=&quot; font-style:italic;&quot;&gt;Naming&lt;/span&gt; in the screenshot file and it is usually used to distinguish files.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;It &lt;span style=&quot; font-style:italic;&quot;&gt;can&lt;/span&gt; be left blank.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="namingComboBox" >
-             <property name="whatsThis" >
-              <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
-&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+            <widget class="QComboBox" name="namingComboBox">
+             <property name="whatsThis">
+              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">The naming is inserted after the prefix and is what makes each screenshot file unique to avoid overwriting.&lt;/p>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-weight:600;">Numeric&lt;/span>: inserts a number in sequence, &lt;span style=" font-style:italic;">1, 2, 3&lt;/span>.&lt;/p>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-weight:600;">Timestamp&lt;/span>: inserts a unique number (a Unix timestamp) that corresponds with the current time.&lt;/p>
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-weight:600;">Date&lt;/span>: inserts the current date and time, in the form of dd-MM-yyyy hh.mm.ss.&lt;/p>&lt;/body>&lt;/html></string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;The naming is inserted after the prefix and is what makes each screenshot file unique to avoid overwriting.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Numeric&lt;/span&gt;: inserts a number in sequence, &lt;span style=&quot; font-style:italic;&quot;&gt;1, 2, 3&lt;/span&gt;.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Timestamp&lt;/span&gt;: inserts a unique number (a Unix timestamp) that corresponds with the current time.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Date&lt;/span&gt;: inserts the current date and time, in the form of dd-MM-yyyy hh.mm.ss.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>(number)</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>(timestamp)</string>
               </property>
              </item>
              <item>
-              <property name="text" >
+              <property name="text">
                <string>(date)</string>
               </property>
              </item>
@@ -173,58 +174,58 @@ p, li { white-space: pre-wrap; }
            </item>
           </layout>
          </item>
-         <item row="1" column="2" >
-          <widget class="QPushButton" name="flipPrefixPushButton" >
-           <property name="icon" >
-            <iconset resource="../lightscreen.qrc" >
+         <item row="1" column="2">
+          <widget class="QPushButton" name="flipPrefixPushButton">
+           <property name="icon">
+            <iconset resource="../lightscreen.qrc">
              <normaloff>:/icons/PrefixLeft</normaloff>:/icons/PrefixLeft</iconset>
            </property>
-           <property name="checkable" >
+           <property name="checkable">
             <bool>true</bool>
            </property>
-           <property name="autoDefault" >
+           <property name="autoDefault">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="2" column="1" >
-          <widget class="QComboBox" name="formatComboBox" >
-           <property name="whatsThis" >
+         <item row="2" column="1">
+          <widget class="QComboBox" name="formatComboBox">
+           <property name="whatsThis">
             <string/>
            </property>
            <item>
-            <property name="text" >
+            <property name="text">
              <string>PNG</string>
             </property>
            </item>
            <item>
-            <property name="text" >
+            <property name="text">
              <string>JPG</string>
             </property>
            </item>
            <item>
-            <property name="text" >
+            <property name="text">
              <string>BMP</string>
             </property>
            </item>
           </widget>
          </item>
-         <item row="4" column="0" colspan="3" >
-          <widget class="QCheckBox" name="startupCheckBox" >
-           <property name="whatsThis" >
+         <item row="4" column="0" colspan="3">
+          <widget class="QCheckBox" name="startupCheckBox">
+           <property name="whatsThis">
             <string/>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>&amp;Start Lightscreen with Windows</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="0" colspan="3" >
-          <widget class="QCheckBox" name="startupHideCheckBox" >
-           <property name="whatsThis" >
+         <item row="5" column="0" colspan="3">
+          <widget class="QCheckBox" name="startupHideCheckBox">
+           <property name="whatsThis">
             <string/>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>&amp;Hide the main window on startup.</string>
            </property>
           </widget>
@@ -233,110 +234,110 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="hotkeyTab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="hotkeyTab">
+      <attribute name="title">
        <string>Hotkeys</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_3" >
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <layout class="QGridLayout" name="gridLayout" >
-         <item row="0" column="0" >
-          <widget class="QCheckBox" name="screenCheckBox" >
-           <property name="text" >
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="screenCheckBox">
+           <property name="text">
             <string>Capture the screen</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1" >
-          <widget class="HotkeyWidget" name="screenHotkeyWidget" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Maximum" hsizetype="Minimum" >
+         <item row="0" column="1">
+          <widget class="HotkeyWidget" name="screenHotkeyWidget">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="text" >
+           <property name="text">
             <string/>
            </property>
-           <property name="checkable" >
+           <property name="checkable">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="1" column="0" >
-          <widget class="QCheckBox" name="windowCheckBox" >
-           <property name="text" >
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="windowCheckBox">
+           <property name="text">
             <string>Capture a window</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1" >
-          <widget class="HotkeyWidget" name="windowHotkeyWidget" >
-           <property name="text" >
+         <item row="1" column="1">
+          <widget class="HotkeyWidget" name="windowHotkeyWidget">
+           <property name="text">
             <string/>
            </property>
-           <property name="checkable" >
+           <property name="checkable">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="2" column="0" >
-          <widget class="QCheckBox" name="areaCheckBox" >
-           <property name="text" >
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="areaCheckBox">
+           <property name="text">
             <string>Capture a screen area</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1" >
-          <widget class="HotkeyWidget" name="areaHotkeyWidget" >
-           <property name="text" >
+         <item row="2" column="1">
+          <widget class="HotkeyWidget" name="areaHotkeyWidget">
+           <property name="text">
             <string/>
            </property>
-           <property name="checkable" >
+           <property name="checkable">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="3" column="0" colspan="2" >
-          <widget class="QFrame" name="frame" >
-           <property name="frameShape" >
+         <item row="3" column="0" colspan="2">
+          <widget class="QFrame" name="frame">
+           <property name="frameShape">
             <enum>QFrame::HLine</enum>
            </property>
-           <property name="frameShadow" >
+           <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
           </widget>
          </item>
-         <item row="4" column="0" >
-          <widget class="QCheckBox" name="openCheckBox" >
-           <property name="text" >
+         <item row="4" column="0">
+          <widget class="QCheckBox" name="openCheckBox">
+           <property name="text">
             <string>Open the program window</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1" >
-          <widget class="HotkeyWidget" name="openHotkeyWidget" >
-           <property name="text" >
+         <item row="4" column="1">
+          <widget class="HotkeyWidget" name="openHotkeyWidget">
+           <property name="text">
             <string/>
            </property>
-           <property name="checkable" >
+           <property name="checkable">
             <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="5" column="0" >
-          <widget class="QCheckBox" name="directoryCheckBox" >
-           <property name="text" >
+         <item row="5" column="0">
+          <widget class="QCheckBox" name="directoryCheckBox">
+           <property name="text">
             <string>Open the directory</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1" >
-          <widget class="HotkeyWidget" name="directoryHotkeyWidget" >
-           <property name="text" >
+         <item row="5" column="1">
+          <widget class="HotkeyWidget" name="directoryHotkeyWidget">
+           <property name="text">
             <string/>
            </property>
-           <property name="checkable" >
+           <property name="checkable">
             <bool>false</bool>
            </property>
           </widget>
@@ -345,67 +346,67 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="moreTab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="moreTab">
+      <attribute name="title">
        <string>Options</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout" >
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QCheckBox" name="trayCheckBox" >
-         <property name="whatsThis" >
+        <widget class="QCheckBox" name="trayCheckBox">
+         <property name="whatsThis">
           <string/>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Sho&amp;w a system tray icon.</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="hideCheckBox" >
-         <property name="text" >
+        <widget class="QCheckBox" name="hideCheckBox">
+         <property name="text">
           <string>&amp;Hide Lightscreen while taking a screenshot.</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="updaterCheckBox" >
-         <property name="text" >
+        <widget class="QCheckBox" name="updaterCheckBox">
+         <property name="text">
           <string>Periodically check for updates.</string>
          </property>
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4" >
-         <property name="sizeConstraint" >
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="sizeConstraint">
           <enum>QLayout::SetMinimumSize</enum>
          </property>
          <item>
-          <widget class="QLabel" name="languageLabel" >
-           <property name="text" >
+          <widget class="QLabel" name="languageLabel">
+           <property name="text">
             <string>Language:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="languageComboBox" />
+          <widget class="QComboBox" name="languageComboBox"/>
          </item>
          <item>
-          <widget class="QLabel" name="translateLabel" >
-           <property name="text" >
-            <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
-&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+          <widget class="QLabel" name="translateLabel">
+           <property name="text">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;a href="http://lightscreen.sourceforge.net/language">&lt;span style=" text-decoration: underline; color:#0000ff;">More information...&lt;/span>&lt;/a>&lt;/p>&lt;/body>&lt;/html></string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://lightscreen.sourceforge.net/language&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More information...&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer" >
-           <property name="orientation" >
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
              <height>20</height>
@@ -416,33 +417,33 @@ p, li { white-space: pre-wrap; }
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout" >
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QLabel" name="notifyLabel" >
-           <property name="text" >
+          <widget class="QLabel" name="notifyLabel">
+           <property name="text">
             <string>Notify with:</string>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>messageCheckBox</cstring>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="messageCheckBox" >
-           <property name="whatsThis" >
-            <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">&#xd;&#xd;
-p, li { white-space: pre-wrap; }&#xd;&#xd;
-&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">&#xd;&#xd;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Shows a completion message once the screenshot is saved, clicking this message takes you to the directory where the screenshot was saved.&lt;/p>&lt;/body>&lt;/html></string>
+          <widget class="QCheckBox" name="messageCheckBox">
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Shows a completion message once the screenshot is saved, clicking this message takes you to the directory where the screenshot was saved.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="text" >
+           <property name="text">
             <string>Tray icon Popup</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="playSoundCheckBox" >
-           <property name="text" >
+          <widget class="QCheckBox" name="playSoundCheckBox">
+           <property name="text">
             <string>&amp;Sound cue</string>
            </property>
           </widget>
@@ -450,33 +451,33 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5" >
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
-          <widget class="QLabel" name="qualityLabel" >
-           <property name="text" >
+          <widget class="QLabel" name="qualityLabel">
+           <property name="text">
             <string>Screenshot Quality:</string>
            </property>
-           <property name="buddy" >
+           <property name="buddy">
             <cstring>qualitySlider</cstring>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QSlider" name="qualitySlider" >
-           <property name="whatsThis" >
-            <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">&#xd;&#xd;
-p, li { white-space: pre-wrap; }&#xd;&#xd;
-&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">&#xd;&#xd;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This slider goes from 0 to 100. 100 being the highest quality and 0 the lowest.&lt;/p>&#xd;&#xd;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Quality is related to file size and of course to readability and overall quality of the image.&lt;/p>&lt;/body>&lt;/html></string>
+          <widget class="QSlider" name="qualitySlider">
+           <property name="whatsThis">
+            <string>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This slider goes from 0 to 100. 100 being the highest quality and 0 the lowest.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Quality is related to file size and of course to readability and overall quality of the image.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-           <property name="maximum" >
+           <property name="value">
+            <number>99</number>
+           </property>
+           <property name="maximum">
             <number>100</number>
            </property>
-           <property name="value" >
-            <number>100</number>
-           </property>
-           <property name="orientation" >
+           <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
           </widget>
@@ -485,51 +486,51 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="advancedtab" >
-      <attribute name="title" >
+     <widget class="QWidget" name="advancedtab">
+      <attribute name="title">
        <string>Advanced</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3" >
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QCheckBox" name="clipboardCheckBox" >
-         <property name="text" >
+        <widget class="QCheckBox" name="clipboardCheckBox">
+         <property name="text">
           <string>Copy the screenshot to the clipboard.</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="optiPngCheckBox" >
-         <property name="toolTip" >
+        <widget class="QCheckBox" name="optiPngCheckBox">
+         <property name="toolTip">
           <string>Opens a new process called OptiPNG which dramatically reduces the file size.</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Optimize PNG screenshots.</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="dxScreenCheckBox" >
-         <property name="toolTip" >
+        <widget class="QCheckBox" name="dxScreenCheckBox">
+         <property name="toolTip">
           <string>DirectX screenshots can be useful for capturing some games which would not work using the normal method.</string>
          </property>
-         <property name="text" >
+         <property name="text">
           <string>Use Direct&amp;X for screenshots (experimental).</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="warnHideCheckBox" >
-         <property name="text" >
+        <widget class="QCheckBox" name="warnHideCheckBox">
+         <property name="text">
           <string>Warn when hiding without a tray icon.</string>
          </property>
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer" >
-         <property name="orientation" >
+        <spacer name="verticalSpacer">
+         <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
            <height>42</height>
@@ -538,13 +539,20 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
         </spacer>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2" >
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <spacer name="horizontalSpacer_2" >
-           <property name="orientation" >
+          <widget class="QPushButton" name="checkUpdatesPushButton">
+           <property name="text">
+            <string>Check Updates Now</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>40</width>
              <height>20</height>
@@ -553,8 +561,8 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="aboutPushButton" >
-           <property name="text" >
+          <widget class="QPushButton" name="aboutPushButton">
+           <property name="text">
             <string>About Lightscreen</string>
            </property>
           </widget>
@@ -566,11 +574,11 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
+     <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::RestoreDefaults</set>
      </property>
     </widget>
@@ -612,7 +620,7 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>
-  <include location="../lightscreen.qrc" />
+  <include location="../lightscreen.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -621,11 +629,11 @@ p, li { white-space: pre-wrap; }&#xd;&#xd;
    <receiver>OptionsDialog</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>289</x>
      <y>280</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>

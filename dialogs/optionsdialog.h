@@ -15,6 +15,7 @@ public:
 public slots:
   void accepted();
   void browse();
+  void checkUpdatesNow();
   void dialogButtonClicked(QAbstractButton *button);
   void flipButtonToggled(bool checked);
   void languageChange(QString language);
@@ -22,6 +23,7 @@ public slots:
   void saveSettings();
   void startupRelatedStateChange(int state);
   void trayRelatedStateChange(int state);
+
 
 protected:
   void changeEvent(QEvent *event);
