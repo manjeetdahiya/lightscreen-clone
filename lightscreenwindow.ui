@@ -27,7 +27,7 @@
         </sizepolicy>
        </property>
        <property name="text" >
-        <string>Screeenshot</string>
+        <string>Screenshot</string>
        </property>
        <property name="popupMode" >
         <enum>QToolButton::InstantPopup</enum>
