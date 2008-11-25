@@ -18,9 +18,14 @@ AreaSelector::AreaSelector()
   drawBackground();
 }
 
-QRect AreaSelector::getRect()
+QRect AreaSelector::rect()
 {
   return mRect;
+}
+
+QPixmap AreaSelector::pixmap()
+{
+  return mCleanDesktop.copy(rect());
 }
 
 // Drawing slots

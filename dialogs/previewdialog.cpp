@@ -7,13 +7,14 @@
 
 PreviewDialog::PreviewDialog(QPixmap &screenshot) : QDialog(0)
 {
-  setWindowFlags( Qt::WindowStaysOnTopHint | Qt::Popup);
+  setWindowFlags( Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint );
+  setWindowTitle("Screenshot Preview");
   setMouseTracking(true);
 
   QSize size = screenshot.size();
 
   if (!(size.width() < 200 && size.height() < 200))
-  {
+  { // Scale the image when it's witdth or height exceed 200
     size.scale(200, 200, Qt::KeepAspectRatio);
   }
 
@@ -26,20 +27,18 @@ PreviewDialog::PreviewDialog(QPixmap &screenshot) : QDialog(0)
 
   QPoint position = QApplication::desktop()->availableGeometry().bottomRight();
   position.setX(position.x() - size.width());
-  //position.setY(position.y() - size.height());
 
   move(position);
 
+  //TODO: It should be possible to disable this.
   QTimeLine *effectTimeLine = new QTimeLine(400, this);
   effectTimeLine->setFrameRange(position.y(), position.y() - size.height());
 
   connect(effectTimeLine, SIGNAL(frameChanged(int)), this, SLOT(effect(int)));
   connect(&deathTimer, SIGNAL(timeout()), this, SLOT(kill()));
 
-  deathTimer.setInterval(3000);
-
   show();
-  deathTimer.start();
+  deathTimer.start(3000);
   effectTimeLine->start();
 }
 
@@ -61,15 +60,7 @@ bool PreviewDialog::event(QEvent *event)
   }
   if (event->type() == QEvent::MouseMove)
   {
-    setFocus();
-  }
-  if (event->type() == QEvent::FocusIn)
-  {
-    deathTimer.stop();
-  }
-  if (event->type() == QEvent::FocusOut)
-  {
-    deathTimer.start();
+    deathTimer.setInterval(3000);
   }
 
   return QDialog::event(event);

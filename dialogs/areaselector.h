@@ -11,8 +11,9 @@ class AreaSelector: public QDialog
   Q_OBJECT
 
 public:
-	AreaSelector();
-	QRect getRect();
+  AreaSelector();
+  QRect rect();
+  QPixmap pixmap();
 
 private slots:
   void drawBackground();

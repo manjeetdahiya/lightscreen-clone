@@ -122,6 +122,12 @@ void LightscreenWindow::goToFolder()
     QDesktopServices::openUrl(QUrl(folder));
 }
 
+void LightscreenWindow::instanceMessage(QString message)
+{
+  if (!message.isNull())
+    show();
+}
+
 void LightscreenWindow::messageClicked()
 {
   goToFolder();
@@ -637,7 +643,7 @@ void LightscreenWindow::closeEvent(QCloseEvent *event)
 void LightscreenWindow::showEvent(QShowEvent *event)
 {
   restoreGeometry(mSettings.value("geometry").toByteArray());
-  os::vistaGlass(this); // Fixes black background bug?
+  //os::vistaGlass(this); // Fixes black background bug?
   QDialog::showEvent(event);
 }
 

@@ -120,8 +120,8 @@ QPixmap Screenshot::getSelectedArea()
 
   alreadySelecting = false;
 
-  if (result == QDialog::Accepted && selector.getRect().isValid())
-    return screen.copy(selector.getRect());
+  if (result == QDialog::Accepted && selector.rect().isValid())
+    return selector.pixmap();
   else
     return QPixmap();
 }

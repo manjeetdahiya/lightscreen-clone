@@ -9,7 +9,8 @@ HEADERS += tools/os.h \
     widgets/hotkeywidget.h \
     lightscreenwindow.h \
     tools/screenshot.h \
-    dialogs/previewdialog.h
+    dialogs/previewdialog.h \
+    tools/singleapplication/dsingleapplication.h
 SOURCES += tools/os.cpp \
     updater/updater.cpp \
     dialogs/areaselector.cpp \
@@ -19,7 +20,8 @@ SOURCES += tools/os.cpp \
     main.cpp \
     lightscreenwindow.cpp \
     tools/screenshot.cpp \
-    dialogs/previewdialog.cpp
+    dialogs/previewdialog.cpp \
+    tools/singleapplication/dsingleapplication.cpp
 FORMS += dialogs/optionsdialog.ui \
     dialogs/aboutdialog.ui \
     lightscreenwindow.ui
@@ -32,5 +34,4 @@ QT += network \
     core \
     gui
 win32:LIBS += libgdi32
-
 include($$PWD/tools/globalshortcut/globalshortcut.pri)
