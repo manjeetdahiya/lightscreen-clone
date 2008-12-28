@@ -191,20 +191,26 @@ void LightscreenWindow::screenshotAction(int mode)
 
   }
 
-  // Populating the option object that will then be passed to the screenshot engine
-  Screenshot::Options options;
-  options.file       = mSettings.value("file/enabled").toBool();
-  options.format     = mSettings.value("file/format").toInt();
-  options.prefix     = mSettings.value("file/prefix").toString();
-  options.directory  = QDir(mSettings.value("file/target").toString());
-  options.naming     = mSettings.value("file/naming").toInt();
-  options.mode       = mode;
-  options.quality    = mSettings.value("options/quality", 100).toInt();
-  options.flipNaming = mSettings.value("options/flip", false).toBool();
-  options.directX    = mSettings.value("options/dxScreen", false).toBool();
-  options.currentMonitor = mSettings.value("options/currentMonitor", false).toBool();
-  options.clipboard  = mSettings.value("options/clipboard", true).toBool();
-  options.preview    = mSettings.value("options/preview", false).toBool();
+  static Screenshot::Options options;
+
+  if (!mDoCache)
+  {
+    // Populating the option object that will then be passed to the screenshot engine
+    options.file       = mSettings.value("file/enabled").toBool();
+    options.format     = mSettings.value("file/format").toInt();
+    options.prefix     = mSettings.value("file/prefix").toString();
+    options.directory  = QDir(mSettings.value("file/target").toString());
+    options.naming     = mSettings.value("file/naming").toInt();
+    options.mode       = mode;
+    options.quality    = mSettings.value("options/quality", 100).toInt();
+    options.flipNaming = mSettings.value("options/flip", false).toBool();
+    options.directX    = mSettings.value("options/dxScreen", false).toBool();
+    options.currentMonitor = mSettings.value("options/currentMonitor", false).toBool();
+    options.clipboard  = mSettings.value("options/clipboard", true).toBool();
+    options.preview    = mSettings.value("options/preview", false).toBool();
+
+    mDoCache = true;
+  }
 
   // Taking the screenshot and saving the result.
   Screenshot screenshot(options);
@@ -444,6 +450,8 @@ void LightscreenWindow::applySettings()
   mTrayIcon->setVisible(mSettings.value("options/tray").toBool());
 
   connectHotkeys();
+
+  mDoCache = false;
 
 #ifdef Q_WS_WIN
   // Windows startup settings

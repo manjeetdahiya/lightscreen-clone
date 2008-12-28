@@ -7,7 +7,7 @@
 
 PreviewDialog::PreviewDialog(QPixmap &screenshot) : QDialog(0)
 {
-  setWindowFlags( Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint );
+  setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
   setWindowTitle("Screenshot Preview");
   setMouseTracking(true);
 

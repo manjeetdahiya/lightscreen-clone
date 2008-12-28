@@ -13,23 +13,23 @@ class Screenshot : public QObject
 public:
   enum Format
   {
-    PNG = 0,
-    JPEG,
-    BMP,
-    TIFF
+    PNG  = 0,
+    JPEG = 1,
+    BMP  = 2,
+    TIFF = 3
   };
 
   enum Naming
   {
     Numeric = 0,
-    Timestamp
+    Timestamp = 1
   };
 
   enum Mode
   {
-    WholeScreen = 0,
-    ActiveWindow,
-    SelectedArea
+    WholeScreen  = 0,
+    ActiveWindow = 1,
+    SelectedArea = 2
   };
 
   struct Options
@@ -55,20 +55,25 @@ public:
     QString fileName;
   };
 
-  Screenshot(Screenshot::Options options);
+  Screenshot(Screenshot::Options opt);
 
 public slots:
   Screenshot::Result take();
 
 private:
-  QPixmap getActiveWindow();
-  QString getFileName();
-  char*   formatString();
-  QPixmap getSelectedArea();
-  QPixmap getWholeScreen();
+  void  activeWindow();
+  QString  newFileName();
+  char* formatString();
+  void  selectedArea();
+  void  wholeScreen();
+
+  void setPixmap(QPixmap pixmap);
+  QPixmap& pixmap();
+  QPixmap grabDesktop();
 
 private:
   Screenshot::Options options;
+  QPixmap mPixmap;
 
 };
 

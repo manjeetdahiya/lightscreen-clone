@@ -1,5 +1,3 @@
-
-
 #include <QApplication>
 #include <QClipboard>
 #include <QDateTime>
@@ -18,28 +16,30 @@
 
 #include "os.h"
 
-Screenshot::Screenshot(Screenshot::Options options) : options(options)
+Screenshot::Screenshot(Screenshot::Options opt) :
+    options(opt)
 {
+
 }
 
-QPixmap Screenshot::getActiveWindow()
+void Screenshot::activeWindow()
 {
 #ifdef Q_WS_WIN
   HWND fWindow = GetForegroundWindow();
 
   if (fWindow == NULL)
-  return QPixmap();
+  return;
 
   if (fWindow == GetDesktopWindow())
-  return getWholeScreen();
+   wholeScreen();
 
-  return os::grabWindow(GetForegroundWindow());
+  setPixmap(os::grabWindow(GetForegroundWindow()));
 #else
-  return QPixmap::grabWindow(QApplication::desktop()->winId());
+  wholeScreen();
 #endif
 }
 
-QString Screenshot::getFileName()
+QString Screenshot::newFileName()
 {
   if (!options.directory.exists())
     options.directory.mkpath(options.directory.path());
@@ -73,23 +73,23 @@ QString Screenshot::getFileName()
   break;
 }
 
-// %1: Path
-// %2-%3: Naming / Prefix
-// %4: File extension
-QString fileName("%1%2%3.%4");
-QString extension = QString(formatString()).toLower();
-QString path = QDir::toNativeSeparators(options.directory.path());
+  // %1: Path
+  // %2-%3: Naming / Prefix
+  // %4: File extension
+  QString fileName("%1%2%3.%4");
+  QString extension = QString(formatString()).toLower();
+  QString path = QDir::toNativeSeparators(options.directory.path());
 
-// Cleanup
-if (QDir::toNativeSeparators(path.at(path.size()-1)) != QDir::separator() && !path.isEmpty())
-path.append(QDir::separator());
+  // Cleanup
+  if (QDir::toNativeSeparators(path.at(path.size()-1)) != QDir::separator() && !path.isEmpty())
+    path.append(QDir::separator());
 
-if (options.flipNaming)
-fileName = fileName.arg(path).arg(naming).arg(options.prefix).arg(extension);
-else
-fileName = fileName.arg(path).arg(options.prefix).arg(naming).arg(extension);
+  if (options.flipNaming)
+    fileName = fileName.arg(path).arg(naming).arg(options.prefix).arg(extension);
+  else
+    fileName = fileName.arg(path).arg(options.prefix).arg(naming).arg(extension);
 
-return fileName;
+  return fileName;
 }
 
 char* Screenshot::formatString()
@@ -104,16 +104,16 @@ char* Screenshot::formatString()
   return "PNG"; //default
 }
 
-QPixmap Screenshot::getSelectedArea()
+void Screenshot::selectedArea()
 {
   static bool alreadySelecting = false; // Prevents multiple AreaSelector instances
 
   if (alreadySelecting)
-    return QPixmap();
+    return;
 
   alreadySelecting = true;
 
-  QPixmap screen = QPixmap::grabWindow(QApplication::desktop()->winId());
+  QPixmap screen = grabDesktop();
 
   AreaSelector selector;
   int result = selector.exec();
@@ -121,35 +121,56 @@ QPixmap Screenshot::getSelectedArea()
   alreadySelecting = false;
 
   if (result == QDialog::Accepted && selector.rect().isValid())
-    return selector.pixmap();
+    setPixmap(selector.pixmap());
   else
-    return QPixmap();
+    return;
 }
 
-QPixmap Screenshot::getWholeScreen()
+void Screenshot::wholeScreen()
 {
   if (options.directX)
-    return os::getDxScreen();
+    setPixmap(os::getDxScreen());
   else
+    setPixmap(grabDesktop());
+}
+
+QPixmap Screenshot::grabDesktop()
+{
+  if (options.currentMonitor)
+  { // Shamelessly stolen from KSnapshot: http://websvn.kde.org/trunk/KDE/kdegraphics/ksnapshot/ksnapshot.cpp?revision=845665&view=markup
+    QDesktopWidget *desktop = QApplication::desktop();
+    int screenId = desktop->screenNumber( QCursor::pos() );;
+    QRect geom = desktop->screenGeometry( screenId );
+    return QPixmap::grabWindow( desktop->winId(), geom.x(), geom.y(), geom.width(), geom.height() );
+  } else {
     return QPixmap::grabWindow(QApplication::desktop()->winId());
+  }
+}
+
+void Screenshot::setPixmap(QPixmap pixmap)
+{
+  mPixmap = pixmap;
+}
+
+QPixmap& Screenshot::pixmap()
+{
+  return mPixmap;
 }
 
 Screenshot::Result Screenshot::take()
 {
-  QPixmap screenshot;
-
   switch (options.mode)
   {
   case Screenshot::WholeScreen:
-    screenshot = getWholeScreen();
+    wholeScreen();
     break;
 
   case Screenshot::SelectedArea:
-    screenshot = getSelectedArea();
+    selectedArea();
     break;
 
   case Screenshot::ActiveWindow:
-    screenshot = getActiveWindow();
+    activeWindow();
     break;
   }
 
@@ -158,13 +179,13 @@ Screenshot::Result Screenshot::take()
 
   if (options.file)
   {
-    fileName = getFileName();
-    action   = screenshot.save(fileName, formatString(), options.quality);
+    fileName = newFileName();
+    action   = pixmap().save(fileName, formatString(), options.quality);
   }
   else
   {
     QString fileName = "";
-    action   = !screenshot.isNull();
+    action   = !(pixmap().isNull());
   }
 
   Screenshot::Result result;
@@ -173,10 +194,10 @@ Screenshot::Result Screenshot::take()
   result.fileName = fileName;
 
   if (action && options.preview)
-    new PreviewDialog(screenshot);
+    new PreviewDialog(pixmap());
 
   if (action && options.clipboard)
-    qApp->clipboard()->setPixmap(screenshot);
+    qApp->clipboard()->setPixmap(pixmap());
 
   return result;
 }

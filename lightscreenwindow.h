@@ -53,6 +53,7 @@ protected:
 
 private:
   bool             mReviveMain;
+  bool             mDoCache;
   QSettings        mSettings;
   QSystemTrayIcon *mTrayIcon;
   Ui::LightscreenWindowClass ui;
