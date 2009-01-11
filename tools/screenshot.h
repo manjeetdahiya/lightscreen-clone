@@ -48,17 +48,12 @@ public:
     bool preview;
   };
 
-  struct Result
-  {
-    Options options;
-    bool result;
-    QString fileName;
-  };
-
-  Screenshot(Screenshot::Options opt);
+  Screenshot(Screenshot::Options options);
+  Screenshot::Options &options();
 
 public slots:
-  Screenshot::Result take();
+  bool take();
+  QString save();
 
 private:
   void  activeWindow();
@@ -69,10 +64,10 @@ private:
 
   void setPixmap(QPixmap pixmap);
   QPixmap& pixmap();
-  QPixmap grabDesktop();
+  void grabDesktop();
 
 private:
-  Screenshot::Options options;
+  Screenshot::Options mOptions;
   QPixmap mPixmap;
 
 };

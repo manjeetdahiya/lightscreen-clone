@@ -117,9 +117,12 @@ void LightscreenWindow::goToFolder()
   QString folder = mSettings.value("file/target").toString();
 
   if (folder.isEmpty())
-    QDesktopServices::openUrl(QUrl(QApplication::applicationDirPath()));
-  else
-    QDesktopServices::openUrl(QUrl(folder));
+    folder = QApplication::applicationDirPath();
+
+  if (QDir::toNativeSeparators(folder.at(folder.size()-1)) != QDir::separator())
+    folder.append(QDir::separator());
+
+  QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
 }
 
 void LightscreenWindow::instanceMessage(QString message)
@@ -140,58 +143,51 @@ void LightscreenWindow::restoreSystemTrayNotifier()
 
 void LightscreenWindow::screenshotAction(int mode)
 {
-  qDebug() << "screenshotAction:" << mode;
+  bool image  = false;
+  bool result = false;
+  QString fileName;
+  static int lastMode = -1;
+  int delayms = -1;
+  bool optionsHide = mSettings.value("options/hide").toBool(); // Option cache, used a couple of times.
+  static Screenshot::Options options;
 
   // Applying pre-screenshot settings
   if (mSettings.value("options/hide").toBool())
     mTrayIcon->hide();
 
-  bool shouldHideWindow = false;
-  static int lastMode = -1;
-  static bool lastShouldHide = false;
-  int delayms = -1;
+  if (optionsHide)
+    setVisible(false);
 
-  if (mSettings.value("options/hide").toBool())
+  // Screenshot delay
+  delayms = mSettings.value("options/delay", 0).toInt();
+  delayms = delayms * 1000; // Converting the delay to milliseconds.
+
+  if (optionsHide)
   {
-    shouldHideWindow = isVisible();
-
-    //Hiding the main window for the screenshot
-    if (shouldHideWindow)
-      setVisible(false);
-
-    // Screenshot delay
-    delayms = mSettings.value("options/delay", 0).toInt();
-    delayms = delayms * 1000; // Converting the delay to milliseconds.
-
     // When on Windows Vista, the window takes a little bit longer to hide
     if (QSysInfo::WindowsVersion == QSysInfo::WV_VISTA)
       delayms += 400;
     else
       delayms += 200;
-
-    // The delayed functions works using static variables lastMode and lastShouldHide
-    // which keep the argument so a QTimer can call this function again.
-    if (delayms > 0)
-    {
-      if (lastMode < 0)
-      {
-        lastMode = mode;
-        lastShouldHide = shouldHideWindow;
-
-        QTimer::singleShot(delayms, this, SLOT(screenshotAction()));
-        return;
-      }
-      else
-      {
-        mode = lastMode;
-        shouldHideWindow = lastShouldHide;
-        lastMode = -1;
-      }
-    }
-
   }
 
-  static Screenshot::Options options;
+  // The delayed functions works using the static variable lastMode
+  // which keeps the argument so a QTimer can call this function again.
+  if (delayms > 0)
+  {
+    if (lastMode < 0)
+    {
+      lastMode = mode;
+
+      QTimer::singleShot(delayms, this, SLOT(screenshotAction()));
+      return;
+    }
+    else
+    {
+      mode = lastMode;
+      lastMode = -1;
+    }
+  }
 
   if (!mDoCache)
   {
@@ -201,7 +197,6 @@ void LightscreenWindow::screenshotAction(int mode)
     options.prefix     = mSettings.value("file/prefix").toString();
     options.directory  = QDir(mSettings.value("file/target").toString());
     options.naming     = mSettings.value("file/naming").toInt();
-    options.mode       = mode;
     options.quality    = mSettings.value("options/quality", 100).toInt();
     options.flipNaming = mSettings.value("options/flip", false).toBool();
     options.directX    = mSettings.value("options/dxScreen", false).toBool();
@@ -212,21 +207,25 @@ void LightscreenWindow::screenshotAction(int mode)
     mDoCache = true;
   }
 
+  options.mode       = mode;
+
   // Taking the screenshot and saving the result.
   Screenshot screenshot(options);
 
-  Screenshot::Result screenshotResult;
+  image = screenshot.take();
 
-  screenshotResult = screenshot.take();
-
-  qDebug() << "Result:" << screenshotResult.result;
+  if (image)
+  {
+    fileName = screenshot.save();
+    result   = !(fileName.isEmpty());
+  }
 
   // Reversing settings
   if (mSettings.value("options/hide").toBool())
   {
     mTrayIcon->show();
 
-    if (shouldHideWindow)
+    if (optionsHide)
       setVisible(true);
 
     lastMode = -1;
@@ -234,15 +233,15 @@ void LightscreenWindow::screenshotAction(int mode)
 
   // Showing message.
   if (mSettings.value("options/message").toBool())
-    showScreenshotMessage(screenshotResult.result, screenshotResult.fileName);
+    showScreenshotMessage(result, fileName);
 
   if (mSettings.value("options/tray").toBool())
-    showTrayNotifier(screenshotResult.result);
+    showTrayNotifier(result);
 
 #ifdef Q_WS_WIN
   if (mSettings.value("options/playSound", false).toBool())
   { //TODO: Cross-platform -- see freedesktop.org? mac?
-    if (screenshotResult.result)
+    if (result)
     {
       QSound sound("Media/notify.wav");
       sound.play();
@@ -255,12 +254,12 @@ void LightscreenWindow::screenshotAction(int mode)
   }
 #endif
 
-  if (!screenshotResult.result)
+  if (!result)
     return;
 
   if (mSettings.value("options/optipng").toBool()
    && mSettings.value("options/format").toInt() == Screenshot::PNG)
-    compressPng(screenshotResult.fileName);
+    compressPng(fileName);
 
 }
 
@@ -546,15 +545,15 @@ void LightscreenWindow::createScreenshotButtonMenu()
 
   QActionGroup *screenshotGroup = new QActionGroup(this);
   screenshotGroup->addAction(screenAction);
-  screenshotGroup->addAction(windowAction);
   screenshotGroup->addAction(areaAction);
+  screenshotGroup->addAction(windowAction);
 
   connect(screenshotGroup, SIGNAL(triggered(QAction*)), this, SLOT(screenshotActionTriggered(QAction*)));
 
   QMenu *buttonMenu = new QMenu;
   buttonMenu->addAction(screenAction);
-  buttonMenu->addAction(windowAction);
   buttonMenu->addAction(areaAction);
+  buttonMenu->addAction(windowAction);
   buttonMenu->addSeparator();
   buttonMenu->addAction(goAction);
 

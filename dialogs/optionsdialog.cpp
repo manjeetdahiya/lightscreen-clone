@@ -17,6 +17,8 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 {
   ui.setupUi(this);
 
+  os::vistaGlass(this);
+
   setModal(true);
 
 #ifndef Q_WS_WIN
@@ -45,7 +47,11 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   connect(ui.openCheckBox     , SIGNAL(toggled(bool)), ui.openHotkeyWidget     , SLOT(setEnabled(bool)));
   connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
 
-  connect(ui.translateLabel, SIGNAL(linkActivated(QString)), this, SLOT(openUrl(QString)));
+  connect(ui.generalButton,     SIGNAL(clicked()), this, SLOT(changePage()));
+  connect(ui.hotkeysButton,     SIGNAL(clicked()), this, SLOT(changePage()));
+  connect(ui.optionsButton,     SIGNAL(clicked()), this, SLOT(changePage()));
+  connect(ui.screenshareButton, SIGNAL(clicked()), this, SLOT(changePage()));
+  connect(ui.advancedButton,    SIGNAL(clicked()), this, SLOT(changePage()));
 
   // Getting the language entries
   QDir lang(QCoreApplication::applicationDirPath() + "/lang", "*.qm");
@@ -105,6 +111,22 @@ void OptionsDialog::browse()
   ui.targetLineEdit->setText(fileName);
 }
 
+void OptionsDialog::changePage()
+{
+  QString page = qobject_cast<QPushButton*>(sender())->text();
+
+  if (page == tr("General"))
+    ui.stack->setCurrentIndex(0);
+  else if (page == tr("Hotkeys"))
+    ui.stack->setCurrentIndex(1);
+  else if (page == tr("Options"))
+    ui.stack->setCurrentIndex(2);
+  else if (page == tr("Screenshare"))
+    ui.stack->setCurrentIndex(3);
+  else if (page == tr("Advanced"))
+    ui.stack->setCurrentIndex(4);
+}
+
 void OptionsDialog::checkUpdatesNow()
 {
   Updater::instance()->check();
@@ -160,11 +182,6 @@ void OptionsDialog::flipButtonToggled(bool checked)
 void OptionsDialog::languageChange(QString language)
 {
   os::translate(language);
-}
-
-void OptionsDialog::openUrl(QString url)
-{
-  QDesktopServices::openUrl(QUrl(url));
 }
 
 void OptionsDialog::saveSettings()

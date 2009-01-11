@@ -16,10 +16,15 @@
 
 #include "os.h"
 
-Screenshot::Screenshot(Screenshot::Options opt) :
-    options(opt)
+Screenshot::Screenshot(Screenshot::Options options) :
+    mOptions(options)
 {
 
+}
+
+Screenshot::Options &Screenshot::options()
+{
+  return mOptions;
 }
 
 void Screenshot::activeWindow()
@@ -41,35 +46,35 @@ void Screenshot::activeWindow()
 
 QString Screenshot::newFileName()
 {
-  if (!options.directory.exists())
-    options.directory.mkpath(options.directory.path());
+  if (!mOptions.directory.exists())
+    mOptions.directory.mkpath(mOptions.directory.path());
 
   QString naming("%1");
 
   int naming_largest = 0;
 
-  switch (options.naming)
+  switch (mOptions.naming)
   {
   case 0: // Numeric
     // Iterating through the folder to find the largest numeric naming.
-    foreach(QString file, options.directory.entryList(QDir::Files)){
-    if (file.contains(options.prefix))
-    {
-      file.chop(file.size() - file.lastIndexOf("."));
-      file.remove(options.prefix);
+    foreach(QString file, mOptions.directory.entryList(QDir::Files)){
+      if (file.contains(mOptions.prefix))
+      {
+        file.chop(file.size() - file.lastIndexOf("."));
+        file.remove(mOptions.prefix);
 
-      if (file.toInt()> naming_largest)
-      naming_largest = file.toInt();
+        if (file.toInt()> naming_largest)
+        naming_largest = file.toInt();
+      }
     }
-  }
 
-  naming = naming.arg(naming_largest + 1);
+    naming = naming.arg(naming_largest + 1);
   break;
   case 1: // Timestamp
-  naming = naming.arg(QDateTime::currentDateTime().toTime_t());
+    naming = naming.arg(QDateTime::currentDateTime().toTime_t());
   break;
   case 2: // Date
-  naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
+    naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
   break;
 }
 
@@ -78,27 +83,27 @@ QString Screenshot::newFileName()
   // %4: File extension
   QString fileName("%1%2%3.%4");
   QString extension = QString(formatString()).toLower();
-  QString path = QDir::toNativeSeparators(options.directory.path());
+  QString path = QDir::toNativeSeparators(mOptions.directory.path());
 
   // Cleanup
   if (QDir::toNativeSeparators(path.at(path.size()-1)) != QDir::separator() && !path.isEmpty())
     path.append(QDir::separator());
 
-  if (options.flipNaming)
-    fileName = fileName.arg(path).arg(naming).arg(options.prefix).arg(extension);
+  if (mOptions.flipNaming)
+    fileName = fileName.arg(path).arg(naming).arg(mOptions.prefix).arg(extension);
   else
-    fileName = fileName.arg(path).arg(options.prefix).arg(naming).arg(extension);
+    fileName = fileName.arg(path).arg(mOptions.prefix).arg(naming).arg(extension);
 
   return fileName;
 }
 
 char* Screenshot::formatString()
 {
-  if (options.format == 0)
+  if (mOptions.format == 0)
     return "PNG";
-  if (options.format == 1)
+  if (mOptions.format == 1)
     return "JPG";
-  if (options.format == 2)
+  if (mOptions.format == 2)
     return "BMP";
 
   return "PNG"; //default
@@ -113,8 +118,6 @@ void Screenshot::selectedArea()
 
   alreadySelecting = true;
 
-  QPixmap screen = grabDesktop();
-
   AreaSelector selector;
   int result = selector.exec();
 
@@ -128,22 +131,22 @@ void Screenshot::selectedArea()
 
 void Screenshot::wholeScreen()
 {
-  if (options.directX)
+  if (mOptions.directX)
     setPixmap(os::getDxScreen());
   else
-    setPixmap(grabDesktop());
+    grabDesktop();
 }
 
-QPixmap Screenshot::grabDesktop()
+void Screenshot::grabDesktop()
 {
-  if (options.currentMonitor)
+  if (mOptions.currentMonitor)
   { // Shamelessly stolen from KSnapshot: http://websvn.kde.org/trunk/KDE/kdegraphics/ksnapshot/ksnapshot.cpp?revision=845665&view=markup
     QDesktopWidget *desktop = QApplication::desktop();
     int screenId = desktop->screenNumber( QCursor::pos() );;
     QRect geom = desktop->screenGeometry( screenId );
-    return QPixmap::grabWindow( desktop->winId(), geom.x(), geom.y(), geom.width(), geom.height() );
+    setPixmap(QPixmap::grabWindow( desktop->winId(), geom.x(), geom.y(), geom.width(), geom.height() ));
   } else {
-    return QPixmap::grabWindow(QApplication::desktop()->winId());
+    setPixmap(QPixmap::grabWindow(QApplication::desktop()->winId()));
   }
 }
 
@@ -157,9 +160,9 @@ QPixmap& Screenshot::pixmap()
   return mPixmap;
 }
 
-Screenshot::Result Screenshot::take()
+bool Screenshot::take()
 {
-  switch (options.mode)
+  switch (mOptions.mode)
   {
   case Screenshot::WholeScreen:
     wholeScreen();
@@ -174,30 +177,25 @@ Screenshot::Result Screenshot::take()
     break;
   }
 
+  return !pixmap().isNull();
+}
+
+QString Screenshot::save()
+{
   QString fileName;
   bool    action;
 
-  if (options.file)
-  {
-    fileName = newFileName();
-    action   = pixmap().save(fileName, formatString(), options.quality);
-  }
-  else
-  {
-    QString fileName = "";
-    action   = !(pixmap().isNull());
-  }
+  fileName = newFileName();
+  action   = pixmap().save(fileName, formatString(), mOptions.quality);
 
-  Screenshot::Result result;
-  result.options  = options;
-  result.result   = action;
-  result.fileName = fileName;
-
-  if (action && options.preview)
+  if (action && mOptions.preview)
     new PreviewDialog(pixmap());
 
-  if (action && options.clipboard)
+  if (action && mOptions.clipboard)
     qApp->clipboard()->setPixmap(pixmap());
 
-  return result;
+  if (action)
+    return fileName;
+  else
+    return QString();
 }

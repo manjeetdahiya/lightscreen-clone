@@ -13,6 +13,8 @@
 AreaSelector::AreaSelector()
 {
   setWindowFlags(Qt::WindowStaysOnTopHint);
+  setWindowState( Qt::WindowFullScreen);
+
   setCursor(Qt::CrossCursor);
 
   drawBackground();
