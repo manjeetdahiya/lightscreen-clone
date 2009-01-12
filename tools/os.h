@@ -9,7 +9,6 @@ namespace os
 { //TODO: Comment functions
   QPixmap getDxScreen();
   QPixmap grabWindow(WId winId);
-  bool singleInstance(QString name);
   void translate(QString language);
   void vistaGlass(QWidget *target);
 }

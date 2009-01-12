@@ -15,11 +15,11 @@ public:
 public slots:
   void accepted();
   void browse();
+  void changePage();
   void checkUpdatesNow();
   void dialogButtonClicked(QAbstractButton *button);
   void flipButtonToggled(bool checked);
   void languageChange(QString language);
-  void openUrl(QString url);
   void saveSettings();
   void startupRelatedStateChange(int state);
   void trayRelatedStateChange(int state);

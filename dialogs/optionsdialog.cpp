@@ -17,6 +17,8 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 {
   ui.setupUi(this);
 
+  os::vistaGlass(this);
+
   setModal(true);
 
 #ifndef Q_WS_WIN
@@ -45,7 +47,11 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   connect(ui.openCheckBox     , SIGNAL(toggled(bool)), ui.openHotkeyWidget     , SLOT(setEnabled(bool)));
   connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
 
-  connect(ui.translateLabel, SIGNAL(linkActivated(QString)), this, SLOT(openUrl(QString)));
+  connect(ui.generalButton,     SIGNAL(clicked()), this, SLOT(changePage()));
+  connect(ui.hotkeysButton,     SIGNAL(clicked()), this, SLOT(changePage()));
+  connect(ui.optionsButton,     SIGNAL(clicked()), this, SLOT(changePage()));
+  connect(ui.screenshareButton, SIGNAL(clicked()), this, SLOT(changePage()));
+  connect(ui.advancedButton,    SIGNAL(clicked()), this, SLOT(changePage()));
 
   // Getting the language entries
   QDir lang(QCoreApplication::applicationDirPath() + "/lang", "*.qm");
@@ -105,6 +111,22 @@ void OptionsDialog::browse()
   ui.targetLineEdit->setText(fileName);
 }
 
+void OptionsDialog::changePage()
+{
+  QString page = qobject_cast<QPushButton*>(sender())->text();
+
+  if (page == tr("General"))
+    ui.stack->setCurrentIndex(0);
+  else if (page == tr("Hotkeys"))
+    ui.stack->setCurrentIndex(1);
+  else if (page == tr("Options"))
+    ui.stack->setCurrentIndex(2);
+  else if (page == tr("Screenshare"))
+    ui.stack->setCurrentIndex(3);
+  else if (page == tr("Advanced"))
+    ui.stack->setCurrentIndex(4);
+}
+
 void OptionsDialog::checkUpdatesNow()
 {
   Updater::instance()->check();
@@ -162,11 +184,6 @@ void OptionsDialog::languageChange(QString language)
   os::translate(language);
 }
 
-void OptionsDialog::openUrl(QString url)
-{
-  QDesktopServices::openUrl(QUrl(url));
-}
-
 void OptionsDialog::saveSettings()
 {
   QSettings settings;
@@ -176,6 +193,7 @@ void OptionsDialog::saveSettings()
   settings.setValue("prefix", ui.prefixLineEdit->text());
   settings.setValue("naming", ui.namingComboBox->currentIndex());
   settings.setValue("target", ui.targetLineEdit->text());
+  settings.setValue("enabled", ui.fileGroupBox->isChecked());
   settings.endGroup();
 
   settings.beginGroup("options");
@@ -192,6 +210,7 @@ void OptionsDialog::saveSettings()
   settings.setValue("language", ui.languageComboBox->currentText());
   // This settings is inverted because the first iteration of the Updater did not have a settings but instead relied on the messagebox choice of the user.
   settings.setValue("disableUpdater", !ui.updaterCheckBox->isChecked());
+  settings.setValue("preview", ui.previewCheckBox->isChecked());
 
   // Advanced
   settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
@@ -259,6 +278,7 @@ void OptionsDialog::loadSettings()
   ui.prefixLineEdit->setText(settings.value("prefix", "screenshot.").toString());
   ui.namingComboBox->setCurrentIndex(settings.value("naming", 0).toInt());
   ui.targetLineEdit->setText(settings.value("target", QDir::homePath() + "/screenshots").toString()); // Defaults to $HOME$/screenshots
+  ui.fileGroupBox->setChecked(settings.value("enabled", true).toBool());
   settings.endGroup();
 
   settings.beginGroup("options");
@@ -272,6 +292,7 @@ void OptionsDialog::loadSettings()
   ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
   ui.playSoundCheckBox->setChecked(settings.value("playSound", false).toBool());
   ui.updaterCheckBox->setChecked(!settings.value("disableUpdater", false).toBool());
+  ui.previewCheckBox->setChecked(settings.value("preview", false).toBool());
 
   // Advanced
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", true).toBool());

@@ -7,16 +7,22 @@ HEADERS += tools/os.h \
     dialogs/optionsdialog.h \
     dialogs/aboutdialog.h \
     widgets/hotkeywidget.h \
-    lightscreenwindow.h
+    lightscreenwindow.h \
+    tools/screenshot.h \
+    dialogs/previewdialog.h \
+    tools/singleapplication/dsingleapplication.h \
+    dialogs/languagedialog.h
 SOURCES += tools/os.cpp \
     updater/updater.cpp \
     dialogs/areaselector.cpp \
-    engines/screenshotengine.cpp \
     dialogs/optionsdialog.cpp \
     dialogs/aboutdialog.cpp \
     widgets/hotkeywidget.cpp \
     main.cpp \
-    lightscreenwindow.cpp
+    lightscreenwindow.cpp \
+    tools/screenshot.cpp \
+    dialogs/previewdialog.cpp \
+    tools/singleapplication/dsingleapplication.cpp
 FORMS += dialogs/optionsdialog.ui \
     dialogs/aboutdialog.ui \
     lightscreenwindow.ui

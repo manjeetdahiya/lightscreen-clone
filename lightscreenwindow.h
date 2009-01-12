@@ -6,7 +6,6 @@
 #include <QSettings>
 
 #include "ui_lightscreenwindow.h"
-#include "engines/screenshotengine.h"
 
 class QHttp;
 class Updater;
@@ -24,6 +23,7 @@ public slots:
   bool closingWithoutTray();
   void checkForUpdates();
   void goToFolder();
+  void instanceMessage(QString message);
   void messageClicked();
   void restoreSystemTrayNotifier();
   void screenshotAction(int mode = 0);
@@ -53,7 +53,7 @@ protected:
 
 private:
   bool             mReviveMain;
-  ScreenshotEngine mScreenshotEngine;
+  bool             mDoCache;
   QSettings        mSettings;
   QSystemTrayIcon *mTrayIcon;
   Ui::LightscreenWindowClass ui;
