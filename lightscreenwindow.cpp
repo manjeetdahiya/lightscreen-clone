@@ -22,6 +22,7 @@
 #include "lightscreenwindow.h"
 #include "dialogs/aboutdialog.h"
 #include "dialogs/optionsdialog.h"
+#include "dialogs/previewdialog.h"
 
 #include "tools/globalshortcut/globalshortcutmanager.h"
 #include "tools/os.h"
@@ -207,7 +208,13 @@ void LightscreenWindow::screenshotAction(int mode)
     mDoCache = true;
   }
 
-  options.mode       = mode;
+  options.mode = mode;
+
+  if (options.preview) //TODO: Check for screenshare here.
+  {
+    new PreviewDialog(this, options);
+    return;
+  }
 
   // Taking the screenshot and saving the result.
   Screenshot screenshot(options);
@@ -220,15 +227,24 @@ void LightscreenWindow::screenshotAction(int mode)
     result   = !(fileName.isEmpty());
   }
 
+
+  screenshotCleanup(result, fileName);
+
+  lastMode = -1;
+}
+
+void LightscreenWindow::screenshotActionTriggered(QAction* action)
+{
+  screenshotAction(action->data().toInt());
+}
+
+void LightscreenWindow::screenshotCleanup(bool result, QString fileName)
+{
   // Reversing settings
   if (mSettings.value("options/hide").toBool())
   {
     mTrayIcon->show();
-
-    if (optionsHide)
-      setVisible(true);
-
-    lastMode = -1;
+    setVisible(true);
   }
 
   // Showing message.
@@ -260,12 +276,6 @@ void LightscreenWindow::screenshotAction(int mode)
   if (mSettings.value("options/optipng").toBool()
    && mSettings.value("options/format").toInt() == Screenshot::PNG)
     compressPng(fileName);
-
-}
-
-void LightscreenWindow::screenshotActionTriggered(QAction* action)
-{
-  screenshotAction(action->data().toInt());
 }
 
 void LightscreenWindow::showOptions()

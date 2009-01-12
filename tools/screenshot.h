@@ -48,12 +48,15 @@ public:
     bool preview;
   };
 
+  Screenshot();
   Screenshot(Screenshot::Options options);
   Screenshot::Options &options();
+  void setOptions(Screenshot::Options options);
 
 public slots:
   bool take();
   QString save();
+  QPixmap& pixmap();
 
 private:
   void  activeWindow();
@@ -63,7 +66,6 @@ private:
   void  wholeScreen();
 
   void setPixmap(QPixmap pixmap);
-  QPixmap& pixmap();
   void grabDesktop();
 
 private:

@@ -16,15 +16,17 @@
 
 #include "os.h"
 
-Screenshot::Screenshot(Screenshot::Options options) :
-    mOptions(options)
-{
-
-}
+Screenshot::Screenshot() {}
+Screenshot::Screenshot(Screenshot::Options options) :  mOptions(options) {}
 
 Screenshot::Options &Screenshot::options()
 {
   return mOptions;
+}
+
+void Screenshot::setOptions(Screenshot::Options options)
+{
+  mOptions = options;
 }
 
 void Screenshot::activeWindow()
@@ -183,15 +185,15 @@ bool Screenshot::take()
 QString Screenshot::save()
 {
   QString fileName;
-  bool    action;
+  bool    action = false;
 
-  fileName = newFileName();
-  action   = pixmap().save(fileName, formatString(), mOptions.quality);
+  if (mOptions.file)
+  {
+    fileName = newFileName();
+    action   = pixmap().save(fileName, formatString(), mOptions.quality);
+  }
 
-  if (action && mOptions.preview)
-    new PreviewDialog(pixmap());
-
-  if (action && mOptions.clipboard)
+  if (mOptions.clipboard)
     qApp->clipboard()->setPixmap(pixmap());
 
   if (action)
