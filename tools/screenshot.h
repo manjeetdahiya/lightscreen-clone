@@ -46,6 +46,8 @@ public:
     bool clipboard;
     bool file;
     bool preview;
+    bool screenshare;
+    QString service;
   };
 
   Screenshot();

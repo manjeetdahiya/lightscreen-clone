@@ -11,34 +11,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void myMessageOutput(QtMsgType type, const char *msg)
-{ // Message output to print everything into stdout, so Windows can catch it.
-  //Comment out debug ouput for release build
-  switch (type)
-  {
-  case QtDebugMsg:
-    fprintf(stdout, "Debug: %s\n", msg);
-    break;
-  case QtWarningMsg:
-    fprintf(stdout, "Warning: %s\n", msg);
-    break;
-  case QtCriticalMsg:
-    fprintf(stdout, "Critical: %s\n", msg);
-    break;
-  case QtFatalMsg:
-    fprintf(stdout, "Fatal: %s\n", msg);
-    abort();
-  }
-}
-
 int main(int argc, char *argv[])
 {
-  qInstallMsgHandler(myMessageOutput);
-
   QApplication a(argc, argv);
   a.setOrganizationName("config");
   a.setApplicationName ("lightscreen");
-  a.setApplicationVersion("0.6-dev");
+  a.setApplicationVersion("1.0-dev");
   a.setQuitOnLastWindowClosed(false);
 
   QSettings::setDefaultFormat(QSettings::IniFormat);

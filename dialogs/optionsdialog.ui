@@ -19,7 +19,6 @@
 background-color: white;
 border: 1px solid gray;
 border-radius: 4px;
-z-index: 2;
 }
 </string>
   </property>
@@ -696,7 +695,7 @@ p, li { white-space: pre-wrap; }
        <widget class="QWidget" name="page_5">
         <layout class="QVBoxLayout" name="verticalLayout_8">
          <item>
-          <widget class="QGroupBox" name="groupBox">
+          <widget class="QGroupBox" name="screenshareGroupBox">
            <property name="title">
             <string>Screenshare</string>
            </property>
@@ -731,21 +730,21 @@ p, li { white-space: pre-wrap; }
              </spacer>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton">
+             <widget class="QRadioButton" name="isRadioButton">
               <property name="text">
                <string>ImageShack.us</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton_2">
+             <widget class="QRadioButton" name="tpRadioButton">
               <property name="text">
                <string>TinyPic.com</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton_3">
+             <widget class="QRadioButton" name="iuRadioButton">
               <property name="text">
                <string>Imageupload.com</string>
               </property>

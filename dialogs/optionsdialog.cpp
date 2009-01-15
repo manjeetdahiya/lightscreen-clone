@@ -220,6 +220,11 @@ void OptionsDialog::saveSettings()
   settings.setValue("currentMonitor", ui.currentMonitorCheckBox->isChecked());
   settings.endGroup();
 
+  settings.beginGroup("screenshare");
+  settings.setValue("enabled", ui.screenshareGroupBox->isChecked());
+  settings.setValue("service", "imageshack"); //TODO: Offer choice
+  settings.endGroup();
+
   settings.beginGroup("actions");
 
   settings.beginGroup("screen");
@@ -319,6 +324,11 @@ void OptionsDialog::loadSettings()
 
   ui.languageComboBox->setCurrentIndex(index);
 
+  settings.endGroup();
+
+  settings.beginGroup("screenshare");
+  ui.screenshareGroupBox->setChecked(settings.value("enabled", false).toBool());
+  //TODO: Select service
   settings.endGroup();
 
   settings.beginGroup("actions");

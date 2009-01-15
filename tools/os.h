@@ -11,6 +11,7 @@ namespace os
   QPixmap grabWindow(WId winId);
   void translate(QString language);
   void vistaGlass(QWidget *target);
+  void debug(QString text);
 }
 
 

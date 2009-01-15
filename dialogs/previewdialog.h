@@ -6,6 +6,9 @@
 #include <QTimer>
 #include "../tools/screenshot.h"
 
+class QHBoxLayout;
+class QProgressBar;
+class QHttp;
 class PreviewDialog : public QDialog
 {
   Q_OBJECT
@@ -17,6 +20,7 @@ private slots:
     void kill();
     void effect(int frame);
     void confirm();
+    void screenshareFinished(int id, bool error);
 
 protected:
     bool event(QEvent *event);
@@ -28,6 +32,9 @@ private:
   QTimer deathTimer;
   Screenshot mScreenshot;
   bool mConfirmed;
+  QHBoxLayout *mButtonLayout;
+  QProgressBar *mProgressBar;
+  QHttp *mHttp;
 
 };
 

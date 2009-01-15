@@ -12,6 +12,7 @@
 
 #include "hotkeywidget.h"
 #include "../tools/globalshortcut/globalshortcutmanager.h"
+#include "../tools/os.h"
 
 //TODO: QWT: Fix Printscreen
 HotkeyWidget::HotkeyWidget(QWidget *parent) :
@@ -47,10 +48,6 @@ bool HotkeyWidget::event(QEvent *event)
   if (event->type() == QEvent::FocusIn)
   {
     setText(tr("Type your hotkey"));
-#ifdef Q_WS_WIN
-    GlobalShortcutManager::instance()->connect(Qt::Key_Print, this, SLOT(printKeyPress()));
-    GlobalShortcutManager::instance()->connect(QKeySequence(Qt::CTRL + Qt::Key_Print), this, SLOT(printKeyPress()));
-#endif
   }
   if (event->type() == QEvent::FocusOut)
   {
@@ -61,11 +58,6 @@ bool HotkeyWidget::event(QEvent *event)
     }
 
     setHotkeyText(); // Reset the text
-
-#ifdef Q_WS_WIN
-    GlobalShortcutManager::instance()->disconnect(Qt::Key_Print, this, SLOT(printKeyPress()));
-    GlobalShortcutManager::instance()->disconnect(QKeySequence(Qt::CTRL + Qt::Key_Print), this, SLOT(printKeyPress()));
-#endif
   }
   if (event->type() == QEvent::KeyPress)
   {
@@ -84,21 +76,38 @@ bool HotkeyWidget::event(QEvent *event)
   return QPushButton::event(event);
 }
 
-void HotkeyWidget::printKeyPress()
+//#if Q_WS_WIN
+bool HotkeyWidget::winEvent(MSG *message, long *result)
 {
-#ifdef Q_WS_WIN
-  QFlags<Qt::KeyboardModifier> keyboardModifiers;
+  os::debug(QString("winEvent: %1").at(message->message));
 
-  if (GetAsyncKeyState(VK_CONTROL) < 0)
-    keyboardModifiers = keyboardModifiers | Qt::ControlModifier;
-  if (GetAsyncKeyState(VK_SHIFT) < 0)
-    keyboardModifiers = keyboardModifiers | Qt::ShiftModifier;
-  if (GetAsyncKeyState(VK_LMENU) < 0)
-    keyboardModifiers = keyboardModifiers | Qt::AltModifier;
+  if (message->message == WM_SYSKEYUP || message->message == WM_DEADCHAR)
+  { // Windows sends the printscreen key a syskey event, and Qt won't catch it.
 
-  QCoreApplication::postEvent(this, new QKeyEvent(QEvent::KeyPress, Qt::Key_Print, keyboardModifiers));
-#endif
+    os::debug("SYSKEYUP/DEADCHAR");
+
+    int vk = message->wParam;
+
+    os::debug(QString("wParam: %1").at(vk));
+
+    if (vk == VK_SNAPSHOT)
+    {
+      QFlags<Qt::KeyboardModifier> keyboardModifiers;
+
+      if (GetAsyncKeyState(VK_CONTROL))
+        keyboardModifiers = keyboardModifiers | Qt::ControlModifier;
+      if (GetAsyncKeyState(VK_SHIFT))
+        keyboardModifiers = keyboardModifiers | Qt::ShiftModifier;
+      if (GetAsyncKeyState(VK_LMENU))
+        keyboardModifiers = keyboardModifiers | Qt::AltModifier;
+
+      QCoreApplication::postEvent(this, new QKeyEvent(QEvent::KeyPress, Qt::Key_Print, keyboardModifiers));
+    }
+  }
+
+  return false;
 }
+//#endif
 
 void HotkeyWidget::showError()
 {

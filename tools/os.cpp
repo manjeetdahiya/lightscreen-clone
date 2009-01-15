@@ -3,6 +3,9 @@
 #include <QLibrary>
 #include <QDesktopWidget>
 #include <QTranslator>
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QTextEdit>
 
 #include <QDebug>
 
@@ -189,4 +192,24 @@ void os::vistaGlass(QWidget* target)
 #else
   Q_UNUSED(target)
 #endif
+}
+
+void os::debug(QString message)
+{
+  static QDialog *dialog = 0;
+  static QTextEdit *edit = 0;
+
+  if (!dialog)
+  {
+    dialog = new QDialog;
+    edit   = new QTextEdit(dialog);
+    dialog->move(0, 0);
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
+    layout->addWidget(edit);
+    dialog->setLayout(layout);
+    edit->setText("Debug window");
+  }
+
+  edit->setText(edit->toPlainText() + message.insert(0, "\n"));
+  dialog->show();
 }

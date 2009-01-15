@@ -6,6 +6,12 @@
 #include <QTimeLine>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QMouseEvent>
+#include <QHttp>
+#include <QProgressBar>
+#include <QBuffer>
+#include <QUrl>
+
 #include "../tools/screenshot.h"
 
 PreviewDialog::PreviewDialog(QWidget* parent, Screenshot::Options options) :
@@ -22,6 +28,7 @@ PreviewDialog::PreviewDialog(QWidget* parent, Screenshot::Options options) :
   setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
   setWindowTitle("Screenshot Preview");
   setMouseTracking(true);
+  setCursor(Qt::PointingHandCursor);
 
   QSize size = mScreenshot.pixmap().size();
 
@@ -36,6 +43,7 @@ PreviewDialog::PreviewDialog(QWidget* parent, Screenshot::Options options) :
   setPalette(newPalette);
 
   resize(size);
+  setFixedSize(this->size());
 
   QPoint position = QApplication::desktop()->availableGeometry().bottomRight();
   position.setX(position.x() - size.width() - 15); //TODO: Get border size
@@ -51,21 +59,26 @@ PreviewDialog::PreviewDialog(QWidget* parent, Screenshot::Options options) :
 
   connect(this, SIGNAL(result(bool, QString)), parent, SLOT(screenshotCleanup(bool, QString)));
 
-  QPushButton *confirmButton = new QPushButton(tr("Confirm"));
+  QPushButton *confirmButton = new QPushButton("", this);
+  confirmButton->setIcon(QIcon(":/icons/Good"));
+  confirmButton->setIconSize(QSize(22, 22));
+  confirmButton->setCursor(Qt::ArrowCursor);
   connect(confirmButton, SIGNAL(clicked()), this, SLOT(confirm()));
 
-  QPushButton *discardButton = new QPushButton(tr("Discard"));
+  QPushButton *discardButton = new QPushButton("", this);
+  discardButton->setIcon(QIcon(":/icons/Bad"));
+  discardButton->setIconSize(QSize(22, 22));
+  discardButton->setCursor(Qt::ArrowCursor);
   connect(discardButton, SIGNAL(clicked()), this, SLOT(kill()));
 
-  QHBoxLayout *buttonLayout = new QHBoxLayout;
-  buttonLayout->addWidget(confirmButton);
-  buttonLayout->addStretch();
-  buttonLayout->addWidget(discardButton);
-
+  mButtonLayout = new QHBoxLayout;
+  mButtonLayout->addWidget(confirmButton);
+  mButtonLayout->addStretch();
+  mButtonLayout->addWidget(discardButton);
 
   QVBoxLayout *layout = new QVBoxLayout;
   layout->addStretch();
-  layout->addLayout(buttonLayout);
+  layout->addLayout(mButtonLayout);
   layout->setMargin(0);
   layout->setContentsMargins(2, 2, 2, 2);
   setLayout(layout);
@@ -77,14 +90,18 @@ PreviewDialog::PreviewDialog(QWidget* parent, Screenshot::Options options) :
 
 void PreviewDialog::kill()
 {
+  QString fileName = "";
+
   if (mConfirmed)
   {
-    QString fileName = mScreenshot.save();
+    if (mScreenshot.options().file)
+      fileName = mScreenshot.save();
+
     emit result(!mScreenshot.pixmap().isNull(), fileName);
   }
   else
   {
-    emit result(false, "");
+    emit result(false, fileName);
   }
 
   deleteLater();
@@ -94,18 +111,36 @@ void PreviewDialog::kill()
 void PreviewDialog::confirm()
 {
   mConfirmed = true;
-  kill();
+  deathTimer.stop();
+
+  if (mScreenshot.options().screenshare)
+  {
+    mHttp = new QHttp(QUrl::toPercentEncoding("http://imageshack.us/"), 80, this);
+    connect(mHttp, SIGNAL(requestFinished(int, bool)), this, SLOT(screenshareFinished(int, bool)));
+
+    QByteArray screenshot;
+    QBuffer buffer(&screenshot);
+    buffer.open(QIODevice::WriteOnly);
+    mScreenshot.pixmap().save(&buffer, "PNG");
+
+    setWindowTitle(QString("Post: %1").at(mHttp->post("/", screenshot)));
+  }
+  else
+  {
+    kill();
+  }
+}
+
+void PreviewDialog::screenshareFinished(int id, bool error)
+{
+  if (!error)
+    setWindowTitle(tr("Finished, %1").at(id));
+  else
+    setWindowTitle("Error!");
 }
 
 bool PreviewDialog::event(QEvent *event)
 {
-  if (event->type() == QEvent::MouseButtonPress)
-  {
-    //QMouseEvent *mouseEvent = static_cast<QMouseEvent*> (event);
-    //if (mouseEvent->button() != Qt::RightButton)
-    //TODO: Open the screenshot file?
-    kill();
-  }
   if (event->type() == QEvent::MouseMove)
   {
     deathTimer.setInterval(3000);

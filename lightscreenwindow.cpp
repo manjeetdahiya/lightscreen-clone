@@ -204,7 +204,8 @@ void LightscreenWindow::screenshotAction(int mode)
     options.currentMonitor = mSettings.value("options/currentMonitor", false).toBool();
     options.clipboard  = mSettings.value("options/clipboard", true).toBool();
     options.preview    = mSettings.value("options/preview", false).toBool();
-
+    options.screenshare= mSettings.value("screenshare/enabled", false).toBool();
+    options.service    = mSettings.value("screenshare/service", false).toBool();
     mDoCache = true;
   }
 

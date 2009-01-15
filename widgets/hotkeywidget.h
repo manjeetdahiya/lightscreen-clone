@@ -22,11 +22,11 @@ private:
 
 private slots:
   void hideError();
-  void printKeyPress();
 
 protected:
   // Event overrides:
   bool event(QEvent* event);
+  virtual bool winEvent(MSG *message, long *result);
 
 private:
   QKeySequence mHotkey;
