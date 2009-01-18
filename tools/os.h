@@ -3,15 +3,18 @@
 #define OS_H_
 
 #include <QObject>
-#include <QPixmap>
 
+struct QPixmap;
+struct QPoint;
 namespace os
 { //TODO: Comment functions
-  QPixmap getDxScreen();
+  QPixmap dxScreen();
   QPixmap grabWindow(WId winId);
+  QPixmap cursor();
+  QPoint mousePosition();
   void translate(QString language);
   void vistaGlass(QWidget *target);
-  void debug(QString text);
+
 }
 
 

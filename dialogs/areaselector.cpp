@@ -10,7 +10,7 @@
 
 #include "areaselector.h"
 
-AreaSelector::AreaSelector()
+AreaSelector::AreaSelector(QPixmap desktop, bool magnify) : mCleanDesktop(desktop), mMagnify(magnify)
 {
   setWindowFlags(Qt::WindowStaysOnTopHint);
   setWindowState( Qt::WindowFullScreen);
@@ -34,8 +34,7 @@ QPixmap AreaSelector::pixmap()
 
 void AreaSelector::drawBackground()
 {
-  QPixmap desktop = QPixmap::grabWindow(QApplication::desktop()->winId());
-  mCleanDesktop = desktop;
+  QPixmap desktop = mCleanDesktop;
 
   //Transforming the pixmap to make the user notice the change between desktop and area selector (85% transparent black overlay)
   QPainter painter(&desktop);
@@ -82,6 +81,28 @@ void AreaSelector::drawRectangleSelector(QPainter &painter)
   // Draw the size in the bottom right of the selection rect
   QString text = tr("%1 x %2 px ").arg(mRect.width()).arg(mRect.height());
   painter.drawText(mRect, Qt::AlignBottom | Qt::AlignRight, text);
+
+  if (mPos.isNull() || !mMagnify)
+    return;
+
+  // Drawing the magnified version
+  QPoint magEnd = mPos;
+  magEnd.setX(magEnd.x()+50);
+  magEnd.setY(magEnd.y()+50);
+
+  QPoint magStart = mPos;
+  magStart.setX(magStart.x()-50);
+  magStart.setY(magStart.y()-50);
+
+  QRect newRect = QRect(magStart, magEnd);
+  QPixmap magnified = mCleanDesktop.copy(newRect).scaled(QSize(200, 200));
+
+  QPainter magPainter(&magnified);
+  magPainter.setPen(QPen(QBrush(QColor(255, 0, 0, 180)), 2)); // Same border pen
+  magPainter.drawRect(magnified.rect());
+  magPainter.drawText(magnified.rect().center(), "+");
+
+  painter.drawPixmap(mRect.bottomRight(), magnified);
 }
 
 // Protected event
@@ -111,6 +132,7 @@ bool AreaSelector::event(QEvent *event)
   {
     QMouseEvent *mouseEvent = static_cast<QMouseEvent*> (event);
     mRect = QRect(mOrigin, mouseEvent->pos()).normalized();
+    mPos  = mouseEvent->pos();
     update();
   }
   if (event->type() == QEvent::Paint)

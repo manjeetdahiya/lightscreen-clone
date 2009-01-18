@@ -21,7 +21,6 @@ SOURCES += tools/os.cpp \
     main.cpp \
     lightscreenwindow.cpp \
     tools/screenshot.cpp \
-    dialogs/previewdialog.cpp \
     tools/singleapplication/dsingleapplication.cpp
 FORMS += dialogs/optionsdialog.ui \
     dialogs/aboutdialog.ui \

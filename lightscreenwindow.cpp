@@ -22,7 +22,6 @@
 #include "lightscreenwindow.h"
 #include "dialogs/aboutdialog.h"
 #include "dialogs/optionsdialog.h"
-#include "dialogs/previewdialog.h"
 
 #include "tools/globalshortcut/globalshortcutmanager.h"
 #include "tools/os.h"
@@ -204,30 +203,27 @@ void LightscreenWindow::screenshotAction(int mode)
     options.currentMonitor = mSettings.value("options/currentMonitor", false).toBool();
     options.clipboard  = mSettings.value("options/clipboard", true).toBool();
     options.preview    = mSettings.value("options/preview", false).toBool();
-    options.screenshare= mSettings.value("screenshare/enabled", false).toBool();
-    options.service    = mSettings.value("screenshare/service", false).toBool();
+    options.magnify    = mSettings.value("options/magnify", false).toBool();
+    options.cursor     = mSettings.value("options/cursor" , false).toBool();
     mDoCache = true;
   }
 
   options.mode = mode;
-
-  if (options.preview) //TODO: Check for screenshare here.
-  {
-    new PreviewDialog(this, options);
-    return;
-  }
 
   // Taking the screenshot and saving the result.
   Screenshot screenshot(options);
 
   image = screenshot.take();
 
-  if (image)
+  if (image && options.file)
   {
     fileName = screenshot.save();
     result   = !(fileName.isEmpty());
   }
-
+  else
+  {
+    result = image;
+  }
 
   screenshotCleanup(result, fileName);
 

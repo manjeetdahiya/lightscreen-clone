@@ -46,8 +46,8 @@ public:
     bool clipboard;
     bool file;
     bool preview;
-    bool screenshare;
-    QString service;
+    bool magnify;
+    bool cursor;
   };
 
   Screenshot();
@@ -66,9 +66,8 @@ private:
   char* formatString();
   void  selectedArea();
   void  wholeScreen();
-
   void setPixmap(QPixmap pixmap);
-  void grabDesktop();
+  QPixmap grabDesktop();
 
 private:
   Screenshot::Options mOptions;

@@ -76,39 +76,6 @@ bool HotkeyWidget::event(QEvent *event)
   return QPushButton::event(event);
 }
 
-//#if Q_WS_WIN
-bool HotkeyWidget::winEvent(MSG *message, long *result)
-{
-  os::debug(QString("winEvent: %1").at(message->message));
-
-  if (message->message == WM_SYSKEYUP || message->message == WM_DEADCHAR)
-  { // Windows sends the printscreen key a syskey event, and Qt won't catch it.
-
-    os::debug("SYSKEYUP/DEADCHAR");
-
-    int vk = message->wParam;
-
-    os::debug(QString("wParam: %1").at(vk));
-
-    if (vk == VK_SNAPSHOT)
-    {
-      QFlags<Qt::KeyboardModifier> keyboardModifiers;
-
-      if (GetAsyncKeyState(VK_CONTROL))
-        keyboardModifiers = keyboardModifiers | Qt::ControlModifier;
-      if (GetAsyncKeyState(VK_SHIFT))
-        keyboardModifiers = keyboardModifiers | Qt::ShiftModifier;
-      if (GetAsyncKeyState(VK_LMENU))
-        keyboardModifiers = keyboardModifiers | Qt::AltModifier;
-
-      QCoreApplication::postEvent(this, new QKeyEvent(QEvent::KeyPress, Qt::Key_Print, keyboardModifiers));
-    }
-  }
-
-  return false;
-}
-//#endif
-
 void HotkeyWidget::showError()
 {
   if (mShowingError)

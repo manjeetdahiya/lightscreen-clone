@@ -11,7 +11,7 @@ class AreaSelector: public QDialog
   Q_OBJECT
 
 public:
-  AreaSelector();
+  AreaSelector(QPixmap desktop, bool magnify = false);
   QRect rect();
   QPixmap pixmap();
 
@@ -25,7 +25,9 @@ protected:
 private:
   QRect mRect;
   QPoint mOrigin;
+  QPoint mPos;
   QPixmap mCleanDesktop;
+  bool mMagnify;
 
 };
 

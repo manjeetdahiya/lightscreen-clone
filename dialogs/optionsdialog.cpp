@@ -5,8 +5,9 @@
 #include <QSettings>
 #include <QTimer>
 #include <QUrl>
-
 #include <QDebug>
+#include <QKeyEvent>
+#include <windows.h>
 
 #include "optionsdialog.h"
 #include "../tools/os.h"
@@ -50,7 +51,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   connect(ui.generalButton,     SIGNAL(clicked()), this, SLOT(changePage()));
   connect(ui.hotkeysButton,     SIGNAL(clicked()), this, SLOT(changePage()));
   connect(ui.optionsButton,     SIGNAL(clicked()), this, SLOT(changePage()));
-  connect(ui.screenshareButton, SIGNAL(clicked()), this, SLOT(changePage()));
   connect(ui.advancedButton,    SIGNAL(clicked()), this, SLOT(changePage()));
 
   // Getting the language entries
@@ -121,10 +121,8 @@ void OptionsDialog::changePage()
     ui.stack->setCurrentIndex(1);
   else if (page == tr("Options"))
     ui.stack->setCurrentIndex(2);
-  else if (page == tr("Screenshare"))
-    ui.stack->setCurrentIndex(3);
   else if (page == tr("Advanced"))
-    ui.stack->setCurrentIndex(4);
+    ui.stack->setCurrentIndex(3);
 }
 
 void OptionsDialog::checkUpdatesNow()
@@ -210,19 +208,14 @@ void OptionsDialog::saveSettings()
   settings.setValue("language", ui.languageComboBox->currentText());
   // This settings is inverted because the first iteration of the Updater did not have a settings but instead relied on the messagebox choice of the user.
   settings.setValue("disableUpdater", !ui.updaterCheckBox->isChecked());
-  settings.setValue("preview", ui.previewCheckBox->isChecked());
+  settings.setValue("magnify", ui.magnifyCheckBox->isChecked());
+  settings.setValue("cursor", ui.cursorCheckBox->isChecked());
 
   // Advanced
   settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
-  settings.setValue("dxScreen", ui.dxScreenCheckBox->isChecked());
   settings.setValue("clipboard", ui.clipboardCheckBox->isChecked());
   settings.setValue("optipng", ui.optiPngCheckBox->isChecked());
   settings.setValue("currentMonitor", ui.currentMonitorCheckBox->isChecked());
-  settings.endGroup();
-
-  settings.beginGroup("screenshare");
-  settings.setValue("enabled", ui.screenshareGroupBox->isChecked());
-  settings.setValue("service", "imageshack"); //TODO: Offer choice
   settings.endGroup();
 
   settings.beginGroup("actions");
@@ -297,11 +290,11 @@ void OptionsDialog::loadSettings()
   ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
   ui.playSoundCheckBox->setChecked(settings.value("playSound", false).toBool());
   ui.updaterCheckBox->setChecked(!settings.value("disableUpdater", false).toBool());
-  ui.previewCheckBox->setChecked(settings.value("preview", false).toBool());
+  ui.magnifyCheckBox->setChecked(settings.value("magnify", false).toBool());
+  ui.cursorCheckBox->setChecked(settings.value("cursor", false).toBool());
 
   // Advanced
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", true).toBool());
-  ui.dxScreenCheckBox->setChecked(settings.value("dxScreen", false).toBool());
   ui.optiPngCheckBox->setChecked(settings.value("optipng", true).toBool());
   ui.warnHideCheckBox->setChecked(!settings.value("disableHideAlert", false).toBool());
   ui.currentMonitorCheckBox->setChecked(settings.value("currentMonitor", false).toBool());
@@ -324,11 +317,6 @@ void OptionsDialog::loadSettings()
 
   ui.languageComboBox->setCurrentIndex(index);
 
-  settings.endGroup();
-
-  settings.beginGroup("screenshare");
-  ui.screenshareGroupBox->setChecked(settings.value("enabled", false).toBool());
-  //TODO: Select service
   settings.endGroup();
 
   settings.beginGroup("actions");
@@ -480,3 +468,42 @@ void OptionsDialog::changeEvent(QEvent* event)
 
   QDialog::changeEvent(event);
 }
+
+#ifdef Q_WS_WIN
+bool OptionsDialog::winEvent(MSG *message, long *result)
+{
+
+  if (message->message == WM_KEYUP)
+  {
+    int vk = message->wParam;
+
+    if (vk == VK_SNAPSHOT)
+    {
+      QFlags<Qt::KeyboardModifier> keyboardModifiers;
+
+      if (GetAsyncKeyState(VK_CONTROL))
+        keyboardModifiers = keyboardModifiers | Qt::ControlModifier;
+      if (GetAsyncKeyState(VK_SHIFT))
+        keyboardModifiers = keyboardModifiers | Qt::ShiftModifier;
+      if (GetAsyncKeyState(VK_LMENU))
+        keyboardModifiers = keyboardModifiers | Qt::AltModifier;
+
+      HotkeyWidget *widget = 0;
+
+      if (ui.screenHotkeyWidget->hasFocus())
+        widget = ui.screenHotkeyWidget;
+      if (ui.areaHotkeyWidget->hasFocus())
+        widget = ui.areaHotkeyWidget;
+      if (ui.windowHotkeyWidget->hasFocus())
+        widget = ui.windowHotkeyWidget;
+      if (ui.openHotkeyWidget->hasFocus())
+        widget = ui.openHotkeyWidget;
+
+      if (widget)
+        QCoreApplication::postEvent(widget, new QKeyEvent(QEvent::KeyPress, Qt::Key_Print, keyboardModifiers));
+    }
+  }
+
+  return QDialog::winEvent(message, result);
+}
+#endif

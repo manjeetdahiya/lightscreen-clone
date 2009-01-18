@@ -5,13 +5,13 @@
 #include <QDesktopWidget>
 #include <QPixmap>
 #include <QSettings>
+#include <QPainter>
 
 #ifdef Q_WS_WIN
 #include <windows.h>
 #endif
 
 #include "../dialogs/areaselector.h"
-#include "../dialogs/previewdialog.h"
 #include "screenshot.h"
 
 #include "os.h"
@@ -120,7 +120,8 @@ void Screenshot::selectedArea()
 
   alreadySelecting = true;
 
-  AreaSelector selector;
+  mOptions.currentMonitor = true;
+  AreaSelector selector (grabDesktop(), mOptions.magnify);
   int result = selector.exec();
 
   alreadySelecting = false;
@@ -133,22 +134,43 @@ void Screenshot::selectedArea()
 
 void Screenshot::wholeScreen()
 {
-  if (mOptions.directX)
-    setPixmap(os::getDxScreen());
-  else
-    grabDesktop();
+  setPixmap(grabDesktop());
+
+  if (mOptions.cursor)
+  {
+    QPainter painter(&pixmap());
+    painter.drawPixmap(os::mousePosition(), os::cursor());
+  }
 }
 
-void Screenshot::grabDesktop()
+QPixmap Screenshot::grabDesktop()
 {
   if (mOptions.currentMonitor)
-  { // Shamelessly stolen from KSnapshot: http://websvn.kde.org/trunk/KDE/kdegraphics/ksnapshot/ksnapshot.cpp?revision=845665&view=markup
-    QDesktopWidget *desktop = QApplication::desktop();
-    int screenId = desktop->screenNumber( QCursor::pos() );;
-    QRect geom = desktop->screenGeometry( screenId );
-    setPixmap(QPixmap::grabWindow( desktop->winId(), geom.x(), geom.y(), geom.width(), geom.height() ));
-  } else {
-    setPixmap(QPixmap::grabWindow(QApplication::desktop()->winId()));
+  {
+    //Grabbing only the current screen (as indicated by mouse position)
+    int screenId = QApplication::desktop()->screenNumber(QCursor::pos());
+    return QPixmap::grabWindow(QApplication::desktop()->screen(screenId)->winId());
+  }
+  else
+  {
+    //Grabbing all screens
+    int numScreens = QApplication::desktop()->numScreens();
+
+    //if (numScreens <= 1)
+    //  return QPixmap::grabWindow(QApplication::desktop()->screen(1)->winId());
+
+    QPixmap allScreens = QPixmap::grabWindow(QApplication::desktop()->screen(1)->winId());
+    QPainter painter(&allScreens);
+    QPoint point = QPoint(0, 0);
+
+    for (int i = 2; i <= numScreens; i++)
+    { // Iterate through the screens and paint them into one pixmap
+
+      painter.drawPixmap(point, QPixmap::grabWindow(QApplication::desktop()->screen(i)->winId()));
+      point = allScreens.rect().topRight();
+    }
+
+    return allScreens;
   }
 }
 

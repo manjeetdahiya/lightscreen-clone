@@ -6,6 +6,9 @@
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QTextEdit>
+#include <QPixmap>
+#include <QPoint>
+#include <QBitmap>
 
 #include <QDebug>
 
@@ -20,82 +23,16 @@ typedef struct
   int cxRightWidth;
   int cyTopHeight;
   int cyBottomHeight;
-}MARGINS;
+} MARGINS;
 
 typedef HRESULT (WINAPI *PtrDwmExtendFrameIntoClientArea)(HWND hWnd, const MARGINS *margins);
 static PtrDwmExtendFrameIntoClientArea pDwmExtendFrameIntoClientArea = 0;
 
 typedef HRESULT (WINAPI *PtrDwmIsCompositionEnabled)(BOOL *pfEnabled);
 static PtrDwmIsCompositionEnabled pDwmIsCompositionEnabled = 0;
-
 #endif
 
 #include "os.h"
-
-
-QPixmap os::getDxScreen()
-{
-#if Q_WS_WINDOWS
-  //RenderTargetSurface.
-  IDirect3DSurface9* pRenderTargetSurface = NULL;
-
-  //DestinationTargetSurface
-  IDirect3DSurface9* pDestinationTargetSurface = NULL;
-
-  //DisplayMode
-  D3DDISPLAYMODE d3dDipMode;
-
-  //HBITMAP that will be the return of the method
-  HBITMAP hbm;
-
-  if (m_pd3dDevice == NULL)
-  return QPixmap();
-
-  //Get the client rectangle
-  RECT rc;
-  GetClientRect (myhWnd, &rc);
-  ClientToScreen(myhWnd, LPPOINT(&rc.left));
-  ClientToScreen(myhWnd, LPPOINT(&rc.right));
-
-  //GetRenderTargetSurface.
-  if(FAILED(m_pd3dDevice->GetRenderTarget(0, &pRenderTargetSurface)))
-  return QPixmap();
-
-  //Display Mode (d3dDipMode)
-  if(FAILED(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT,&d3dDipMode)))
-  return QPixmap();
-
-  //GetDestinationTargetSurface
-  if(FAILED(m_pd3dDevice->CreateOffscreenPlainSurface((rc.right - rc.left),
-              (rc.bottom - rc.top),
-              d3dDipMode.Format,
-              D3DPOOL_SYSTEMMEM,
-              &pDestinationTargetSurface,
-              NULL)))
-  return QPixmap();
-
-  //copy RenderTargetSurface -> DestTarget
-  if(FAILED(m_pd3dDevice->GetRenderTargetData(pRenderTargetSurface, pDestinationTargetSurface)))
-  return QPixmap();
-
-  LPD3DXBUFFER bufferedImage = NULL;
-
-  //Save the DestinationTargetSurface into memory (as a bitmap)
-  if(FAILED(D3DXSaveSurfaceToFileInMemory(&bufferedImage,
-              D3DXIFF_BMP,
-              pDestinationTargetSurface,
-              NULL,
-              NULL)))
-  return QPixmap();
-
-  pRenderTargetSurface->Release();
-  pDestinationTargetSurface->Release();
-
-  return QPixmap::fromWinHBITMAP(hbm);
-#else
-  return QPixmap::grabWindow(QApplication::desktop()->winId());
-#endif
-}
 
 QPixmap os::grabWindow(WId winId)
 {
@@ -139,6 +76,33 @@ QPixmap os::grabWindow(WId winId)
   return pixmap;
 #else
   return QPixmap::grabWindow(winId);
+#endif
+}
+
+QPixmap os::cursor()
+{
+#ifdef Q_WS_WIN
+  // Get the icon info
+  ICONINFO iconInfo;
+  GetIconInfo(GetCursor(), &iconInfo);
+
+  QPixmap result = QPixmap::fromWinHBITMAP(iconInfo.hbmColor);
+  result.setMask(QBitmap(QPixmap::fromWinHBITMAP(iconInfo.hbmMask)));
+
+  return result;
+#else
+  return QPixmap();
+#endif
+}
+
+QPoint os::mousePosition()
+{
+#ifdef Q_WS_WIN
+  POINT p;
+  GetCursorPos(&p);
+  return QPoint(p.x, p.y);
+#else
+  return QPoint(0, 0);
 #endif
 }
 
@@ -192,24 +156,4 @@ void os::vistaGlass(QWidget* target)
 #else
   Q_UNUSED(target)
 #endif
-}
-
-void os::debug(QString message)
-{
-  static QDialog *dialog = 0;
-  static QTextEdit *edit = 0;
-
-  if (!dialog)
-  {
-    dialog = new QDialog;
-    edit   = new QTextEdit(dialog);
-    dialog->move(0, 0);
-    QVBoxLayout *layout = new QVBoxLayout(dialog);
-    layout->addWidget(edit);
-    dialog->setLayout(layout);
-    edit->setText("Debug window");
-  }
-
-  edit->setText(edit->toPlainText() + message.insert(0, "\n"));
-  dialog->show();
 }
