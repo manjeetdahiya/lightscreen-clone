@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>330</width>
+    <width>358</width>
     <height>262</height>
    </rect>
   </property>
@@ -254,13 +254,13 @@ All numbers and letters, except for the following characters:&lt;br&gt;
 
 &lt;ul&gt;
 &lt;li&gt;
-&lt;em&gt;/number/&lt;/em&gt;: A self incrementing number. Can also be used as&lt;em&gt; %number(00)%&lt;/em&gt;, can contain unlimited preceding zeroes to create 0001, 0002, etc.
+&lt;em&gt;/number/&lt;/em&gt;: A self incrementing number.
 &lt;/li&gt;
 &lt;li&gt;
 &lt;em&gt;/timestamp/&lt;/em&gt;: A stanrdar unix timestamp.
 &lt;/li&gt;
 &lt;li&gt;
-&lt;em&gt;/date/&lt;/em&gt;: The standard Lightscreen date for files, dd-MM-yyyy hh.mm.ss.
+&lt;em&gt;/date/&lt;/em&gt;: The standard Lightscreen date for files, dd-MM-yyyy hh.mm.ss, it can be customized using /date(..)/, see below for details.
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;br&gt;
@@ -327,8 +327,8 @@ It also possible to use the &lt;em&gt;date&lt;/em&gt; naming option with custom 
 &lt;br&gt;&lt;br&gt;
 &lt;u&gt;Some examples&lt;/u&gt;:
 &lt;ul&gt;
-&lt;li&gt;screenshot./number/  &lt;b&gt;The standard Lightscreen naming&lt;/b&gt;&lt;/li&gt;
-&lt;li&gt;/date(yyyy-MM-dd)/ - /number/  &lt;b&gt;The current date and an increasing number, for those who take a lot of screenshots each day.&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;&quot;screenshot./number/&quot; &lt;b&gt;The standard Lightscreen naming&lt;/b&gt;&lt;/li&gt;
+&lt;li&gt;&quot;/date(yyyy-MM-dd)/ - screenshot #/number/&quot;  &lt;b&gt;The current date and an increasing number, for those who take a lot of screenshots each day.&lt;/b&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/body&gt;&lt;/html&gt;</string>
                 </property>

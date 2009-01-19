@@ -16,12 +16,13 @@ public:
 private:
     QString mString;
     QString mResult;
+    QString mNumberString;
     QStringList mFileList;
 
 private:
     void process();
     int  number();
-
+    void date();
 
 };
 
