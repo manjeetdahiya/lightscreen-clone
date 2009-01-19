@@ -14,29 +14,29 @@
 
 #include <string>
 
-#ifdef Q_WS_WIN
-#include <windows.h>
+#if defined(Q_WS_WIN)
+  #include <windows.h>
 
-typedef struct
-{
-  int cxLeftWidth;
-  int cxRightWidth;
-  int cyTopHeight;
-  int cyBottomHeight;
-} MARGINS;
+  typedef struct
+  {
+    int cxLeftWidth;
+    int cxRightWidth;
+    int cyTopHeight;
+    int cyBottomHeight;
+  } MARGINS;
 
-typedef HRESULT (WINAPI *PtrDwmExtendFrameIntoClientArea)(HWND hWnd, const MARGINS *margins);
-static PtrDwmExtendFrameIntoClientArea pDwmExtendFrameIntoClientArea = 0;
+  typedef HRESULT (WINAPI *PtrDwmExtendFrameIntoClientArea)(HWND hWnd, const MARGINS *margins);
+  static PtrDwmExtendFrameIntoClientArea pDwmExtendFrameIntoClientArea = 0;
 
-typedef HRESULT (WINAPI *PtrDwmIsCompositionEnabled)(BOOL *pfEnabled);
-static PtrDwmIsCompositionEnabled pDwmIsCompositionEnabled = 0;
+  typedef HRESULT (WINAPI *PtrDwmIsCompositionEnabled)(BOOL *pfEnabled);
+  static PtrDwmIsCompositionEnabled pDwmIsCompositionEnabled = 0;
 #endif
 
 #include "os.h"
 
 QPixmap os::grabWindow(WId winId)
 {
-#ifdef Q_WS_WIN
+#if defined(Q_WS_WIN)
   HDC hdcScreen = GetDC(NULL);
 
   RECT rcWindow;
@@ -81,7 +81,7 @@ QPixmap os::grabWindow(WId winId)
 
 QPixmap os::cursor()
 {
-#ifdef Q_WS_WIN
+#if defined(Q_WS_WIN)
   // Get the icon info
   ICONINFO iconInfo;
   GetIconInfo(GetCursor(), &iconInfo);
@@ -92,17 +92,6 @@ QPixmap os::cursor()
   return result;
 #else
   return QPixmap();
-#endif
-}
-
-QPoint os::mousePosition()
-{
-#ifdef Q_WS_WIN
-  POINT p;
-  GetCursorPos(&p);
-  return QPoint(p.x, p.y);
-#else
-  return QPoint(0, 0);
 #endif
 }
 
@@ -129,8 +118,8 @@ void os::translate(QString language)
 
 void os::vistaGlass(QWidget* target)
 {
-#ifdef Q_WS_WIN
-  QLibrary dwmapi("dwmapi");
+#if defined(Q_WS_WIN)
+  static QLibrary dwmapi("dwmapi");
 
   if (QSysInfo::WindowsVersion == QSysInfo::WV_VISTA)
   { // Glass frame only for Windows Vista
@@ -151,8 +140,6 @@ void os::vistaGlass(QWidget* target)
       target->setAttribute(Qt::WA_NoSystemBackground);
     }
   }
-
-  dwmapi.unload();
 #else
   Q_UNUSED(target)
 #endif

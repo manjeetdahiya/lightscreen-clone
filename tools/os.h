@@ -11,7 +11,6 @@ namespace os
   QPixmap dxScreen();
   QPixmap grabWindow(WId winId);
   QPixmap cursor();
-  QPoint mousePosition();
   void translate(QString language);
   void vistaGlass(QWidget *target);
 

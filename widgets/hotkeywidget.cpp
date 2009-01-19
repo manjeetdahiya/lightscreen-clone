@@ -6,15 +6,8 @@
 
 #include <QDebug>
 
-#ifdef Q_WS_WIN
-#include <windows.h>
-#endif
-
 #include "hotkeywidget.h"
-#include "../tools/globalshortcut/globalshortcutmanager.h"
-#include "../tools/os.h"
 
-//TODO: QWT: Fix Printscreen
 HotkeyWidget::HotkeyWidget(QWidget *parent) :
   QPushButton(parent)
 {

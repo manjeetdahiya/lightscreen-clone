@@ -5,12 +5,17 @@
 #include <QSettings>
 #include <QTimer>
 #include <QUrl>
-#include <QDebug>
+#include <QDesktopWidget>
 #include <QKeyEvent>
+#include <QTextBrowser>
+#include <QHBoxLayout>
+
 #include <windows.h>
 
 #include "optionsdialog.h"
 #include "../tools/os.h"
+#include "../tools/customnaming.h"
+
 #include "../updater/updater.h"
 
 OptionsDialog::OptionsDialog(QWidget *parent) :
@@ -22,7 +27,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   setModal(true);
 
-#ifndef Q_WS_WIN
+#ifndef Q_WS_WIN //TODO: Add other windows-only opts (cursor?)
   ui.playSoundCheckBox->setVisible(false);
   ui.playSoundCheckBox->setChecked(false);
 #endif
@@ -33,14 +38,18 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   { // If there are no settings, get rid of the cancel button so that the user is forced to save them
     ui.buttonBox->clear();
     ui.buttonBox->addButton(QDialogButtonBox::Ok);
+
+    // Move the first option window to the center of the screen, since windows usually positions it in a random location since it has no visible parent.
+    move(QApplication::desktop()->screen(QApplication::desktop()->screenNumber(QCursor::pos()))->rect().center()-QPoint(height()/2, width()/2));
   }
 
   connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(dialogButtonClicked(QAbstractButton*)));
 
-  connect(ui.flipPrefixPushButton, SIGNAL(toggled(bool)), this, SLOT(flipButtonToggled(bool)));
+  connect(ui.customPushButton    , SIGNAL(toggled(bool)), this, SLOT(customButtonToggled(bool)));
+  connect(ui.customHelpPushButton, SIGNAL(clicked()), this, SLOT(showCustomHelp()));
 
-  connect(ui.aboutPushButton       , SIGNAL(clicked()), parent, SLOT(showAbout()));
-  connect(ui.checkUpdatesPushButton, SIGNAL(clicked()), this  , SLOT(checkUpdatesNow()));
+  connect(ui.aboutPushButton        , SIGNAL(clicked()), parent, SLOT(showAbout()));
+  connect(ui.checkUpdatesPushButton , SIGNAL(clicked()), this  , SLOT(checkUpdatesNow()));
 
   connect(ui.screenCheckBox   , SIGNAL(toggled(bool)), ui.screenHotkeyWidget   , SLOT(setEnabled(bool)));
   connect(ui.areaCheckBox     , SIGNAL(toggled(bool)), ui.areaHotkeyWidget     , SLOT(setEnabled(bool)));
@@ -94,6 +103,12 @@ void OptionsDialog::accepted()
   if (hotkeyCollision())
   {
     QMessageBox::critical(0, tr("Hotkey conflict"), tr("You have assigned the same hotkeys to more than one action."));
+    return;
+  }
+
+  if (ui.customPushButton->isChecked() && !CustomNaming::isValid(ui.customLineEdit->text()))
+  {
+    QMessageBox::critical(0, tr("Custom Naming Error"), tr("The custom naming string you entered is invalid."));
     return;
   }
 
@@ -154,24 +169,37 @@ void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
   }
 }
 
-void OptionsDialog::flipButtonToggled(bool checked)
+void OptionsDialog::customButtonToggled(bool checked)
 {
   setUpdatesEnabled(false);
 
+  // I'm sure there's a better way to do this..
+
   ui.hboxLayout->removeWidget(ui.prefixLineEdit);
   ui.hboxLayout->removeWidget(ui.namingComboBox);
+  ui.hboxLayout->removeWidget(ui.customLineEdit);
+  ui.hboxLayout->removeWidget(ui.customHelpPushButton);
+
+  ui.prefixLineEdit->setVisible(true);
+  ui.namingComboBox->setVisible(true);
+  ui.customLineEdit->setVisible(true);
+  ui.customHelpPushButton->setVisible(true);
 
   if (checked)
   {
-    ui.flipPrefixPushButton->setIcon(QIcon(":/icons/PrefixRight"));
-    ui.hboxLayout->addWidget(ui.namingComboBox);
-    ui.hboxLayout->addWidget(ui.prefixLineEdit);
+    ui.hboxLayout->addWidget(ui.customLineEdit);
+    ui.hboxLayout->addWidget(ui.customHelpPushButton);
+
+    ui.prefixLineEdit->setVisible(false);
+    ui.namingComboBox->setVisible(false);
   }
   else
   {
-    ui.flipPrefixPushButton->setIcon(QIcon(":/icons/PrefixLeft"));
     ui.hboxLayout->addWidget(ui.prefixLineEdit);
     ui.hboxLayout->addWidget(ui.namingComboBox);
+
+    ui.customLineEdit->setVisible(false);
+    ui.customHelpPushButton->setVisible(false);
   }
 
   setUpdatesEnabled(true); // Avoids flicker
@@ -190,6 +218,8 @@ void OptionsDialog::saveSettings()
   settings.setValue("format", ui.formatComboBox->currentIndex());
   settings.setValue("prefix", ui.prefixLineEdit->text());
   settings.setValue("naming", ui.namingComboBox->currentIndex());
+  settings.setValue("custom", ui.customPushButton->isChecked());
+  settings.setValue("customString", ui.customLineEdit->text());
   settings.setValue("target", ui.targetLineEdit->text());
   settings.setValue("enabled", ui.fileGroupBox->isChecked());
   settings.endGroup();
@@ -199,7 +229,6 @@ void OptionsDialog::saveSettings()
   settings.setValue("startupHide", ui.startupHideCheckBox->isChecked());
   settings.setValue("hide", ui.hideCheckBox->isChecked());
   settings.setValue("delay", ui.delaySpinBox->value());
-  settings.setValue("flip", ui.flipPrefixPushButton->isChecked());
   settings.setValue("tray", ui.trayCheckBox->isChecked());
   settings.setValue("message", ui.messageCheckBox->isChecked());
   settings.setValue("quality", ui.qualitySlider->value());
@@ -256,6 +285,26 @@ void OptionsDialog::startupRelatedStateChange(int state)
     ui.startupHideCheckBox->setChecked(false);
 }
 
+void OptionsDialog::showCustomHelp()
+{
+  QDialog helpDialog;
+  helpDialog.setWindowTitle("Custon Naming Information");
+  helpDialog.setMinimumSize(400, 400);
+
+  QTextBrowser help(&helpDialog);
+  help.setHtml(ui.customLineEdit->whatsThis());
+
+  QHBoxLayout layout;
+  layout.addWidget(&help);
+
+  layout.setMargin(0);
+  layout.setContentsMargins(0, 0, 0, 0);
+
+  helpDialog.setLayout(&layout);
+
+  helpDialog.exec();
+}
+
 void OptionsDialog::trayRelatedStateChange(int state)
 {
   ui.messageCheckBox->setEnabled(state);
@@ -275,6 +324,8 @@ void OptionsDialog::loadSettings()
   ui.formatComboBox->setCurrentIndex(settings.value("format", 1).toInt());
   ui.prefixLineEdit->setText(settings.value("prefix", "screenshot.").toString());
   ui.namingComboBox->setCurrentIndex(settings.value("naming", 0).toInt());
+  ui.customPushButton->setChecked(settings.value("custom", false).toBool());
+  ui.customLineEdit->setText(settings.value("customString", "screenshot./number/").toString());
   ui.targetLineEdit->setText(settings.value("target", QDir::homePath() + "/screenshots").toString()); // Defaults to $HOME$/screenshots
   ui.fileGroupBox->setChecked(settings.value("enabled", true).toBool());
   settings.endGroup();
@@ -284,7 +335,6 @@ void OptionsDialog::loadSettings()
   ui.startupHideCheckBox->setChecked(settings.value("startupHide").toBool());
   ui.hideCheckBox->setChecked(settings.value("hide").toBool());
   ui.delaySpinBox->setValue(settings.value("delay", 0).toInt());
-  ui.flipPrefixPushButton->setChecked(settings.value("flip", false).toBool());
   ui.trayCheckBox->setChecked(settings.value("tray", true).toBool());
   ui.messageCheckBox->setChecked(settings.value("message").toBool());
   ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
@@ -292,6 +342,8 @@ void OptionsDialog::loadSettings()
   ui.updaterCheckBox->setChecked(!settings.value("disableUpdater", false).toBool());
   ui.magnifyCheckBox->setChecked(settings.value("magnify", false).toBool());
   ui.cursorCheckBox->setChecked(settings.value("cursor", false).toBool());
+
+  customButtonToggled(ui.customPushButton->isChecked());
 
   // Advanced
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", true).toBool());
@@ -469,7 +521,7 @@ void OptionsDialog::changeEvent(QEvent* event)
   QDialog::changeEvent(event);
 }
 
-#ifdef Q_WS_WIN
+#if defined(Q_WS_WIN)
 bool OptionsDialog::winEvent(MSG *message, long *result)
 {
 

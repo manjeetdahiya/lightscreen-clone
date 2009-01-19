@@ -11,7 +11,8 @@ HEADERS += tools/os.h \
     tools/screenshot.h \
     dialogs/previewdialog.h \
     tools/singleapplication/dsingleapplication.h \
-    dialogs/languagedialog.h
+    dialogs/languagedialog.h \
+    tools/customnaming.h
 SOURCES += tools/os.cpp \
     updater/updater.cpp \
     dialogs/areaselector.cpp \
@@ -21,7 +22,8 @@ SOURCES += tools/os.cpp \
     main.cpp \
     lightscreenwindow.cpp \
     tools/screenshot.cpp \
-    tools/singleapplication/dsingleapplication.cpp
+    tools/singleapplication/dsingleapplication.cpp \
+    tools/customnaming.cpp
 FORMS += dialogs/optionsdialog.ui \
     dialogs/aboutdialog.ui \
     lightscreenwindow.ui

@@ -192,19 +192,20 @@ void LightscreenWindow::screenshotAction(int mode)
   if (!mDoCache)
   {
     // Populating the option object that will then be passed to the screenshot engine
-    options.file       = mSettings.value("file/enabled").toBool();
-    options.format     = mSettings.value("file/format").toInt();
-    options.prefix     = mSettings.value("file/prefix").toString();
-    options.directory  = QDir(mSettings.value("file/target").toString());
-    options.naming     = mSettings.value("file/naming").toInt();
-    options.quality    = mSettings.value("options/quality", 100).toInt();
-    options.flipNaming = mSettings.value("options/flip", false).toBool();
-    options.directX    = mSettings.value("options/dxScreen", false).toBool();
-    options.currentMonitor = mSettings.value("options/currentMonitor", false).toBool();
-    options.clipboard  = mSettings.value("options/clipboard", true).toBool();
-    options.preview    = mSettings.value("options/preview", false).toBool();
-    options.magnify    = mSettings.value("options/magnify", false).toBool();
-    options.cursor     = mSettings.value("options/cursor" , false).toBool();
+    options.file          = mSettings.value("file/enabled").toBool();
+    options.format        = mSettings.value("file/format").toInt();
+    options.prefix        = mSettings.value("file/prefix").toString();
+    options.directory     = QDir(mSettings.value("file/target").toString());
+    options.naming        = mSettings.value("file/naming").toInt();
+    options.custom        = mSettings.value("file/custom", false).toBool();
+    options.customString  = mSettings.value("file/customString" , "").toString();
+    options.quality       = mSettings.value("options/quality", 100).toInt();
+    options.directX       = mSettings.value("options/dxScreen", false).toBool();
+    options.currentMonitor= mSettings.value("options/currentMonitor", false).toBool();
+    options.clipboard     = mSettings.value("options/clipboard", true).toBool();
+    options.preview       = mSettings.value("options/preview", false).toBool();
+    options.magnify       = mSettings.value("options/magnify", false).toBool();
+    options.cursor        = mSettings.value("options/cursor" , false).toBool();
     mDoCache = true;
   }
 
@@ -251,7 +252,7 @@ void LightscreenWindow::screenshotCleanup(bool result, QString fileName)
   if (mSettings.value("options/tray").toBool())
     showTrayNotifier(result);
 
-#ifdef Q_WS_WIN
+#if defined(Q_WS_WIN)
   if (mSettings.value("options/playSound", false).toBool())
   { //TODO: Cross-platform -- see freedesktop.org? mac?
     if (result)
@@ -459,7 +460,7 @@ void LightscreenWindow::applySettings()
 
   mDoCache = false;
 
-#ifdef Q_WS_WIN
+#if defined(Q_WS_WIN)
   // Windows startup settings
 
   QSettings init("Microsoft", "Windows");

@@ -51,6 +51,9 @@
          <property name="text">
           <string>&amp;Options</string>
          </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
          <property name="flat">
           <bool>false</bool>
          </property>
@@ -67,6 +70,9 @@
          <property name="text">
           <string>&amp;Hide</string>
          </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
          <property name="flat">
           <bool>false</bool>
          </property>
@@ -79,6 +85,9 @@
          </property>
          <property name="text">
           <string>&amp;Quit</string>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
          </property>
          <property name="flat">
           <bool>false</bool>

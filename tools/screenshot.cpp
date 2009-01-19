@@ -7,14 +7,15 @@
 #include <QSettings>
 #include <QPainter>
 
-#ifdef Q_WS_WIN
-#include <windows.h>
+#if defined(Q_WS_WIN)
+  #include <windows.h>
 #endif
 
 #include "../dialogs/areaselector.h"
 #include "screenshot.h"
 
 #include "os.h"
+#include "customnaming.h"
 
 Screenshot::Screenshot() {}
 Screenshot::Screenshot(Screenshot::Options options) :  mOptions(options) {}
@@ -31,7 +32,7 @@ void Screenshot::setOptions(Screenshot::Options options)
 
 void Screenshot::activeWindow()
 {
-#ifdef Q_WS_WIN
+#if defined(Q_WS_WIN)
   HWND fWindow = GetForegroundWindow();
 
   if (fWindow == NULL)
@@ -51,50 +52,63 @@ QString Screenshot::newFileName()
   if (!mOptions.directory.exists())
     mOptions.directory.mkpath(mOptions.directory.path());
 
-  QString naming("%1");
+  QString naming = "";
 
-  int naming_largest = 0;
-
-  switch (mOptions.naming)
+  if (mOptions.custom)
   {
-  case 0: // Numeric
-    // Iterating through the folder to find the largest numeric naming.
-    foreach(QString file, mOptions.directory.entryList(QDir::Files)){
-      if (file.contains(mOptions.prefix))
-      {
-        file.chop(file.size() - file.lastIndexOf("."));
-        file.remove(mOptions.prefix);
+    CustomNaming customNaming(mOptions.customString, mOptions.directory.entryList(QDir::Files));
 
-        if (file.toInt()> naming_largest)
-        naming_largest = file.toInt();
+    if (customNaming.isValid())
+      naming = customNaming.string();
+  }
+
+  if (!mOptions.custom || naming.isEmpty())
+  { // TODO: Cleanup
+    naming = "%1";
+
+    int naming_largest = 0;
+
+    switch (mOptions.naming)
+    {
+    case 0: // Numeric
+      // Iterating through the folder to find the largest numeric naming.
+      foreach(QString file, mOptions.directory.entryList(QDir::Files)){
+        if (file.contains(mOptions.prefix))
+        {
+          file.chop(file.size() - file.lastIndexOf("."));
+          file.remove(mOptions.prefix);
+
+          if (file.toInt()> naming_largest)
+          naming_largest = file.toInt();
+        }
       }
+
+      naming = naming.arg(naming_largest + 1);
+    break;
+    case 1: // Timestamp
+      naming = naming.arg(QDateTime::currentDateTime().toTime_t());
+      break;
+    case 2: // Date
+      naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
+      break;
     }
+  }
 
-    naming = naming.arg(naming_largest + 1);
-  break;
-  case 1: // Timestamp
-    naming = naming.arg(QDateTime::currentDateTime().toTime_t());
-  break;
-  case 2: // Date
-    naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
-  break;
-}
+  QString fileName;
 
-  // %1: Path
-  // %2-%3: Naming / Prefix
-  // %4: File extension
-  QString fileName("%1%2%3.%4");
   QString extension = QString(formatString()).toLower();
   QString path = QDir::toNativeSeparators(mOptions.directory.path());
 
   // Cleanup
-  if (QDir::toNativeSeparators(path.at(path.size()-1)) != QDir::separator() && !path.isEmpty())
+  if (path.at(path.size()-1) != QDir::separator() && !path.isEmpty())
     path.append(QDir::separator());
 
-  if (mOptions.flipNaming)
-    fileName = fileName.arg(path).arg(naming).arg(mOptions.prefix).arg(extension);
-  else
-    fileName = fileName.arg(path).arg(mOptions.prefix).arg(naming).arg(extension);
+  fileName.append(path);
+
+  if (!mOptions.custom)
+    fileName.append(mOptions.prefix);
+
+  fileName.append(naming+"."+extension);
 
   return fileName;
 }
@@ -139,7 +153,7 @@ void Screenshot::wholeScreen()
   if (mOptions.cursor)
   {
     QPainter painter(&pixmap());
-    painter.drawPixmap(os::mousePosition(), os::cursor());
+    painter.drawPixmap(QCursor::pos(), os::cursor());
   }
 }
 

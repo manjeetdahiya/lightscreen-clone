@@ -4,8 +4,8 @@
 #include <QPainter>
 #include <QPixmap>
 
-#ifdef Q_WS_WIN
-#include "windows.h"
+#if defined(Q_WS_WIN)
+  #include "windows.h"
 #endif
 
 #include "areaselector.h"
