@@ -20,3 +20,4 @@ void AboutDialog::openUrl(QString url)
   QDesktopServices::openUrl( QUrl(url));
 }
 
+

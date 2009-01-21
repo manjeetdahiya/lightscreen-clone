@@ -1,14 +1,14 @@
 #include <QDateTime>
 #include <QDesktopServices>
+#include <QDesktopWidget>
 #include <QFileDialog>
+#include <QHBoxLayout>
+#include <QKeyEvent>
 #include <QMessageBox>
 #include <QSettings>
+#include <QTextBrowser>
 #include <QTimer>
 #include <QUrl>
-#include <QDesktopWidget>
-#include <QKeyEvent>
-#include <QTextBrowser>
-#include <QHBoxLayout>
 
 #include <windows.h>
 
@@ -23,11 +23,11 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 {
   ui.setupUi(this);
 
-  os::vistaGlass(this);
+  os::aeroGlass(this);
 
   setModal(true);
 
-#ifndef Q_WS_WIN //TODO: Add other windows-only opts (cursor?)
+#if !defined(Q_WS_WIN) //TODO: Add other windows-only opts (cursor?)
   ui.playSoundCheckBox->setVisible(false);
   ui.playSoundCheckBox->setChecked(false);
 #endif
@@ -239,6 +239,7 @@ void OptionsDialog::saveSettings()
   settings.setValue("disableUpdater", !ui.updaterCheckBox->isChecked());
   settings.setValue("magnify", ui.magnifyCheckBox->isChecked());
   settings.setValue("cursor", ui.cursorCheckBox->isChecked());
+  settings.setValue("saveAs", ui.saveAsCheckBox->isChecked());
 
   // Advanced
   settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
@@ -342,6 +343,7 @@ void OptionsDialog::loadSettings()
   ui.updaterCheckBox->setChecked(!settings.value("disableUpdater", false).toBool());
   ui.magnifyCheckBox->setChecked(settings.value("magnify", false).toBool());
   ui.cursorCheckBox->setChecked(settings.value("cursor", false).toBool());
+  ui.saveAsCheckBox->setChecked(settings.value("saveAs", false).toBool());
 
   customButtonToggled(ui.customPushButton->isChecked());
 

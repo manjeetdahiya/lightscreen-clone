@@ -32,7 +32,7 @@
 LightscreenWindow::LightscreenWindow(QWidget *parent) :
   QDialog(parent)
 {
-  os::vistaGlass(this);
+  os::aeroGlass(this);
 
   ui.setupUi(this);
 
@@ -139,6 +139,7 @@ void LightscreenWindow::messageClicked()
 void LightscreenWindow::restoreSystemTrayNotifier()
 {
   mTrayIcon->setIcon(QIcon(":/icons/SystemTray"));
+  setWindowTitle(tr("Lightscreen"));
 }
 
 void LightscreenWindow::screenshotAction(int mode)
@@ -206,6 +207,8 @@ void LightscreenWindow::screenshotAction(int mode)
     options.preview       = mSettings.value("options/preview", false).toBool();
     options.magnify       = mSettings.value("options/magnify", false).toBool();
     options.cursor        = mSettings.value("options/cursor" , false).toBool();
+    options.saveAs        = mSettings.value("options/saveAs" , false).toBool();
+
     mDoCache = true;
   }
 
@@ -317,9 +320,15 @@ void LightscreenWindow::showScreenshotMessage(bool result, QString fileName)
 void LightscreenWindow::showTrayNotifier(bool result)
 {
   if (result)
+  {
     mTrayIcon->setIcon(QIcon(":/icons/SystemTraySucess"));
+    setWindowTitle(tr("Sucess!"));
+  }
   else
+  {
     mTrayIcon->setIcon(QIcon(":/icons/SystemTrayFailure"));
+    setWindowTitle(tr("Failed!"));
+  }
 
   QTimer::singleShot(1500, this, SLOT(restoreSystemTrayNotifier()));
 }
@@ -633,32 +642,19 @@ void LightscreenWindow::checkForUpdates()
   Updater::instance()->check();
 }
 
-// Events
+// Event handling
 
-void LightscreenWindow::changeEvent(QEvent* event)
+bool LightscreenWindow::event(QEvent *event)
 {
   if (event->type() == QEvent::LanguageChange)
     ui.retranslateUi(this);
 
-  QDialog::changeEvent(event);
-}
+  if (event->type() == QEvent::Show)
+    restoreGeometry(mSettings.value("geometry").toByteArray());
 
-void LightscreenWindow::hideEvent(QHideEvent *event)
-{
-  mSettings.setValue("geometry", saveGeometry());
-  QDialog::hideEvent(event);
-}
+  if (event->type() == QEvent::Close || event->type() == QEvent::Hide)
+    mSettings.setValue("geometry", saveGeometry());
 
-void LightscreenWindow::closeEvent(QCloseEvent *event)
-{
-  mSettings.setValue("geometry", saveGeometry());
-  QDialog::closeEvent(event);
-}
-
-void LightscreenWindow::showEvent(QShowEvent *event)
-{
-  restoreGeometry(mSettings.value("geometry").toByteArray());
-  //os::vistaGlass(this); // Fixes black background bug?
-  QDialog::showEvent(event);
+  return QDialog::event(event);
 }
 

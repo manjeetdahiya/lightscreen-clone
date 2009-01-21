@@ -762,6 +762,13 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="saveAsCheckBox">
+         <property name="text">
+          <string>Choose where and how to save each screenshot (&quot;Save as&quot;).</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="cursorCheckBox">
          <property name="text">
           <string>Include the cursor in the screenshot.</string>

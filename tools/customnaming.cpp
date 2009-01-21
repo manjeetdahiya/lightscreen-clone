@@ -1,10 +1,11 @@
 #include "customnaming.h"
+#include "os.h"
 
-#include <QString>
-#include <QStringList>
-#include <QRegExp>
 #include <QDateTime>
 #include <QDebug>
+#include <QRegExp>
+#include <QString>
+#include <QStringList>
 
 CustomNaming::CustomNaming(QString string, QStringList fileList) : mString(string), mFileList(fileList)
 {
@@ -39,8 +40,8 @@ void CustomNaming::process()
 
   mResult = mString;
 
-  mResult.replace("/timestamp/" , QString::number(QDateTime::currentDateTime().toTime_t()));
-  mResult.replace("/date/"      , QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
+  mResult.replace("/timestamp/"   , QString::number(QDateTime::currentDateTime().toTime_t()));
+  mResult.replace("/date/"        , QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
 
   // Convenience function, parses /date/s with options.
   date();

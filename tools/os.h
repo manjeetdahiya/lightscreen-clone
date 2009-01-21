@@ -2,18 +2,20 @@
 #ifndef OS_H_
 #define OS_H_
 
-#include <QObject>
+#include <QWidget>
 
 struct QPixmap;
 struct QPoint;
+struct QString;
+
 namespace os
-{ //TODO: Comment functions
+{ //TODO: Comment functions, order alphabetically (in .cpp too)
+  void aeroGlass(QWidget *target);
+  void addToRecentDocuments(QString fileName);
+  QPixmap cursor();
   QPixmap dxScreen();
   QPixmap grabWindow(WId winId);
-  QPixmap cursor();
   void translate(QString language);
-  void vistaGlass(QWidget *target);
-
 }
 
 

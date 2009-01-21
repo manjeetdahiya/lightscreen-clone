@@ -3,9 +3,10 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QDesktopWidget>
+#include <QFileDialog>
+#include <QPainter>
 #include <QPixmap>
 #include <QSettings>
-#include <QPainter>
 
 #if defined(Q_WS_WIN)
   #include <windows.h>
@@ -96,7 +97,6 @@ QString Screenshot::newFileName()
 
   QString fileName;
 
-  QString extension = QString(formatString()).toLower();
   QString path = QDir::toNativeSeparators(mOptions.directory.path());
 
   // Cleanup
@@ -108,21 +108,23 @@ QString Screenshot::newFileName()
   if (!mOptions.custom)
     fileName.append(mOptions.prefix);
 
-  fileName.append(naming+"."+extension);
+  fileName.append(naming);
 
   return fileName;
 }
 
-char* Screenshot::formatString()
+QString Screenshot::extension()
 {
   if (mOptions.format == 0)
-    return "PNG";
+    return ".png";
   if (mOptions.format == 1)
-    return "JPG";
+    return ".jpg";
   if (mOptions.format == 2)
-    return "BMP";
+    return ".bmp";
+  if (mOptions.format == 3)
+    return "tiff";
 
-  return "PNG"; //default
+  return ".jpg"; //default
 }
 
 void Screenshot::selectedArea()
@@ -170,8 +172,10 @@ QPixmap Screenshot::grabDesktop()
     //Grabbing all screens
     int numScreens = QApplication::desktop()->numScreens();
 
-    //if (numScreens <= 1)
-    //  return QPixmap::grabWindow(QApplication::desktop()->screen(1)->winId());
+    if (numScreens <= 1)
+      return QPixmap::grabWindow(QApplication::desktop()->screen(1)->winId());
+
+    // TODO: Doing this causes slowdown (confirm in release mode), must optimize.
 
     QPixmap allScreens = QPixmap::grabWindow(QApplication::desktop()->screen(1)->winId());
     QPainter painter(&allScreens);
@@ -220,13 +224,38 @@ bool Screenshot::take()
 
 QString Screenshot::save()
 {
-  QString fileName;
+  QString fileName = "";
   bool    action = false;
 
-  if (mOptions.file)
+  if (mOptions.file && !mOptions.saveAs)
   {
     fileName = newFileName();
-    action   = pixmap().save(fileName, formatString(), mOptions.quality);
+
+    // Optimize?
+    int n = 1;
+    QString original = fileName;
+    while (QFile::exists(fileName+extension()))
+    {
+      fileName = QString("%1 (%2)").arg(original).arg(n);
+      n++;
+    }
+
+    action = pixmap().save(fileName+extension(), 0, mOptions.quality);
+  }
+
+  if (mOptions.file && mOptions.saveAs)
+  {
+    fileName = QFileDialog::getSaveFileName(0, tr("Save as.."), newFileName(), "*"+extension());
+
+    if (fileName.isEmpty())
+      action = false;
+    else
+      action = pixmap().save(fileName, 0, mOptions.quality);
+  }
+
+  if (mOptions.file)
+  { // Windows only
+    os::addToRecentDocuments(fileName);
   }
 
   if (mOptions.clipboard)

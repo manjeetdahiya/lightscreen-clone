@@ -1,14 +1,12 @@
-#include <QWidget>
 #include <QApplication>
-#include <QLibrary>
-#include <QDesktopWidget>
-#include <QTranslator>
-#include <QDialog>
-#include <QVBoxLayout>
-#include <QTextEdit>
-#include <QPixmap>
-#include <QPoint>
 #include <QBitmap>
+#include <QDesktopWidget>
+#include <QDialog>
+#include <QLibrary>
+#include <QPixmap>
+#include <QTextEdit>
+#include <QTranslator>
+#include <QWidget>
 
 #include <QDebug>
 
@@ -16,6 +14,7 @@
 
 #if defined(Q_WS_WIN)
   #include <windows.h>
+  #include <shlobj.h>
 
   typedef struct
   {
@@ -33,6 +32,13 @@
 #endif
 
 #include "os.h"
+
+void os::addToRecentDocuments(QString fileName)
+{
+#if defined(Q_WS_WIN)
+  SHAddToRecentDocs(SHARD_PATH, fileName.toAscii().data());
+#endif
+}
 
 QPixmap os::grabWindow(WId winId)
 {
@@ -116,29 +122,27 @@ void os::translate(QString language)
   qApp->installTranslator(translator);
 }
 
-void os::vistaGlass(QWidget* target)
+void os::aeroGlass(QWidget* target)
 {
 #if defined(Q_WS_WIN)
+  if (QSysInfo::WindowsVersion < QSysInfo::WV_VISTA)
+    return;  // Glass frame only for Windows Vista and above.
+
   static QLibrary dwmapi("dwmapi");
 
-  if (QSysInfo::WindowsVersion == QSysInfo::WV_VISTA)
-  { // Glass frame only for Windows Vista
+  pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)dwmapi.resolve("DwmIsCompositionEnabled");
 
-    pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)dwmapi.resolve("DwmIsCompositionEnabled");
+  BOOL enabled;
+  pDwmIsCompositionEnabled(&enabled);
 
-    BOOL enabled;
-    pDwmIsCompositionEnabled(&enabled);
+  if (enabled)
+  {
+    pDwmExtendFrameIntoClientArea = (PtrDwmExtendFrameIntoClientArea)dwmapi.resolve("DwmExtendFrameIntoClientArea");
 
-    if (enabled)
-    {
-      pDwmExtendFrameIntoClientArea = (PtrDwmExtendFrameIntoClientArea)dwmapi.resolve("DwmExtendFrameIntoClientArea");
+    MARGINS margins = { -1}; //setting it to -1 makes the glass available throughout the entire window
 
-      MARGINS margins =
-      { -1}; //setting it to -1 makes the glass available throughout the entire window
-
-      pDwmExtendFrameIntoClientArea(target->winId(), &margins);
-      target->setAttribute(Qt::WA_NoSystemBackground);
-    }
+    pDwmExtendFrameIntoClientArea(target->winId(), &margins);
+    target->setAttribute(Qt::WA_NoSystemBackground);
   }
 #else
   Q_UNUSED(target)

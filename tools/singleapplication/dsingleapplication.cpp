@@ -8,7 +8,7 @@
   and expects a correct answer, if it's correct then the app is running and
   we can talk to it.
 
-  Messages sent are in text and start with APP_ID+":", unles message has this three 
+  Messages sent are in text and start with APP_ID+":", unles message has this three
   bytes it is descarded. Each text message is prepended with int32 value of
   it's size.
 
@@ -19,15 +19,17 @@
 
   History:
     02/08/2007 17:14 - First creation
-      
-  ver: 1       
+
+  ver: 1
 *******************************************************************************/
 
 #include "dsingleapplication.h"
 
-#include <QtCore>
-#include <QtGui>
-#include <QtNetwork>
+#include <QByteArray>
+#include <QDataStream>
+#include <QString>
+#include <QTcpServer>
+#include <QTcpSocket>
 
 
 DSingleApplication::DSingleApplication( const QString &id, bool initialize ) {
@@ -58,7 +60,7 @@ bool DSingleApplication::isRunning () const {
   // may require some checks here
   return other_instance_running;
 }
- 
+
 void DSingleApplication::init() {
 
   // start at d_unique_port_start and go until find a free port or a port
@@ -94,7 +96,7 @@ void DSingleApplication::init() {
 
   // other instance is not running in the range and there's available port
   if (port == -1) return;
-  
+
   // this port is free and current instance is in listening mode
   bool listening = tcpServer->listen( QHostAddress::LocalHost, port );
   if (listening)
@@ -110,7 +112,7 @@ bool DSingleApplication::sendMessage ( const QString &message ) {
   QByteArray block;
   QDataStream out(&block, QIODevice::WriteOnly);
   out.setVersion( out.version() ); // set to the current Qt version
-  
+
   QString msg = app_id + ":" + message;
   out << (quint32) msg.size();
   out << msg;
@@ -132,7 +134,7 @@ void DSingleApplication::onClientMessage( const QString & message ) {
 // This class is used to check specific port if it has an instance of this app
 //******************************************************************************
 
-DPortChecker::DPortChecker( const QString &id, int port, QObject *parent ) 
+DPortChecker::DPortChecker( const QString &id, int port, QObject *parent )
 : QThread(parent)
 {
   tcpSocket = NULL;
@@ -157,7 +159,7 @@ void DPortChecker::check( int port ) {
 void DPortChecker::run() {
   result = DPortChecker::free;
 
-  if (tcpSocket == NULL) 
+  if (tcpSocket == NULL)
     tcpSocket = new QTcpSocket();
 
   tcpSocket->connectToHost( QHostAddress(QHostAddress::LocalHost), port );
@@ -176,7 +178,7 @@ void DPortChecker::run() {
     if (msgString.size() <= 1) { tcpSocket->abort(); return; }
     int s = qMin( msgString.size(), app_id.size() );
     if ( QString::compare( msgString.left(s), app_id.left(s) ) == 0)
-      result = DPortChecker::us; 
+      result = DPortChecker::us;
   }
 }
 
@@ -215,7 +217,7 @@ void DTalker::onClientMessage( const QString & message ) {
 // This thread is used to communicate with connected client
 //******************************************************************************
 
-DListner::DListner( const QString &id, int socketDescriptor, QObject *parent ) 
+DListner::DListner( const QString &id, int socketDescriptor, QObject *parent )
   : socketDescriptor(socketDescriptor), app_id(id), QThread(parent)
 {
   blockSize = 0;
@@ -237,7 +239,7 @@ void DListner::run() {
   out.setVersion( out.version() ); // set to the current Qt version instead
   out << app_id;
   tcpSocket.write(block);
-  //waitForBytesWritten ( int msecs ) 
+  //waitForBytesWritten ( int msecs )
 
   while (1) {
     if (tcpSocket.state() != QAbstractSocket::ConnectedState) return;
@@ -260,7 +262,7 @@ void DListner::read( QTcpSocket *tcpSocket ) {
   if (tcpSocket->bytesAvailable() < blockSize) return;
   QString msgString;
   in >> msgString;
-  
+
   // if header matches, trim and emit
   QString magic = app_id + ":";
   if ( QString::compare( msgString.left(magic.size()), magic ) == 0)

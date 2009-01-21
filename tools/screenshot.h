@@ -47,6 +47,7 @@ public:
     bool preview;
     bool magnify;
     bool cursor;
+    bool saveAs;
 
     bool custom;
     QString customString;
@@ -63,12 +64,12 @@ public slots:
   QPixmap& pixmap();
 
 private:
-  void  activeWindow();
-  QString  newFileName();
-  char* formatString();
-  void  selectedArea();
-  void  wholeScreen();
-  void setPixmap(QPixmap pixmap);
+  void    activeWindow();
+  QString newFileName();
+  QString extension();
+  void    selectedArea();
+  void    wholeScreen();
+  void    setPixmap(QPixmap pixmap);
   QPixmap grabDesktop();
 
 private:
