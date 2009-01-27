@@ -34,6 +34,10 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
 {
   os::aeroGlass(this);
 
+  QString language = mSettings.value("options/language").toString().toLower();
+
+  os::translate(language);
+
   ui.setupUi(this);
 
   // Actions
@@ -127,8 +131,11 @@ void LightscreenWindow::goToFolder()
 
 void LightscreenWindow::instanceMessage(QString message)
 {
-  if (!message.isNull())
-    show();
+  if (message.isNull())
+    return;
+
+  show();
+  os::setForegroundWindow(this);
 }
 
 void LightscreenWindow::messageClicked()
@@ -163,6 +170,7 @@ void LightscreenWindow::screenshotAction(int mode)
   delayms = mSettings.value("options/delay", 0).toInt();
   delayms = delayms * 1000; // Converting the delay to milliseconds.
 
+#if defined(Q_WS_WIN)
   if (optionsHide)
   {
     // When on Windows Vista, the window takes a little bit longer to hide
@@ -171,6 +179,7 @@ void LightscreenWindow::screenshotAction(int mode)
     else
       delayms += 200;
   }
+#endif
 
   // The delayed functions works using the static variable lastMode
   // which keeps the argument so a QTimer can call this function again.
@@ -354,7 +363,7 @@ void LightscreenWindow::showHotkeyError(QStringList hotkeys)
    {
      messageText += tr("<br>The failed hotkeys are the following:<ul>");
 
-     foreach(QString hotkey, hotkeys)
+     foreach(const QString &hotkey, hotkeys)
      {
        messageText += QString("%1%2%3").arg("<li><b>").arg(hotkey).arg("</b></li>");
      }
@@ -372,9 +381,9 @@ void LightscreenWindow::showHotkeyError(QStringList hotkeys)
    msgBox.setWindowTitle(tr("Lightscreen"));
    msgBox.setText(messageText);
 
-   QPushButton *changeButton  = msgBox.addButton(tr("Change"), QMessageBox::ActionRole);
+   QPushButton *changeButton  = msgBox.addButton(tr("Change") , QMessageBox::ActionRole);
    QPushButton *disableButton = msgBox.addButton(tr("Disable"), QMessageBox::ActionRole);
-   QPushButton *exitButton    = msgBox.addButton(tr("Quit"),  QMessageBox::ActionRole);
+   QPushButton *exitButton    = msgBox.addButton(tr("Quit")   , QMessageBox::ActionRole);
 
    msgBox.exec();
 
@@ -389,7 +398,7 @@ void LightscreenWindow::showHotkeyError(QStringList hotkeys)
    }
    else if (msgBox.clickedButton() == disableButton)
    {
-     foreach(QString hotkey, hotkeys)
+     foreach(const QString &hotkey, hotkeys)
      {
       mSettings.setValue(QString("actions/%1/enabled").arg(hotkey), false);
      }
@@ -458,7 +467,7 @@ void LightscreenWindow::areaHotkey()
 
 void LightscreenWindow::applySettings()
 {
-  if (!QSettings().contains("file/format"))
+  if (!mSettings.contains("file/format"))
     showOptions(); // There are no options (or the options config is invalid or incomplete)
 
   mSettings.sync();
@@ -543,7 +552,6 @@ void LightscreenWindow::connectHotkeys()
 
   if (!failed.isEmpty())
     showHotkeyError(failed);
-
 }
 
 void LightscreenWindow::createScreenshotButtonMenu()
@@ -650,7 +658,10 @@ bool LightscreenWindow::event(QEvent *event)
     ui.retranslateUi(this);
 
   if (event->type() == QEvent::Show)
+  {
+    os::aeroGlass(this);
     restoreGeometry(mSettings.value("geometry").toByteArray());
+  }
 
   if (event->type() == QEvent::Close || event->type() == QEvent::Hide)
     mSettings.setValue("geometry", saveGeometry());

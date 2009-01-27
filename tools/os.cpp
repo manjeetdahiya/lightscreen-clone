@@ -36,7 +36,7 @@
 void os::addToRecentDocuments(QString fileName)
 {
 #if defined(Q_WS_WIN)
-  SHAddToRecentDocs(SHARD_PATH, fileName.toAscii().data());
+  SHAddToRecentDocs(SHARD_PATH, fileName.toAscii().data()); // Windows 7 jump lists use this.
 #endif
 }
 
@@ -50,8 +50,8 @@ QPixmap os::grabWindow(WId winId)
 
   if (IsZoomed(winId))
   {
-    if (QSysInfo::WindowsVersion == QSysInfo::WV_VISTA)
-    {// TODO: WTF! (Test this for 0.6!)
+    if (QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA)
+    {// TODO: WTF!
       rcWindow.right += 8;
       rcWindow.left -= 8;
       rcWindow.top += 8;
@@ -82,6 +82,14 @@ QPixmap os::grabWindow(WId winId)
   return pixmap;
 #else
   return QPixmap::grabWindow(winId);
+#endif
+}
+
+void os::setForegroundWindow(QWidget *window)
+{
+#if defined(Q_WS_WIN)
+  ShowWindow(window->winId(), SW_RESTORE);
+  SetForegroundWindow(window->winId());
 #endif
 }
 
@@ -122,11 +130,12 @@ void os::translate(QString language)
   qApp->installTranslator(translator);
 }
 
-void os::aeroGlass(QWidget* target)
+bool os::aeroGlass(QWidget* target)
 {
 #if defined(Q_WS_WIN)
+
   if (QSysInfo::WindowsVersion < QSysInfo::WV_VISTA)
-    return;  // Glass frame only for Windows Vista and above.
+    return false;  // Glass frame only for Windows Vista and above.
 
   static QLibrary dwmapi("dwmapi");
 
@@ -141,9 +150,16 @@ void os::aeroGlass(QWidget* target)
 
     MARGINS margins = { -1}; //setting it to -1 makes the glass available throughout the entire window
 
-    pDwmExtendFrameIntoClientArea(target->winId(), &margins);
-    target->setAttribute(Qt::WA_NoSystemBackground);
+    enabled = SUCCEEDED(pDwmExtendFrameIntoClientArea(target->winId(), &margins));
+
+    if (enabled)
+    {
+      target->setAttribute(Qt::WA_NoSystemBackground);
+      target->setAttribute(Qt::WA_OpaquePaintEvent);
+    }
   }
+
+  return enabled;
 #else
   Q_UNUSED(target)
 #endif

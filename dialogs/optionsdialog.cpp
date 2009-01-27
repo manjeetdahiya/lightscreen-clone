@@ -10,7 +10,11 @@
 #include <QTimer>
 #include <QUrl>
 
-#include <windows.h>
+#if defined(Q_WS_WIN)
+  #include <windows.h>
+#endif
+
+#include <QDebug>
 
 #include "optionsdialog.h"
 #include "../tools/os.h"
@@ -23,13 +27,19 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 {
   ui.setupUi(this);
 
-  os::aeroGlass(this);
+  if (os::aeroGlass(this))
+  { // The standard QTabBar looks odd when full aero transparency is enabled.
+    setStyleSheet("QTabBar::tab:selected { background: white; margin-top: 2px; padding-right: -1px; padding: 0; border: 1px solid gray; border-bottom: none; }");
+    ui.tabWidget->setTabText(ui.tabWidget->currentIndex(), "  "+tr("General")+"  "); //Fake padding.
+  }
 
   setModal(true);
 
 #if !defined(Q_WS_WIN) //TODO: Add other windows-only opts (cursor?)
   ui.playSoundCheckBox->setVisible(false);
   ui.playSoundCheckBox->setChecked(false);
+  ui.cursorCheckBox->setVisible(false);
+  ui.cursorCheckBox->setChecked(false);
 #endif
 
   QSettings settings;
@@ -57,20 +67,16 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   connect(ui.openCheckBox     , SIGNAL(toggled(bool)), ui.openHotkeyWidget     , SLOT(setEnabled(bool)));
   connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
 
-  connect(ui.generalButton,     SIGNAL(clicked()), this, SLOT(changePage()));
-  connect(ui.hotkeysButton,     SIGNAL(clicked()), this, SLOT(changePage()));
-  connect(ui.optionsButton,     SIGNAL(clicked()), this, SLOT(changePage()));
-  connect(ui.advancedButton,    SIGNAL(clicked()), this, SLOT(changePage()));
-
   // Getting the language entries
   QDir lang(QCoreApplication::applicationDirPath() + "/lang", "*.qm");
   lang.setFilter(QDir::Files);
 
   QStringList entries;
+  QString entry;
 
   entries << "English"; // Set here and not the .ui because it the items would get reset when calling retranslateUi
 
-  foreach (QString entry, lang.entryList())
+  foreach (entry, lang.entryList())
   {
     entry.chop(3); // Remove the ".em"
     entry[0] = entry.at(0).toUpper(); // Make first char uppercase
@@ -128,16 +134,7 @@ void OptionsDialog::browse()
 
 void OptionsDialog::changePage()
 {
-  QString page = qobject_cast<QPushButton*>(sender())->text();
 
-  if (page == tr("General"))
-    ui.stack->setCurrentIndex(0);
-  else if (page == tr("Hotkeys"))
-    ui.stack->setCurrentIndex(1);
-  else if (page == tr("Options"))
-    ui.stack->setCurrentIndex(2);
-  else if (page == tr("Advanced"))
-    ui.stack->setCurrentIndex(3);
 }
 
 void OptionsDialog::checkUpdatesNow()

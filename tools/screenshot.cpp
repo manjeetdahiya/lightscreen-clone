@@ -122,7 +122,7 @@ QString Screenshot::extension()
   if (mOptions.format == 2)
     return ".bmp";
   if (mOptions.format == 3)
-    return "tiff";
+    return ".tiff";
 
   return ".jpg"; //default
 }

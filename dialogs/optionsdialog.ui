@@ -6,23 +6,17 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>358</width>
-    <height>262</height>
+    <width>364</width>
+    <height>265</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Options - Lightscreen</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QStackedWidget
-{
-background-color: white;
-border: 1px solid gray;
-border-radius: 4px;
-}
-</string>
+   <string notr="true"/>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_6">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="margin">
     <number>2</number>
    </property>
@@ -35,98 +29,19 @@ border-radius: 4px;
       <property name="margin">
        <number>0</number>
       </property>
-      <item>
-       <widget class="QPushButton" name="generalButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>General</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-        <property name="autoExclusive">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="hotkeysButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Hotkeys</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="autoExclusive">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="optionsButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Options</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="autoExclusive">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="advancedButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Advanced</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="autoExclusive">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
    <item>
-    <widget class="QStackedWidget" name="stack">
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
+    <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="page">
-      <layout class="QVBoxLayout" name="verticalLayout_5">
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>General</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
         <widget class="QGroupBox" name="fileGroupBox">
          <property name="title">
@@ -400,6 +315,11 @@ It also possible to use the &lt;em&gt;date&lt;/em&gt; naming option with custom 
                 <string>BMP</string>
                </property>
               </item>
+              <item>
+               <property name="text">
+                <string>TIFF</string>
+               </property>
+              </item>
              </widget>
             </item>
             <item row="4" column="0">
@@ -467,8 +387,11 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_2">
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Hotkeys</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
@@ -572,19 +495,6 @@ p, li { white-space: pre-wrap; }
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
          <item row="3" column="0">
           <spacer name="verticalSpacer_3">
            <property name="orientation">
@@ -611,22 +521,28 @@ p, li { white-space: pre-wrap; }
            </property>
           </spacer>
          </item>
+         <item row="0" column="1">
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_3">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QCheckBox" name="trayCheckBox">
-         <property name="whatsThis">
-          <string/>
-         </property>
-         <property name="text">
-          <string>Sho&amp;w a system tray icon.</string>
-         </property>
-        </widget>
-       </item>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Options</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
         <widget class="QCheckBox" name="hideCheckBox">
          <property name="text">
@@ -638,6 +554,16 @@ p, li { white-space: pre-wrap; }
         <widget class="QCheckBox" name="updaterCheckBox">
          <property name="text">
           <string>Periodically check for updates.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="trayCheckBox">
+         <property name="whatsThis">
+          <string/>
+         </property>
+         <property name="text">
+          <string>Sho&amp;w a system tray icon.</string>
          </property>
         </widget>
        </item>
@@ -752,19 +678,22 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_4">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QCheckBox" name="clipboardCheckBox">
-         <property name="text">
-          <string>Copy the screenshot to the clipboard.</string>
-         </property>
-        </widget>
-       </item>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Advanced</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
         <widget class="QCheckBox" name="saveAsCheckBox">
          <property name="text">
           <string>Choose where and how to save each screenshot (&quot;Save as&quot;).</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="clipboardCheckBox">
+         <property name="text">
+          <string>Copy the screenshot to the clipboard.</string>
          </property>
         </widget>
        </item>
@@ -798,19 +727,6 @@ p, li { white-space: pre-wrap; }
           <string>Warn when hiding without a tray icon.</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>42</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">

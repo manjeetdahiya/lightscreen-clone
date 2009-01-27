@@ -10,8 +10,9 @@ struct QString;
 
 namespace os
 { //TODO: Comment functions, order alphabetically (in .cpp too)
-  void aeroGlass(QWidget *target);
+  bool aeroGlass(QWidget *target);
   void addToRecentDocuments(QString fileName);
+  void setForegroundWindow(QWidget *window);
   QPixmap cursor();
   QPixmap dxScreen();
   QPixmap grabWindow(WId winId);

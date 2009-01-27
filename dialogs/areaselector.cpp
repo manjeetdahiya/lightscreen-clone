@@ -4,6 +4,8 @@
 #include <QPainter>
 #include <QPixmap>
 
+#include <QDebug>
+
 #if defined(Q_WS_WIN)
   #include "windows.h"
 #endif
@@ -13,7 +15,7 @@
 AreaSelector::AreaSelector(QPixmap desktop, bool magnify) : mCleanDesktop(desktop), mMagnify(magnify)
 {
   setWindowFlags(Qt::WindowStaysOnTopHint);
-  setWindowState( Qt::WindowFullScreen);
+  setWindowState(Qt::WindowFullScreen);
 
   setCursor(Qt::CrossCursor);
 
@@ -87,22 +89,25 @@ void AreaSelector::drawRectangleSelector(QPainter &painter)
 
   // Drawing the magnified version
   QPoint magEnd = mPos;
-  magEnd.setX(magEnd.x()+50);
-  magEnd.setY(magEnd.y()+50);
+  magEnd += QPoint(50, 50);
 
   QPoint magStart = mPos;
-  magStart.setX(magStart.x()-50);
-  magStart.setY(magStart.y()-50);
+  magStart -= QPoint(50, 50);
 
   QRect newRect = QRect(magStart, magEnd);
-  QPixmap magnified = mCleanDesktop.copy(newRect).scaled(QSize(200, 200));
 
+  QPixmap magnified = mCleanDesktop.copy(newRect).scaled(QSize(200, 200));
   QPainter magPainter(&magnified);
   magPainter.setPen(QPen(QBrush(QColor(255, 0, 0, 180)), 2)); // Same border pen
   magPainter.drawRect(magnified.rect());
   magPainter.drawText(magnified.rect().center(), "+");
 
-  painter.drawPixmap(mRect.bottomRight(), magnified);
+  QPoint drawPosition = mRect.bottomRight();
+
+  if ((drawPosition.x()+200) > mCleanDesktop.rect().width() || (drawPosition.y()+200) > mCleanDesktop.rect().height())
+    drawPosition -= QPoint(200, 200);
+
+  painter.drawPixmap(drawPosition, magnified);
 }
 
 // Protected event

@@ -63,8 +63,9 @@ int CustomNaming::number()
   pattern.replace("/date/"      , "(\\d{2}-\\d{2}-\\d{4} \\d{2}.\\d{2}.\\d{2})");
 
   QRegExp rx  (pattern);
+  QString file;
 
-  foreach(QString file, mFileList)
+  foreach(file, mFileList)
   {
     // Remove the extension
     file.chop(file.size() - file.lastIndexOf("."));
