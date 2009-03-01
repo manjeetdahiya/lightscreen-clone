@@ -2,7 +2,6 @@
 #include "os.h"
 
 #include <QDateTime>
-#include <QDebug>
 #include <QRegExp>
 #include <QString>
 #include <QStringList>
@@ -48,8 +47,6 @@ void CustomNaming::process()
 
   // The date() function MUST be called before the number function since it sets mNumberString which is used by the number() function to skip /date/ parameters.
   mResult.replace("/number/"    , QString::number(number()));
-
-  qDebug() << mResult;
 }
 
 int CustomNaming::number()
@@ -88,7 +85,7 @@ void CustomNaming::date()
   QString string = mResult;
   QString command;
 
-  mNumberString = mResult;
+  mNumberString = QString(mResult);
 
   int pos = 0;    // where we are in the string
   int count = 0;  // how many expressions we've counted

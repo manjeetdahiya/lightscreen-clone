@@ -10,9 +10,9 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
   ui.versionLabel->setText(tr("Version %1").arg(qApp->applicationVersion()));
 
-  connect(ui.linksLabel, SIGNAL(linkActivated(QString)), this, SLOT(openUrl(QString)));
+  connect(ui.linksLabel,    SIGNAL(linkActivated(QString)), this, SLOT(openUrl(QString)));
   connect(ui.creationLabel, SIGNAL(linkActivated(QString)), this, SLOT(openUrl(QString)));
-  connect(ui.qtPushButton, SIGNAL(clicked()), qApp, SLOT(aboutQt()));
+  connect(ui.qtPushButton,  SIGNAL(clicked()), qApp, SLOT(aboutQt()));
 }
 
 void AboutDialog::openUrl(QString url)

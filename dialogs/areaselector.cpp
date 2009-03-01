@@ -19,6 +19,8 @@ AreaSelector::AreaSelector(QPixmap desktop, bool magnify) : mCleanDesktop(deskto
 
   setCursor(Qt::CrossCursor);
 
+  resize(mCleanDesktop.size());
+
   drawBackground();
 }
 

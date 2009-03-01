@@ -35,11 +35,15 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   setModal(true);
 
-#if !defined(Q_WS_WIN) //TODO: Add other windows-only opts (cursor?)
+#if !defined(Q_WS_WIN)
   ui.playSoundCheckBox->setVisible(false);
   ui.playSoundCheckBox->setChecked(false);
   ui.cursorCheckBox->setVisible(false);
   ui.cursorCheckBox->setChecked(false);
+  ui.startupCheckBox->setVisible(false);
+  ui.startupCheckBox->setChecked(false);
+  ui.optiPngCheckBox->setVisible(false);
+  ui.optiPngCheckBox->setChecked(false);
 #endif
 
   QSettings settings;
@@ -50,7 +54,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     ui.buttonBox->addButton(QDialogButtonBox::Ok);
 
     // Move the first option window to the center of the screen, since windows usually positions it in a random location since it has no visible parent.
-    move(QApplication::desktop()->screen(QApplication::desktop()->screenNumber(QCursor::pos()))->rect().center()-QPoint(height()/2, width()/2));
+    move(QApplication::desktop()->screen(QApplication::desktop()->primaryScreen())->rect().center()-QPoint(height()/2, width()/2));
   }
 
   connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(dialogButtonClicked(QAbstractButton*)));

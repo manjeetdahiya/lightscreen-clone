@@ -23,7 +23,6 @@ public slots:
   bool closingWithoutTray();
   void checkForUpdates();
   void goToFolder();
-  void instanceMessage(QString message);
   void messageClicked();
   void restoreSystemTrayNotifier();
   void screenshotAction(int mode = 0);

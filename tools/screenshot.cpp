@@ -137,7 +137,13 @@ void Screenshot::selectedArea()
   alreadySelecting = true;
 
   mOptions.currentMonitor = true;
-  AreaSelector selector (grabDesktop(), mOptions.magnify);
+
+  QPixmap desktop = grabDesktop();
+
+  if (desktop.isNull())
+    return;
+
+  AreaSelector selector (desktop, mOptions.magnify);
   int result = selector.exec();
 
   alreadySelecting = false;
@@ -152,7 +158,7 @@ void Screenshot::wholeScreen()
 {
   setPixmap(grabDesktop());
 
-  if (mOptions.cursor)
+  if (mOptions.cursor && !pixmap().isNull())
   {
     QPainter painter(&pixmap());
     painter.drawPixmap(QCursor::pos(), os::cursor());
@@ -161,35 +167,14 @@ void Screenshot::wholeScreen()
 
 QPixmap Screenshot::grabDesktop()
 {
+  QRect geometry;
+
   if (mOptions.currentMonitor)
-  {
-    //Grabbing only the current screen (as indicated by mouse position)
-    int screenId = QApplication::desktop()->screenNumber(QCursor::pos());
-    return QPixmap::grabWindow(QApplication::desktop()->screen(screenId)->winId());
-  }
+      geometry = QApplication::desktop()->availableGeometry(QCursor::pos());
   else
-  {
-    //Grabbing all screens
-    int numScreens = QApplication::desktop()->numScreens();
+      geometry = QApplication::desktop()->geometry();
 
-    if (numScreens <= 1)
-      return QPixmap::grabWindow(QApplication::desktop()->screen(1)->winId());
-
-    // TODO: Doing this causes slowdown (confirm in release mode), must optimize.
-
-    QPixmap allScreens = QPixmap::grabWindow(QApplication::desktop()->screen(1)->winId());
-    QPainter painter(&allScreens);
-    QPoint point = QPoint(0, 0);
-
-    for (int i = 2; i <= numScreens; i++)
-    { // Iterate through the screens and paint them into one pixmap
-
-      painter.drawPixmap(point, QPixmap::grabWindow(QApplication::desktop()->screen(i)->winId()));
-      point = allScreens.rect().topRight();
-    }
-
-    return allScreens;
-  }
+  return QPixmap::grabWindow(QApplication::desktop()->winId(), geometry.x(), geometry.y(), geometry.width(), geometry.height());
 }
 
 void Screenshot::setPixmap(QPixmap pixmap)

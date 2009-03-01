@@ -129,15 +129,6 @@ void LightscreenWindow::goToFolder()
   QDesktopServices::openUrl(QUrl::fromLocalFile(folder));
 }
 
-void LightscreenWindow::instanceMessage(QString message)
-{
-  if (message.isNull())
-    return;
-
-  show();
-  os::setForegroundWindow(this);
-}
-
 void LightscreenWindow::messageClicked()
 {
   goToFolder();

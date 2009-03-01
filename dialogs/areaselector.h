@@ -23,9 +23,9 @@ protected:
   bool event(QEvent *event);
 
 private:
-  QRect mRect;
-  QPoint mOrigin;
-  QPoint mPos;
+  QRect   mRect;
+  QPoint  mOrigin;
+  QPoint  mPos;
   QPixmap mCleanDesktop;
   bool mMagnify;
 

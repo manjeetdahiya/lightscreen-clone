@@ -3,14 +3,12 @@ TARGET = lightscreen
 HEADERS += tools/os.h \
     updater/updater.h \
     dialogs/areaselector.h \
-    engines/screenshotengine.h \
     dialogs/optionsdialog.h \
     dialogs/aboutdialog.h \
     widgets/hotkeywidget.h \
     lightscreenwindow.h \
     tools/screenshot.h \
     dialogs/previewdialog.h \
-    tools/singleapplication/dsingleapplication.h \
     dialogs/languagedialog.h \
     tools/customnaming.h
 SOURCES += tools/os.cpp \
@@ -22,7 +20,6 @@ SOURCES += tools/os.cpp \
     main.cpp \
     lightscreenwindow.cpp \
     tools/screenshot.cpp \
-    tools/singleapplication/dsingleapplication.cpp \
     tools/customnaming.cpp
 FORMS += dialogs/optionsdialog.ui \
     dialogs/aboutdialog.ui \

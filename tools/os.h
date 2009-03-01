@@ -9,13 +9,18 @@ struct QPoint;
 struct QString;
 
 namespace os
-{ //TODO: Comment functions, order alphabetically (in .cpp too)
+{
+  // Gives the target widget a full aero glass background
   bool aeroGlass(QWidget *target);
+  // Adds the filename to the Windows recent document list (useful for Windows 7 jump lists)
   void addToRecentDocuments(QString fileName);
+  // Set the target window as the foreground window (Windows only)
   void setForegroundWindow(QWidget *window);
+  // Returns the cursor pixmap in Windows
   QPixmap cursor();
-  QPixmap dxScreen();
+  // Returns the pixmap of the given window id.
   QPixmap grabWindow(WId winId);
+  // Translates the ui to the given language name.
   void translate(QString language);
 }
 
