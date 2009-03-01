@@ -151,125 +151,13 @@ p, li { white-space: pre-wrap; }
                 </item>
                </widget>
               </item>
-              <item>
-               <widget class="QLineEdit" name="customLineEdit">
-                <property name="toolTip">
-                 <string>Click on the help button to learn how to use this feature or use the &quot;What's this?&quot; button.</string>
-                </property>
-                <property name="whatsThis">
-                 <string>&lt;html&gt;&lt;body&gt;
-In this space you will be able to fully customize the way your screenshots are named by using different expressions, you can combine these with normal characters to create your own custom screenshot filenames.
-&lt;br&gt;&lt;br&gt;
-&lt;u&gt;Allowed characters&lt;/u&gt;:&lt;br&gt;&lt;br&gt;
-All numbers and letters, except for the following characters:&lt;br&gt;
-&lt;b&gt;  / : ? &quot; &lt; &gt; |&lt;/b&gt;
-&lt;br&gt;&lt;br&gt;
-
-&lt;u&gt;Custom filename format&lt;/u&gt;:&lt;br&gt;
-
-&lt;ul&gt;
-&lt;li&gt;
-&lt;em&gt;/number/&lt;/em&gt;: A self incrementing number.
-&lt;/li&gt;
-&lt;li&gt;
-&lt;em&gt;/timestamp/&lt;/em&gt;: A stanrdar unix timestamp.
-&lt;/li&gt;
-&lt;li&gt;
-&lt;em&gt;/date/&lt;/em&gt;: The standard Lightscreen date for files, dd-MM-yyyy hh.mm.ss, it can be customized using /date(..)/, see below for details.
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;br&gt;
-
-&lt;u&gt;Custom dates&lt;/u&gt;:&lt;br&gt;&lt;br&gt;
-
-It also possible to use the &lt;em&gt;date&lt;/em&gt; naming option with custom formatting in the form of %date(&lt;em&gt;format&lt;/em&gt;)%, the expressions are outlined below, you may combine these with any of the allowed characters.
-&lt;br&gt;&lt;br&gt;
-&lt;u&gt;These expressions may be used for the date&lt;/u&gt;:
-&lt;br&gt;&lt;br&gt;
-&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;Expression&lt;/th&gt;&lt;th&gt;Output&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/td&gt;
-&lt;tr&gt;
-&lt;td&gt;d&lt;/td&gt; &lt;td&gt;the day as number without a leading zero (1 to 31)
-&lt;tr&gt;
-&lt;td&gt;dd&lt;/td&gt; &lt;td&gt;the day as number with a leading zero (01 to 31)&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;ddd&lt;/td&gt; &lt;td&gt;the abbreviated localized day name (e.g. 'Mon' to 'Sun').&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;dddd&lt;/td&gt; &lt;td&gt;the long localized day name (e.g. 'Monday' to 'Qt::Sunday').&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;M&lt;/td&gt; &lt;td&gt;the month as number without a leading zero (1-12)&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;MM&lt;/td&gt; &lt;td&gt;the month as number with a leading zero (01-12)&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;MMM&lt;/td&gt; &lt;td&gt;the abbreviated localized month name (e.g. 'Jan' to 'Dec').&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;MMMM&lt;/td&gt; &lt;td&gt;the long localized month name (e.g. 'January' to 'December').&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;yy&lt;/td&gt; &lt;td&gt;the year as two digit number (00-99)&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;yyyy&lt;/td&gt; &lt;td&gt;the year as four digit number&lt;/tr&gt;
-&lt;/table&gt;
-
-&lt;u&gt;These expressions may be used for the time&lt;/u&gt;:
-&lt;br&gt;&lt;br&gt;
-&lt;table&gt;
-&lt;tr&gt;
-&lt;th&gt;Expression&lt;/th&gt; &lt;th&gt;Output&lt;/th&gt;
-&lt;tr&gt;
-&lt;td&gt;h&lt;/td&gt; &lt;td&gt;the hour without a leading zero (0 to 23 or 1 to 12 if AM/PM display)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;hh&lt;/td&gt; &lt;td&gt;the hour with a leading zero (00 to 23 or 01 to 12 if AM/PM display)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;m&lt;/td&gt; &lt;td&gt;the minute without a leading zero (0 to 59)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;mm&lt;/td&gt; &lt;td&gt;the minute with a leading zero (00 to 59)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;s&lt;/td&gt; &lt;td&gt;the second without a leading zero (0 to 59)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;ss&lt;/td&gt; &lt;td&gt;the second with a leading zero (00 to 59)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;z&lt;/td&gt; &lt;td&gt;the milliseconds without leading zeroes (0 to 999)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;zzz&lt;/td&gt; &lt;td&gt;the milliseconds with leading zeroes (000 to 999)&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;AP&lt;/td&gt; &lt;td&gt;use AM/PM display. AP will be replaced by either &quot;AM&quot; or &quot;PM&quot;.&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;ap&lt;/td&gt; &lt;td&gt;use am/pm display. ap will be replaced by either &quot;am&quot; or &quot;pm&quot;.&lt;/td&gt;&lt;/tr&gt;
-&lt;/table&gt;
-&lt;br&gt;&lt;br&gt;
-&lt;u&gt;Some examples&lt;/u&gt;:
-&lt;ul&gt;
-&lt;li&gt;&quot;screenshot./number/&quot; &lt;b&gt;The standard Lightscreen naming&lt;/b&gt;&lt;/li&gt;
-&lt;li&gt;&quot;/date(yyyy-MM-dd)/ - screenshot #/number/&quot;  &lt;b&gt;The current date and an increasing number, for those who take a lot of screenshots each day.&lt;/b&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="customHelpPushButton">
-                <property name="icon">
-                 <iconset resource="../lightscreen.qrc">
-                  <normaloff>:/icons/Help</normaloff>:/icons/Help</iconset>
-                </property>
-                <property name="checkable">
-                 <bool>false</bool>
-                </property>
-                <property name="autoDefault">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
              </layout>
             </item>
             <item row="1" column="2">
-             <widget class="QPushButton" name="customPushButton">
+             <widget class="QPushButton" name="flipPrefixPushButton">
               <property name="icon">
                <iconset resource="../lightscreen.qrc">
-                <normaloff>:/icons/Configure</normaloff>:/icons/Configure</iconset>
+                <normaloff>:/icons/PrefixLeft</normaloff>:/icons/PrefixLeft</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -790,7 +678,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>browsePushButton</tabstop>
   <tabstop>prefixLineEdit</tabstop>
   <tabstop>namingComboBox</tabstop>
-  <tabstop>customPushButton</tabstop>
+  <tabstop>flipPrefixPushButton</tabstop>
   <tabstop>delaySpinBox</tabstop>
   <tabstop>screenCheckBox</tabstop>
   <tabstop>screenHotkeyWidget</tabstop>

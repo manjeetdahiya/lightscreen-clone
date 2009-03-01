@@ -198,10 +198,8 @@ void LightscreenWindow::screenshotAction(int mode)
     options.prefix        = mSettings.value("file/prefix").toString();
     options.directory     = QDir(mSettings.value("file/target").toString());
     options.naming        = mSettings.value("file/naming").toInt();
-    options.custom        = mSettings.value("file/custom", false).toBool();
-    options.customString  = mSettings.value("file/customString" , "").toString();
+    options.flipNaming    = mSettings.value("options/flip", false).toBool();
     options.quality       = mSettings.value("options/quality", 100).toInt();
-    options.directX       = mSettings.value("options/dxScreen", false).toBool();
     options.currentMonitor= mSettings.value("options/currentMonitor", false).toBool();
     options.clipboard     = mSettings.value("options/clipboard", true).toBool();
     options.preview       = mSettings.value("options/preview", false).toBool();

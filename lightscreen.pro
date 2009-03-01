@@ -9,8 +9,7 @@ HEADERS += tools/os.h \
     lightscreenwindow.h \
     tools/screenshot.h \
     dialogs/previewdialog.h \
-    dialogs/languagedialog.h \
-    tools/customnaming.h
+    dialogs/languagedialog.h
 SOURCES += tools/os.cpp \
     updater/updater.cpp \
     dialogs/areaselector.cpp \
@@ -19,8 +18,7 @@ SOURCES += tools/os.cpp \
     widgets/hotkeywidget.cpp \
     main.cpp \
     lightscreenwindow.cpp \
-    tools/screenshot.cpp \
-    tools/customnaming.cpp
+    tools/screenshot.cpp
 FORMS += dialogs/optionsdialog.ui \
     dialogs/aboutdialog.ui \
     lightscreenwindow.ui

@@ -17,12 +17,11 @@ public slots:
   void browse();
   void changePage();
   void checkUpdatesNow();
-  void customButtonToggled(bool checked);
   void dialogButtonClicked(QAbstractButton *button);
+  void flipButtonToggled(bool checked);
   void languageChange(QString language);
   void saveSettings();
   void startupRelatedStateChange(int state);
-  void showCustomHelp();
   void trayRelatedStateChange(int state);
 
 

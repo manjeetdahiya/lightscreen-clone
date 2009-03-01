@@ -10,6 +10,8 @@
         <file alias="SystemTraySucess" >images/LS.systemtray.good.png</file>
         <file alias="Configure" >images/configure.png</file>
         <file alias="Help" >images/help.png</file>
+        <file alias="PrefixLeft" >images/left.png</file>
+        <file alias="PrefixRight" >images/right.png</file>
     </qresource>
     <qresource prefix="/logo" >
         <file alias="big" >images/LSBig.png</file>

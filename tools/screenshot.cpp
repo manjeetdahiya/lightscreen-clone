@@ -16,7 +16,6 @@
 #include "screenshot.h"
 
 #include "os.h"
-#include "customnaming.h"
 
 Screenshot::Screenshot() {}
 Screenshot::Screenshot(Screenshot::Options options) :  mOptions(options) {}
@@ -53,46 +52,37 @@ QString Screenshot::newFileName()
   if (!mOptions.directory.exists())
     mOptions.directory.mkpath(mOptions.directory.path());
 
-  QString naming = "";
+  QString naming;
+  int naming_largest = 0;
 
-  if (mOptions.custom)
+  if (mOptions.flipNaming)
+    naming = "%1" + mOptions.prefix;
+  else
+    naming = mOptions.prefix + "%1";
+
+  switch (mOptions.naming)
   {
-    CustomNaming customNaming(mOptions.customString, mOptions.directory.entryList(QDir::Files));
+  case 0: // Numeric
+    // Iterating through the folder to find the largest numeric naming.
+    foreach(QString file, mOptions.directory.entryList(QDir::Files)){
+      if (file.contains(mOptions.prefix))
+      {
+        file.chop(file.size() - file.lastIndexOf("."));
+        file.remove(mOptions.prefix);
 
-    if (customNaming.isValid())
-      naming = customNaming.string();
-  }
-
-  if (!mOptions.custom || naming.isEmpty())
-  { // TODO: Cleanup
-    naming = "%1";
-
-    int naming_largest = 0;
-
-    switch (mOptions.naming)
-    {
-    case 0: // Numeric
-      // Iterating through the folder to find the largest numeric naming.
-      foreach(QString file, mOptions.directory.entryList(QDir::Files)){
-        if (file.contains(mOptions.prefix))
-        {
-          file.chop(file.size() - file.lastIndexOf("."));
-          file.remove(mOptions.prefix);
-
-          if (file.toInt()> naming_largest)
-          naming_largest = file.toInt();
-        }
+        if (file.toInt()> naming_largest)
+        naming_largest = file.toInt();
       }
-
-      naming = naming.arg(naming_largest + 1);
-    break;
-    case 1: // Timestamp
-      naming = naming.arg(QDateTime::currentDateTime().toTime_t());
-      break;
-    case 2: // Date
-      naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
-      break;
     }
+
+    naming = naming.arg(naming_largest + 1);
+  break;
+  case 1: // Timestamp
+    naming = naming.arg(QDateTime::currentDateTime().toTime_t());
+    break;
+  case 2: // Date
+    naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
+    break;
   }
 
   QString fileName;
@@ -104,10 +94,6 @@ QString Screenshot::newFileName()
     path.append(QDir::separator());
 
   fileName.append(path);
-
-  if (!mOptions.custom)
-    fileName.append(mOptions.prefix);
-
   fileName.append(naming);
 
   return fileName;

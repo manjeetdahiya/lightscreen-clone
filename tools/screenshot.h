@@ -40,7 +40,7 @@ public:
     QDir directory;
     int mode;
     int quality;
-    bool directX;
+    bool flipNaming;
     bool currentMonitor;
     bool clipboard;
     bool file;
@@ -48,9 +48,6 @@ public:
     bool magnify;
     bool cursor;
     bool saveAs;
-
-    bool custom;
-    QString customString;
   };
 
   Screenshot();
