@@ -432,6 +432,16 @@ p, li { white-space: pre-wrap; }
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
+        <widget class="QCheckBox" name="trayCheckBox">
+         <property name="whatsThis">
+          <string/>
+         </property>
+         <property name="text">
+          <string>Sho&amp;w a system tray icon.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="hideCheckBox">
          <property name="text">
           <string>&amp;Hide Lightscreen while taking a screenshot.</string>
@@ -442,16 +452,6 @@ p, li { white-space: pre-wrap; }
         <widget class="QCheckBox" name="updaterCheckBox">
          <property name="text">
           <string>Periodically check for updates.</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="trayCheckBox">
-         <property name="whatsThis">
-          <string/>
-         </property>
-         <property name="text">
-          <string>Sho&amp;w a system tray icon.</string>
          </property>
         </widget>
        </item>
@@ -475,9 +475,9 @@ p, li { white-space: pre-wrap; }
           <widget class="QComboBox" name="languageComboBox"/>
          </item>
          <item>
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="moreInformationLabel">
            <property name="text">
-            <string>&lt;a href=&quot;#lang&quot;&gt;Get more..&lt;/a&gt;</string>
+            <string>&lt;a href=&quot;http://lightscreen.sourceforge.net/translation&quot;&gt;More information..&lt;/a&gt;</string>
            </property>
           </widget>
          </item>

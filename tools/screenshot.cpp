@@ -122,8 +122,6 @@ void Screenshot::selectedArea()
 
   alreadySelecting = true;
 
-  mOptions.currentMonitor = true;
-
   QPixmap desktop = grabDesktop();
 
   if (desktop.isNull())
@@ -156,7 +154,7 @@ QPixmap Screenshot::grabDesktop()
   QRect geometry;
 
   if (mOptions.currentMonitor)
-      geometry = QApplication::desktop()->availableGeometry(QCursor::pos());
+      geometry = QApplication::desktop()->screenGeometry(QCursor::pos());
   else
       geometry = QApplication::desktop()->geometry();
 

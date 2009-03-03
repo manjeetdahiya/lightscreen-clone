@@ -7,9 +7,7 @@ HEADERS += tools/os.h \
     dialogs/aboutdialog.h \
     widgets/hotkeywidget.h \
     lightscreenwindow.h \
-    tools/screenshot.h \
-    dialogs/previewdialog.h \
-    dialogs/languagedialog.h
+    tools/screenshot.h
 SOURCES += tools/os.cpp \
     updater/updater.cpp \
     dialogs/areaselector.cpp \

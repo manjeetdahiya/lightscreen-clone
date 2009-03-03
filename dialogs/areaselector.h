@@ -27,6 +27,7 @@ private:
   QPoint  mOrigin;
   QPoint  mPos;
   QPixmap mCleanDesktop;
+  QPixmap mBackgroundDesktop;
   bool mMagnify;
 
 };

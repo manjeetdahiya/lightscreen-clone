@@ -20,13 +20,14 @@ public slots:
   void dialogButtonClicked(QAbstractButton *button);
   void flipButtonToggled(bool checked);
   void languageChange(QString language);
+  void link(QString url);
   void saveSettings();
   void startupRelatedStateChange(int state);
   void trayRelatedStateChange(int state);
 
 
 protected:
-  void changeEvent(QEvent *event);
+  bool event(QEvent *event);
 #if defined(Q_WS_WIN)
   bool winEvent(MSG *message, long *result);
 #endif

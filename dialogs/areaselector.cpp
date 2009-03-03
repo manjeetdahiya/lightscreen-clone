@@ -14,12 +14,11 @@
 
 AreaSelector::AreaSelector(QPixmap desktop, bool magnify) : mCleanDesktop(desktop), mMagnify(magnify)
 {
-  setWindowFlags(Qt::WindowStaysOnTopHint);
-  setWindowState(Qt::WindowFullScreen);
-
+  setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
   setCursor(Qt::CrossCursor);
 
-  resize(mCleanDesktop.size());
+  resize(desktop.size());
+  move(0, 0);
 
   drawBackground();
 }
@@ -38,17 +37,17 @@ QPixmap AreaSelector::pixmap()
 
 void AreaSelector::drawBackground()
 {
-  QPixmap desktop = mCleanDesktop;
+  mBackgroundDesktop = mCleanDesktop;
 
   //Transforming the pixmap to make the user notice the change between desktop and area selector (85% transparent black overlay)
-  QPainter painter(&desktop);
+  QPainter painter(&mBackgroundDesktop);
   painter.setBrush(QBrush(QColor(0, 0, 0, 85), Qt::SolidPattern));
-  painter.drawRect(desktop.rect());
+  painter.drawRect(mBackgroundDesktop.rect());
 
   //Drawing the explanatory text.
-  QRect textRect = desktop.rect();
+  QRect textRect = qApp->desktop()->screenGeometry(qApp->desktop()->primaryScreen());
   QString text = tr("Lightscreen screen area mode:\nUse your mouse to draw a rectangle to screenshot or exit pressing\nany key or using the right or middle mouse buttons.");
-  textRect.setHeight(qRound(desktop.rect().height() / 10)); // We get a decently sized rect where the text should be drawn (centered)
+  textRect.setHeight(qRound(textRect.height() / 10)); // We get a decently sized rect where the text should be drawn (centered)
 
   // We draw the white contrasting background for the text, using the same text and options to get the boundingRect that the text will have.
   painter.setPen(QPen(Qt::white));
@@ -67,10 +66,10 @@ void AreaSelector::drawBackground()
   painter.setPen(QPen(Qt::black));
   painter.drawText(textRect, Qt::AlignCenter, text);
 
-  // Set our pixmap as the background of the widget.
-  QPalette newPalette = palette();
-  newPalette.setBrush(backgroundRole(), QBrush(desktop));
-  setPalette(newPalette);
+  // Set our pixmap as the background of the widget. This does not work in multiple monitors, it tiles before it should
+  //QPalette newPalette = palette();
+  //newPalette.setBrush(QPalette::Window, brush);
+  //setPalette(newPalette);
 }
 
 void AreaSelector::drawRectangleSelector(QPainter &painter)
@@ -102,7 +101,7 @@ void AreaSelector::drawRectangleSelector(QPainter &painter)
   QPainter magPainter(&magnified);
   magPainter.setPen(QPen(QBrush(QColor(255, 0, 0, 180)), 2)); // Same border pen
   magPainter.drawRect(magnified.rect());
-  magPainter.drawText(magnified.rect().center(), "+");
+  magPainter.drawText(magnified.rect().center()-QPoint(4, -4), "+"); //Center minus the 4 pixels wide and across of the "+"
 
   QPoint drawPosition = mRect.bottomRight();
 
@@ -116,10 +115,6 @@ void AreaSelector::drawRectangleSelector(QPainter &painter)
 
 bool AreaSelector::event(QEvent *event)
 {
-  if (event->type() == QEvent::Show)
-  {
-    setWindowState(Qt::WindowFullScreen);
-  }
   if (event->type() == QEvent::MouseButtonRelease
    || event->type() == QEvent::KeyPress)
   {
@@ -145,6 +140,7 @@ bool AreaSelector::event(QEvent *event)
   if (event->type() == QEvent::Paint)
   {
     QPainter painter(this);
+    painter.drawPixmap(QPoint(0, 0), mBackgroundDesktop);
     drawRectangleSelector(painter);
   }
 

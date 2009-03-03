@@ -10,11 +10,11 @@
 #include <QTimer>
 #include <QUrl>
 
+#include <QDebug>
+
 #if defined(Q_WS_WIN)
   #include <windows.h>
 #endif
-
-#include <QDebug>
 
 #include "optionsdialog.h"
 #include "../tools/os.h"
@@ -68,6 +68,10 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   connect(ui.windowCheckBox   , SIGNAL(toggled(bool)), ui.windowHotkeyWidget   , SLOT(setEnabled(bool)));
   connect(ui.openCheckBox     , SIGNAL(toggled(bool)), ui.openHotkeyWidget     , SLOT(setEnabled(bool)));
   connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
+  connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.targetLineEdit       , SLOT(setDisabled(bool)));
+  connect(ui.startupCheckBox  , SIGNAL(toggled(bool)), ui.startupHideCheckBox  , SLOT(setEnabled(bool)));
+
+  connect(ui.moreInformationLabel, SIGNAL(linkActivated(QString)), this, SLOT(link(QString)));
 
   // Getting the language entries
   QDir lang(QCoreApplication::applicationDirPath() + "/lang", "*.qm");
@@ -188,6 +192,11 @@ void OptionsDialog::flipButtonToggled(bool checked)
 void OptionsDialog::languageChange(QString language)
 {
   os::translate(language);
+}
+
+void OptionsDialog::link(QString url)
+{
+  QDesktopServices::openUrl(url);
 }
 
 void OptionsDialog::saveSettings()
@@ -469,14 +478,14 @@ bool OptionsDialog::hotkeyCollision()
   return false;
 }
 
-void OptionsDialog::changeEvent(QEvent* event)
+bool OptionsDialog::event(QEvent* event)
 {
   if (event->type() == QEvent::LanguageChange)
   { // TODO: Resize to minimum logical size?
     ui.retranslateUi(this);
   }
 
-  QDialog::changeEvent(event);
+  return QDialog::event(event);
 }
 
 #if defined(Q_WS_WIN)
