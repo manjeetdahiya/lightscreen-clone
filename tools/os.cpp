@@ -8,8 +8,6 @@
 #include <QTranslator>
 #include <QWidget>
 
-#include <QDebug>
-
 #include <string>
 
 #if defined(Q_WS_WIN)

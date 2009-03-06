@@ -4,8 +4,6 @@
 #include <QKeySequence>
 #include <QTimer>
 
-#include <QDebug>
-
 #include "hotkeywidget.h"
 
 HotkeyWidget::HotkeyWidget(QWidget *parent) :

@@ -3,7 +3,6 @@
  */
 
 #include <QDate>
-#include <QDebug>
 #include <QDesktopServices>
 #include <QFileInfo>
 #include <QHttp>
@@ -86,8 +85,8 @@ bool LightscreenWindow::closingWithoutTray()
 
   QPushButton *enableButton = msgBox.addButton(tr("Hide but enable tray"),
       QMessageBox::ActionRole);
-  QPushButton *enableAndDenotifyButton = msgBox.addButton(tr(
-      "Hide and don't warn"), QMessageBox::ActionRole);
+  QPushButton *enableAndDenotifyButton = msgBox.addButton(tr("Hide and don't warn"),
+      QMessageBox::ActionRole);
   QPushButton *hideButton = msgBox.addButton(tr("Just hide"),
       QMessageBox::ActionRole);
   QPushButton *abortButton = msgBox.addButton(QMessageBox::Cancel);
@@ -151,11 +150,11 @@ void LightscreenWindow::screenshotAction(int mode)
   static Screenshot::Options options;
 
   // Applying pre-screenshot settings
-  if (mSettings.value("options/hide").toBool())
-    mTrayIcon->hide();
-
   if (optionsHide)
+  {
     setVisible(false);
+    mTrayIcon->hide();
+  }
 
   // Screenshot delay
   delayms = mSettings.value("options/delay", 0).toInt();
@@ -350,14 +349,14 @@ void LightscreenWindow::showHotkeyError(QStringList hotkeys)
 
    if (hotkeys.count() > 1)
    {
-     messageText += tr("<br>The failed hotkeys are the following:<ul>");
+     messageText += tr("<br>The failed hotkeys are the following:") + "<ul>";
 
      foreach(const QString &hotkey, hotkeys)
      {
        messageText += QString("%1%2%3").arg("<li><b>").arg(hotkey).arg("</b></li>");
      }
 
-    messageText += tr("</ul>");
+    messageText += "</ul>";
    }
    else
    {
@@ -503,7 +502,6 @@ void LightscreenWindow::compressPng(QString fileName)
   // Delete the QProcess once it's done.
   connect(optipng, SIGNAL(finished(int, QProcess::ExitStatus)), optipng, SLOT(deleteLater()));
 
-  optipng->setWorkingDirectory(QCoreApplication::applicationDirPath());
   optipng->start("optipng", args);
 }
 

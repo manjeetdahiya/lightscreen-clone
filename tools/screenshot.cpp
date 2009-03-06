@@ -1,7 +1,6 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QDateTime>
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QPainter>

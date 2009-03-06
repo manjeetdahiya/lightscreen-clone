@@ -21,7 +21,6 @@
 #include "globalshortcutmanager.h"
 
 #include <QCoreApplication>
-#include <QDebug>
 #include "globalshortcuttrigger.h"
 
 /**

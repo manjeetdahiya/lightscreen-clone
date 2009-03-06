@@ -4,8 +4,6 @@
 #include <QPainter>
 #include <QPixmap>
 
-#include <QDebug>
-
 #if defined(Q_WS_WIN)
   #include "windows.h"
 #endif

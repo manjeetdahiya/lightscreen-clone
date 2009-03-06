@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="es">
+<!DOCTYPE TS>
+<TS version="2.0" language="es">
 <defaultcodec></defaultcodec>
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../dialogs/aboutdialog.cpp" line="10"/>
+        <location filename="../dialogs/aboutdialog.cpp" line="11"/>
         <source>Version %1</source>
         <translation>Versión %1</translation>
     </message>
@@ -17,24 +18,9 @@
         <translation>Acerca De - Lightscreen</translation>
     </message>
     <message>
-        <location filename="aboutdialog.ui" line="36"/>
-        <source>Lightscreen</source>
-        <translation type="obsolete">Lightscreen</translation>
-    </message>
-    <message>
         <location filename="../dialogs/aboutdialog.ui" line="31"/>
         <source>Details</source>
         <translation>Detalles</translation>
-    </message>
-    <message>
-        <location filename="aboutdialog.ui" line="71"/>
-        <source>Lightscreen is a program to take screenshots, designed to be very customizable and lightweight. </source>
-        <translation type="obsolete">Lightscreen es un programa para capturar la pantalla, diseñado para ser configurable y liviano.</translation>
-    </message>
-    <message>
-        <location filename="aboutdialog.ui" line="81"/>
-        <source>&lt;b&gt;Version 0.4&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Verson 0.4&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../dialogs/aboutdialog.ui" line="63"/>
@@ -85,7 +71,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt; Everyone is permitted to copy and distribute verbatim copies&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt; of this license document, but changing it is not allowed.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;<byte value="x9"/><byte value="x9"/><byte value="x9"/>    Preamble&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;			    Preamble&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;The licenses for most software are designed to take away your&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;freedom to share and change it.  By contrast, the GNU General Public&lt;/p&gt;
@@ -135,7 +121,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;  The precise terms and conditions for copying, distribution and&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;modification follow.&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;<byte value="xc"/>&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;<byte value="x9"/><byte value="x9"/>    GNU GENERAL PUBLIC LICENSE&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;		    GNU GENERAL PUBLIC LICENSE&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;  0. This License applies to any program or other work which contains&lt;/p&gt;
@@ -334,7 +320,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;of preserving the free status of all derivatives of our free software and&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;of promoting the sharing and reuse of software generally.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;<byte value="x9"/><byte value="x9"/><byte value="x9"/>    NO WARRANTY&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;			    NO WARRANTY&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN&lt;/p&gt;
@@ -356,9 +342,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;POSSIBILITY OF SUCH DAMAGES.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;<byte value="x9"/><byte value="x9"/>     END OF TERMS AND CONDITIONS&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;		     END OF TERMS AND CONDITIONS&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;<byte value="xc"/>&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;<byte value="x9"/>    How to Apply These Terms to Your New Programs&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;	    How to Apply These Terms to Your New Programs&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;  If you develop a new program, and you want it to be of the greatest&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:&apos;Courier New,courier&apos;; font-size:8pt;&quot;&gt;possible use to the public, the best way to achieve this is to make it&lt;/p&gt;
@@ -423,29 +409,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>AreaSelector</name>
     <message>
-        <location filename="areaselector.cpp" line="27"/>
-        <source>Lightscreen screen area mode:
-Use your mouse to draw a rectangle to screenshot or exit pressing
-any key or using the right or middle mouse buttons</source>
-        <translation type="obsolete">Modo de área de pantalla:Usa el mouse para dibujar un rectángulo para capturar o presionacualquier tecla o haz click derecho o del medio para salir</translation>
-    </message>
-    <message>
-        <location filename="dialogs/areaselector.cpp" line="29"/>
-        <source>Lightscreen screen area mode:
-Use your mouse to draw a rectangle to screenshot or exit pressing
-any key or using the right or middle mouse buttons.
-Keep Ctrl pressed to make a square.</source>
-        <translation type="obsolete">Modo de área de pantalla:
-Usa el mouse para dibujar un rectangulo para capturar. Presiona cualquier
-tecla para salir, o usa el botón derecho o del medio del mouse.</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/areaselector.cpp" line="74"/>
+        <location filename="../dialogs/areaselector.cpp" line="83"/>
         <source>%1 x %2 px </source>
         <translation>%1 x %2 px</translation>
     </message>
     <message>
-        <location filename="../dialogs/areaselector.cpp" line="39"/>
+        <location filename="../dialogs/areaselector.cpp" line="47"/>
         <source>Lightscreen screen area mode:
 Use your mouse to draw a rectangle to screenshot or exit pressing
 any key or using the right or middle mouse buttons.</source>
@@ -453,142 +422,19 @@ any key or using the right or middle mouse buttons.</source>
     </message>
 </context>
 <context>
-    <name>HotkeyDialogClass</name>
-    <message>
-        <location filename="hotkeydialog.ui" line="13"/>
-        <source>Select a hotkey</source>
-        <translation type="obsolete">Seleccione un atajo de teclado</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="21"/>
-        <source>CTRL</source>
-        <translation type="obsolete">CTRL</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="28"/>
-        <source>ALT</source>
-        <translation type="obsolete">ALT</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="35"/>
-        <source>SHIFT</source>
-        <translation type="obsolete">SHIFT</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="56"/>
-        <source>Print Screen</source>
-        <translation type="obsolete">Imprimir Pantalla</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="61"/>
-        <source>Scroll Lock</source>
-        <translation type="obsolete">Bloq Despl</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="66"/>
-        <source>Insert</source>
-        <translation type="obsolete">Insert</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="71"/>
-        <source>Home</source>
-        <translation type="obsolete">Inicio</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="76"/>
-        <source>Page Down</source>
-        <translation type="obsolete">Av Pag</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="81"/>
-        <source>Delete</source>
-        <translation type="obsolete">Supr</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="86"/>
-        <source>End</source>
-        <translation type="obsolete">Fin</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="91"/>
-        <source>Page Up</source>
-        <translation type="obsolete">Re Pag</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="96"/>
-        <source>Space</source>
-        <translation type="obsolete">Espacio</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="101"/>
-        <source>F1</source>
-        <translation type="obsolete">F1</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="106"/>
-        <source>F2</source>
-        <translation type="obsolete">F2</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="111"/>
-        <source>F3</source>
-        <translation type="obsolete">F3</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="116"/>
-        <source>F4</source>
-        <translation type="obsolete">F4</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="121"/>
-        <source>F5</source>
-        <translation type="obsolete">F5</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="126"/>
-        <source>F6</source>
-        <translation type="obsolete">F6</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="131"/>
-        <source>F7</source>
-        <translation type="obsolete">F7</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="136"/>
-        <source>F8</source>
-        <translation type="obsolete">F8</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="141"/>
-        <source>F9</source>
-        <translation type="obsolete">F9</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="146"/>
-        <source>F10</source>
-        <translation type="obsolete">F10</translation>
-    </message>
-    <message>
-        <location filename="hotkeydialog.ui" line="151"/>
-        <source>F11</source>
-        <translation type="obsolete">F11</translation>
-    </message>
-</context>
-<context>
     <name>HotkeyWidget</name>
     <message>
-        <location filename="../widgets/hotkeywidget.cpp" line="24"/>
+        <location filename="../widgets/hotkeywidget.cpp" line="15"/>
         <source>Click to select hotkey...</source>
         <translation>Click para elegir atajo...</translation>
     </message>
     <message>
-        <location filename="../widgets/hotkeywidget.cpp" line="50"/>
+        <location filename="../widgets/hotkeywidget.cpp" line="41"/>
         <source>Type your hotkey</source>
         <translation>Escriba su atajo</translation>
     </message>
     <message>
-        <location filename="../widgets/hotkeywidget.cpp" line="54"/>
+        <location filename="../widgets/hotkeywidget.cpp" line="45"/>
         <source>Invalid hotkey</source>
         <translation>Atajo invalido</translation>
     </message>
@@ -596,205 +442,192 @@ any key or using the right or middle mouse buttons.</source>
 <context>
     <name>LightscreenWindow</name>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="399"/>
+        <location filename="../lightscreenwindow.cpp" line="82"/>
+        <location filename="../lightscreenwindow.cpp" line="139"/>
+        <location filename="../lightscreenwindow.cpp" line="369"/>
+        <location filename="../lightscreenwindow.cpp" line="422"/>
         <source>Lightscreen</source>
         <translation>Lightscreen</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="81"/>
+        <location filename="../lightscreenwindow.cpp" line="83"/>
         <source>You have chosen to hide Lightscreen when there&apos;s no system tray icon, so you will not be able to access the program &lt;b&gt;unless you have selected a hotkey to do so&lt;/b&gt;.&lt;br&gt;What do you want to do?</source>
         <translation>Ha elegido cerrar Lightscreen cuando este no tiene un icono en la barra de tareas, por lo que no podrá acceder al programa &lt;b&gt;a menos que haya seleccionado un atajo para hacerlo.&lt;/b&gt;.&lt;br&gt;Que desea hacer?</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="84"/>
+        <location filename="../lightscreenwindow.cpp" line="86"/>
         <source>Hide but enable tray</source>
         <translation>Esconder pero habilitar icono</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="85"/>
+        <location filename="../lightscreenwindow.cpp" line="88"/>
         <source>Hide and don&apos;t warn</source>
         <translation>Esconder y no advertir</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="86"/>
+        <location filename="../lightscreenwindow.cpp" line="90"/>
         <source>Just hide</source>
         <translation>Solo esconder</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="284"/>
+        <location filename="../lightscreenwindow.cpp" line="310"/>
         <source>The screenshot was not taken</source>
         <translation>La captura no fue realizada</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="285"/>
+        <location filename="../lightscreenwindow.cpp" line="311"/>
         <source>There was an error or you did not select a valid area.</source>
         <translation>Ha habido un error o no has seleccionado un área valida.</translation>
     </message>
     <message>
-        <location filename="lightscreenwindow.cpp" line="327"/>
-        <source>Change the hotkey</source>
-        <translation type="obsolete">Cambiar el atajo</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="328"/>
-        <source>Disable the hotkey</source>
-        <translation type="obsolete">Deshabilitar el atajo</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="331"/>
+        <location filename="../lightscreenwindow.cpp" line="348"/>
         <source>Some hotkeys could not be registered, they might already be in use</source>
-        <translation type="obsolete">Algunos atajos no pudieron ser registrados, puede que ya estén en uso</translation>
+        <translation>Algunos atajos no pudieron ser registrados, puede que ya estén en uso</translation>
     </message>
     <message>
-        <location filename="lightscreenwindow.cpp" line="338"/>
-        <source>&lt;br&gt;The failed hotkeys are the following:&lt;ul&gt;</source>
-        <translation type="obsolete">&lt;br&gt;Los atajos que han fallado son los siguientes:&lt;ul&gt;</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="345"/>
-        <source>&lt;/ul&gt;</source>
-        <translation type="obsolete">&lt;/ul&gt;</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="348"/>
-        <source>&lt;br&gt;The failed hotkey is the &lt;b&gt;%1&lt;/b&gt;</source>
-        <translation type="obsolete">&lt;br&gt;El atajo fallido es el de &lt;b&gt;%1&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="351"/>
+        <location filename="../lightscreenwindow.cpp" line="366"/>
         <source>&lt;br&gt;&lt;i&gt;What do you want to do?&lt;/i&gt;</source>
-        <translation type="obsolete">&lt;br&gt;&lt;i&gt;Que quieres hacer?&lt;/i&gt;</translation>
+        <translation>&lt;br&gt;&lt;i&gt;Que quieres hacer?&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="lightscreenwindow.cpp" line="361"/>
-        <source>Quit Lightscreen</source>
-        <translation type="obsolete">Salir de Lightscreen</translation>
-    </message>
-    <message>
-        <location filename="../lightscreenwindow.cpp" line="536"/>
+        <location filename="../lightscreenwindow.cpp" line="582"/>
         <source>Show&amp;/Hide</source>
         <translation>Mostrar&amp;/Esconder</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="539"/>
+        <location filename="../lightscreenwindow.cpp" line="546"/>
+        <location filename="../lightscreenwindow.cpp" line="585"/>
         <source>&amp;Screen</source>
         <translation>&amp;Pantalla</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="542"/>
+        <location filename="../lightscreenwindow.cpp" line="322"/>
+        <source>Sucess!</source>
+        <translation>Éxito!</translation>
+    </message>
+    <message>
+        <location filename="../lightscreenwindow.cpp" line="327"/>
+        <source>Failed!</source>
+        <translation>Fallido!</translation>
+    </message>
+    <message>
+        <location filename="../lightscreenwindow.cpp" line="352"/>
+        <source>&lt;br&gt;The failed hotkeys are the following:</source>
+        <translation>&lt;br&gt;Las hotkeys fallidas son las siguientes:</translation>
+    </message>
+    <message>
+        <location filename="../lightscreenwindow.cpp" line="363"/>
+        <source>&lt;br&gt;The failed hotkey is &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>&lt;br&gt;La hotkey que ha fallado es &lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../lightscreenwindow.cpp" line="372"/>
+        <source>Change</source>
+        <translation>Cambiar</translation>
+    </message>
+    <message>
+        <location filename="../lightscreenwindow.cpp" line="373"/>
+        <source>Disable</source>
+        <translation>Deshabilitar</translation>
+    </message>
+    <message>
+        <location filename="../lightscreenwindow.cpp" line="374"/>
+        <source>Quit</source>
+        <translation>Salir</translation>
+    </message>
+    <message>
+        <location filename="../lightscreenwindow.cpp" line="549"/>
+        <location filename="../lightscreenwindow.cpp" line="588"/>
         <source>&amp;Window</source>
         <translation>&amp;Ventana</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="545"/>
+        <location filename="../lightscreenwindow.cpp" line="552"/>
+        <location filename="../lightscreenwindow.cpp" line="591"/>
         <source>&amp;Area</source>
         <translation>&amp;Área</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="555"/>
+        <location filename="../lightscreenwindow.cpp" line="601"/>
         <source>View &amp;Options</source>
         <translation>Ver las &amp;Opciones</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="558"/>
+        <location filename="../lightscreenwindow.cpp" line="555"/>
+        <location filename="../lightscreenwindow.cpp" line="604"/>
         <source>&amp;Go to Folder</source>
         <translation>&amp;Ir a la carpeta</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="564"/>
+        <location filename="../lightscreenwindow.cpp" line="610"/>
         <source>&amp;Quit</source>
         <translation>&amp;Salir</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="280"/>
+        <location filename="../lightscreenwindow.cpp" line="304"/>
         <source>Saved to %1%2</source>
         <translation>Guardada en %1%2</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="561"/>
+        <location filename="../lightscreenwindow.cpp" line="607"/>
         <source>&amp;About Lightscreen</source>
         <translation>Acerca de &amp;Lightscreen</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="400"/>
+        <location filename="../lightscreenwindow.cpp" line="423"/>
         <source>There&apos;s a new version of Lightscreen available.&lt;br&gt;Would you like to see more information?&lt;br&gt;(&lt;em&gt;You can turn this notification off&lt;/em&gt;)</source>
         <translation>Hay una nueva versión de Lightscreen disponible.&lt;br&gt;Desea ver más información?&lt;br&gt;(&lt;em&gt;Puede desactivar esta notificación&lt;/em&gt;)</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="404"/>
+        <location filename="../lightscreenwindow.cpp" line="427"/>
         <source>Turn Off</source>
         <translation>Desactivar</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="406"/>
+        <location filename="../lightscreenwindow.cpp" line="428"/>
         <source>Remind Me Later</source>
         <translation>Más Tarde</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="501"/>
-        <source>screen</source>
-        <translation type="obsolete">pantalla</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="501"/>
-        <source>window</source>
-        <translation type="obsolete">ventana</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="501"/>
-        <source>area</source>
-        <translation type="obsolete">área</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="502"/>
-        <source>open</source>
-        <translation type="obsolete">abrir</translation>
-    </message>
-    <message>
-        <location filename="lightscreenwindow.cpp" line="502"/>
-        <source>directory</source>
-        <translation type="obsolete">directorio</translation>
     </message>
 </context>
 <context>
     <name>LightscreenWindowClass</name>
     <message>
-        <location filename="../lightscreenwindow.ui" line="13"/>
+        <location filename="../lightscreenwindow.ui" line="14"/>
         <source>Lightscreen</source>
         <translation>Lightscreen</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.ui" line="30"/>
-        <source>Screeenshot</source>
+        <location filename="../lightscreenwindow.ui" line="34"/>
+        <source>Screenshot</source>
         <translation>Captura</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.ui" line="42"/>
+        <location filename="../lightscreenwindow.ui" line="46"/>
         <source>Configure Lightscreen</source>
         <translation>Configurar Lightscreen</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.ui" line="45"/>
+        <location filename="../lightscreenwindow.ui" line="49"/>
         <source>Opens the configuration dialog</source>
         <translation>Abre el dialogo de configuración</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.ui" line="48"/>
+        <location filename="../lightscreenwindow.ui" line="52"/>
         <source>&amp;Options</source>
         <translation>&amp;Opciones</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.ui" line="58"/>
+        <location filename="../lightscreenwindow.ui" line="65"/>
         <source>Hide Lightscreen </source>
         <translation>Esconder Lightscreen</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.ui" line="64"/>
+        <location filename="../lightscreenwindow.ui" line="71"/>
         <source>&amp;Hide</source>
         <translation>&amp;Esconder</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.ui" line="77"/>
+        <location filename="../lightscreenwindow.ui" line="87"/>
         <source>&amp;Quit</source>
         <translation>&amp;Salir</translation>
     </message>
@@ -802,549 +635,326 @@ any key or using the right or middle mouse buttons.</source>
 <context>
     <name>OptionsDialog</name>
     <message>
-        <location filename="../dialogs/optionsdialog.cpp" line="99"/>
+        <location filename="../dialogs/optionsdialog.cpp" line="117"/>
         <source>Hotkey conflict</source>
         <translation>Conflicto de atajos</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.cpp" line="100"/>
+        <location filename="../dialogs/optionsdialog.cpp" line="117"/>
         <source>You have assigned the same hotkeys to more than one action.</source>
         <translation>Has asignado el mismo atajo a más de una acción.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.cpp" line="111"/>
+        <location filename="../dialogs/optionsdialog.cpp" line="127"/>
         <source>Select where you want to save the screenshots</source>
         <translation>Selecciona donde quieres guardar las capturas</translation>
     </message>
     <message>
-        <location filename="dialogs/optionsdialog.cpp" line="292"/>
-        <source>screen</source>
-        <translation type="obsolete">pantalla</translation>
+        <location filename="../dialogs/optionsdialog.cpp" line="150"/>
+        <source>Lightscreen - Options</source>
+        <translation>Lightscreen - Opciones</translation>
     </message>
     <message>
-        <location filename="dialogs/optionsdialog.cpp" line="310"/>
-        <source>window</source>
-        <translation type="obsolete">ventana</translation>
+        <location filename="../dialogs/optionsdialog.cpp" line="328"/>
+        <source> (File not found)</source>
+        <translation>(Archivo no encontrado)</translation>
     </message>
     <message>
-        <location filename="dialogs/optionsdialog.cpp" line="301"/>
-        <source>area</source>
-        <translation type="obsolete">área</translation>
-    </message>
-    <message>
-        <location filename="dialogs/optionsdialog.cpp" line="319"/>
-        <source>open</source>
-        <translation type="obsolete">abrir</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="13"/>
+        <location filename="../dialogs/optionsdialog.ui" line="14"/>
         <source>Options - Lightscreen</source>
         <translation>Opciones - Lightscreen</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="23"/>
+        <location filename="../dialogs/optionsdialog.cpp" line="32"/>
+        <location filename="../dialogs/optionsdialog.ui" line="42"/>
         <source>General</source>
         <translation>General</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="31"/>
+        <location filename="../dialogs/optionsdialog.ui" line="65"/>
         <source>Directory:</source>
         <translation>Directorio:</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="51"/>
+        <location filename="../dialogs/optionsdialog.ui" line="99"/>
         <source>The prefix for the screenshot file</source>
         <translation>El prefijo para la captura</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="54"/>
+        <location filename="../dialogs/optionsdialog.ui" line="102"/>
         <source>Filename:</source>
         <translation>Archivo:</translation>
     </message>
     <message>
-        <location filename="optionsdialog.ui" line="69"/>
-        <source>...</source>
-        <translation type="obsolete">...</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="137"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;<byte value="xd"/>
-p, li { white-space: pre-wrap; }<byte value="xd"/>
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;<byte value="xd"/>
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;The prefix will be inserted before the &lt;span style=&quot; font-style:italic;&quot;&gt;Naming&lt;/span&gt; in the screenshot file and it is usually used to distinguish files.&lt;/p&gt;<byte value="xd"/>
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;It &lt;span style=&quot; font-style:italic;&quot;&gt;can&lt;/span&gt; be left blank.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;p, li { white-space: pre-wrap; }&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;El prefijo sera insertado antes del tipo de nombre en el archivo de captura y es usado para distinguir los archivos..&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;Puede ser dejado en blanco.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="dialogs/optionsdialog.ui" line="178"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;<byte value="xd"/>
-p, li { white-space: pre-wrap; }<byte value="xd"/>
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;<byte value="xd"/>
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;The naming is inserted after the prefix and is what makes each screenshot file unique to avoid overwriting.&lt;/p&gt;<byte value="xd"/>
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Numeric&lt;/span&gt;: inserts a number in sequence, &lt;span style=&quot; font-style:italic;&quot;&gt;1, 2, 3&lt;/span&gt;.&lt;/p&gt;<byte value="xd"/>
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Timestamp&lt;/span&gt;: inserts a unique number (a Unix timestamp) that corresponds with the current time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="obsolete">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;p, li { white-space: pre-wrap; }&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;Este sufijo es insertado después del prefijo y es lo que hace el archivo de captura único para evitar ser sobreescrito.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;numero&lt;/span&gt;: inserta un numero en una secuencia, &lt;span style=&quot; font-style:italic;&quot;&gt;1, 2, 3&lt;/span&gt;.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;timestamp&lt;/span&gt;: pone un numero único (una timestamp de Unix) que corresponde con la fecha y hora actual.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="159"/>
+        <location filename="../dialogs/optionsdialog.ui" line="131"/>
         <source>(number)</source>
         <translation>(numero)</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="164"/>
+        <location filename="../dialogs/optionsdialog.ui" line="136"/>
         <source>(timestamp)</source>
         <translation>(timestamp)</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="81"/>
+        <location filename="../dialogs/optionsdialog.ui" line="165"/>
         <source>The file format for the screenshot</source>
         <translation>El formato de la captura</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="84"/>
+        <location filename="../dialogs/optionsdialog.ui" line="168"/>
         <source>Format:</source>
         <translation>Formato:</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="197"/>
+        <location filename="../dialogs/optionsdialog.ui" line="185"/>
         <source>PNG</source>
         <translation>PNG</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="202"/>
+        <location filename="../dialogs/optionsdialog.ui" line="190"/>
         <source>JPG</source>
         <translation>JPG</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="207"/>
+        <location filename="../dialogs/optionsdialog.ui" line="195"/>
         <source>BMP</source>
         <translation>BMP</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="97"/>
+        <location filename="../dialogs/optionsdialog.ui" line="200"/>
+        <source>TIFF</source>
+        <translation>TIFF</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="208"/>
         <source>Delay:</source>
         <translation>Retraso:</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="110"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;<byte value="xd"/>
-p, li { white-space: pre-wrap; }<byte value="xd"/>
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;<byte value="xd"/>
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;Selecting anything other than 0 in this option will cause the program to &lt;span style=&quot; font-weight:600;&quot;&gt;wait&lt;/span&gt; that amount of seconds before taking the screenshot.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;p, li { white-space: pre-wrap; }&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;Elegir cualquier numero que no sea 0 causara que Lightscreen espere esa cantidad de segundos antes de realizar la captura.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="169"/>
-        <source> s</source>
-        <translation type="obsolete">s</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="218"/>
+        <location filename="../dialogs/optionsdialog.ui" line="251"/>
         <source>&amp;Start Lightscreen with Windows</source>
         <translation>&amp;Iniciar Lightscreen con Windows</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="228"/>
+        <location filename="../dialogs/optionsdialog.ui" line="261"/>
         <source>&amp;Hide the main window on startup.</source>
         <translation>&amp;Esconder la ventana principal cuando inicia.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="238"/>
+        <location filename="../dialogs/optionsdialog.ui" line="269"/>
         <source>Hotkeys</source>
         <translation>Atajos</translation>
     </message>
     <message>
-        <location filename="optionsdialog.ui" line="208"/>
-        <source>QToolBox::tab 
-{
- background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,                                  
- stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
-border: 1px solid gray;
-border-radius: 3px; }
-
-
-QToolBox::tab:selected
-{
- background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,                                  
-stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
- border-color: darkGray;
-}
-
-#screenItem,#windowItem,#areaItem,#openItem, #gtfItem
-{
-background-color: white;
-border: 1px solid lightGray;
-border-radius: 3px;
-}</source>
-        <translation type="obsolete">QToolBox::tab {  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,                                    stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);border: 1px solid gray;border-radius: 3px; }
-QToolBox::tab:selected{  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,                                  stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);  border-color: darkGray;}
-#screenItem,#windowItem,#areaItem,#openItem, #gtfItem{background-color: white;border: 1px solid lightGray;border-radius: 3px;}</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="243"/>
-        <source>Screen</source>
-        <translation type="obsolete">Pantalla</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="249"/>
-        <source>Snap the entire screen.</source>
-        <translation type="obsolete">Captura la pantalla completa.</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="395"/>
-        <source>Select..</source>
-        <translation type="obsolete">Elegir..</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="285"/>
-        <source>Window</source>
-        <translation type="obsolete">Ventana</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="291"/>
-        <source>Snap a window.</source>
-        <translation type="obsolete">Captura una ventana.</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="327"/>
-        <source>Area</source>
-        <translation type="obsolete">Área</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="333"/>
-        <source>Snap a defined area.</source>
-        <translation type="obsolete">Captura un area.</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="369"/>
-        <source>Open window</source>
-        <translation type="obsolete">Abrir la ventana</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="375"/>
-        <source>Open the LS window.</source>
-        <translation type="obsolete">Abre la venta del programa.</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="407"/>
-        <source>More</source>
-        <translation type="obsolete">Más</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="416"/>
-        <source>&amp;Show a system tray icon.</source>
-        <translation type="obsolete">&amp;Mostrar un icono en la barra de tareas.</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="433"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;<byte value="xd"/>
-p, li { white-space: pre-wrap; }<byte value="xd"/>
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;<byte value="xd"/>
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Shows a completion message once the screenshot is saved, clicking this message takes you to the directory where the screenshot was saved.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;p, li { white-space: pre-wrap; }&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Muestra un mensaje al completar una captura, clickear ese mensaje abre el directorio a donde fue guardada dicha captura.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="429"/>
-        <source>Sho&amp;w a message after taking the screenshot.</source>
-        <translation type="obsolete">M&amp;ostrar un mensaje después de la captura.</translation>
-    </message>
-    <message>
-        <location filename="optionsdialog.ui" line="436"/>
-        <source>Hide &amp;tray icon while taking a screenshot.</source>
-        <translation type="obsolete">Esconder el &amp;icono durante la captura.</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="503"/>
+        <location filename="../dialogs/optionsdialog.ui" line="591"/>
         <source>Opens a new process called OptiPNG which dramatically reduces the file size.</source>
         <translation>Abre un nuevo programa llamado OptiPNG que reduce el tamaño del archivo.</translation>
     </message>
     <message>
-        <location filename="optionsdialog.ui" line="446"/>
-        <source>Compress the PNG screenshots.</source>
-        <translation type="obsolete">Comprimir las capturas en formato PNG.</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="513"/>
-        <source>Use transparent windows.</source>
-        <translation>Usar ventanas trasparentes.</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="457"/>
+        <location filename="../dialogs/optionsdialog.ui" line="527"/>
         <source>Screenshot Quality:</source>
         <translation>Calidad de captura:</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="467"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;<byte value="xd"/>
-p, li { white-space: pre-wrap; }<byte value="xd"/>
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;<byte value="xd"/>
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This slider goes from 0 to 100. 100 being the highest quality and 0 the lowest.&lt;/p&gt;<byte value="xd"/>
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Quality is related to file size and of course to readability and overall quality of the image.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;p, li { white-space: pre-wrap; }&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Porcentaje de calidad desde 0 a 100%, 0 siendo la peor calidad y 100 la máxima.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;La calidad esta relacionada con el tamaño del archivo y la calidad de la imagen resultante.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.cpp" line="125"/>
-        <source>Lightscreen</source>
-        <translation>Lightscreen</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.cpp" line="126"/>
+        <location filename="../dialogs/optionsdialog.cpp" line="151"/>
         <source>Restoring the default options will cause you to lose all of your current configuration.</source>
         <translation>Restaurar las opciones por defecto hara que pierda toda su configuración actual.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.cpp" line="129"/>
+        <location filename="../dialogs/optionsdialog.cpp" line="154"/>
         <source>Restore</source>
         <translation>Restaurar</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.cpp" line="130"/>
+        <location filename="../dialogs/optionsdialog.cpp" line="155"/>
         <source>Don&apos;t Restore</source>
         <translation>No Restaurar</translation>
     </message>
     <message>
-        <location filename="dialogs/optionsdialog.cpp" line="328"/>
-        <source>directory</source>
-        <translation type="obsolete">directorio</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="116"/>
+        <location filename="../dialogs/optionsdialog.ui" line="224"/>
         <source>no delay</source>
         <translation>sin retraso</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="122"/>
+        <location filename="../dialogs/optionsdialog.ui" line="230"/>
         <source> seconds</source>
         <translation>segundos</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="246"/>
+        <location filename="../dialogs/optionsdialog.ui" line="277"/>
         <source>Capture the screen</source>
         <translation>Capturar la pantalla</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="269"/>
+        <location filename="../dialogs/optionsdialog.ui" line="300"/>
         <source>Capture a window</source>
         <translation>Capturar una ventana</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="286"/>
+        <location filename="../dialogs/optionsdialog.ui" line="317"/>
         <source>Capture a screen area</source>
         <translation>Capturar un área</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="313"/>
+        <location filename="../dialogs/optionsdialog.ui" line="344"/>
         <source>Open the program window</source>
         <translation>Abrir la ventana</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="330"/>
+        <location filename="../dialogs/optionsdialog.ui" line="361"/>
         <source>Open the directory</source>
         <translation>Abrir el directorio</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="350"/>
+        <location filename="../dialogs/optionsdialog.ui" line="420"/>
         <source>Options</source>
         <translation>Opciones</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="359"/>
+        <location filename="../dialogs/optionsdialog.ui" line="429"/>
         <source>Sho&amp;w a system tray icon.</source>
-        <translation>Mostrar un ícono de sistema.</translation>
+        <translation>Mo&amp;strar un ícono de sistema.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="366"/>
+        <location filename="../dialogs/optionsdialog.ui" line="436"/>
         <source>&amp;Hide Lightscreen while taking a screenshot.</source>
-        <translation>Esconder Lightscreen mientras se captura.</translation>
+        <translation>Esconder Lig&amp;htscreen mientras se captura.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="506"/>
+        <location filename="../dialogs/optionsdialog.ui" line="450"/>
+        <source>Magnify around the mouse in Area mode.</source>
+        <translation>Aumentar al rededor del mouse en modo Area.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="469"/>
+        <source>Click here to go to the Lightscreen homepage to learn more about translations.</source>
+        <translation>Haz click aquí para ir a la página del Lightscreen y aprender mas sobre traducciones.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="472"/>
+        <source>&lt;a href=&quot;http://lightscreen.sourceforge.net/translation&quot;&gt;More information..&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;http://lightscreen.sourceforge.net/translation&gt;Más información..&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="537"/>
+        <source>This slider goes from 0 to 100. 100 being the highest quality and 0 the lowest.&lt;br&gt;
+Quality is related to file size and of course to readability and overall quality of the image.</source>
+        <translation>Este slider va desde a 0 a 100. 100 siendo la mayor calidad y 0 la más baja.&lt;br&gt;
+La calidad tiene relacion con el tamaño del archivo y la legibilidad/calidad general de la imagen.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="563"/>
+        <source>Choose where and how to save each screenshot (&quot;Save as&quot;).</source>
+        <translation>Elegir como y donde guardar cada captura (&quot;Guardar como&quot;).</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="577"/>
+        <source>Include the cursor in the screenshot.</source>
+        <translation>Incluir el cursor en la captura.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="584"/>
+        <source>Grab only the current monitor.</source>
+        <translation>Capturar solo el monitor actual.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="594"/>
         <source>Optimize PNG screenshots.</source>
         <translation>Optimizar capturas PNG.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="520"/>
-        <source>DirectX screenshots can be useful for capturing some games which would not work using the normal method.</source>
-        <translation>Capturas DirectX pueden ser útiles para capturar algunos juegos que no funcionan con el metodo normal.</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="523"/>
-        <source>Use Direct&amp;X for screenshots (experimental).</source>
-        <translation>Usar Direct&amp;X para capturas (experimental).</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/optionsdialog.ui" line="423"/>
+        <location filename="../dialogs/optionsdialog.ui" line="496"/>
         <source>Notify with:</source>
         <translation>Notificar con:</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="439"/>
+        <location filename="../dialogs/optionsdialog.ui" line="117"/>
+        <source>The prefix will be inserted before the &lt;em&gt;Naming&lt;/em&gt; in the screenshot file and it is usually used to distinguish files. It can be left blank.</source>
+        <translation>El prefijo sera insertado antes del &lt;em&gt;Nombre&lt;/em&gt; en la captura y es generalmente usado para distinguir los archivos. Puede ser dejado en blanco.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="124"/>
+        <source>The naming is inserted after the prefix and is what makes each screenshot file unique to avoid overwriting.&lt;br /&gt;
+&lt;b&gt;Numeric&lt;/b&gt;: inserts a number in sequence, 1, 2, 3.
+&lt;b&gt;Timestamp&lt;/b&gt;: inserts a unique number (a Unix timestamp) that corresponds with the current time.
+&lt;b&gt;Date&lt;/b&gt;: inserts the current date and time, in the form of dd-MM-yyyy hh.mm.ss.</source>
+        <translation>El nombre es insertado antes del prefijo y es lo que hace a cada captura unica para evitar ser sobreescrita.&lt;br /&gt;
+&lt;b&gt;Numero&lt;/b&gt;: inserta un numbero en secuencia, 1, 2, 3.
+&lt;b&gt;Tiemestamp&lt;/b&gt;: inserta un numero único (una timestamp de Unix) que corresponde al tiempo actual.
+&lt;b&gt;Fecha&lt;/b&gt;: inserta la fecha y hora actual, en la forma de dia-mes-año hora.minuto.segundo.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="221"/>
+        <source>Selecting anything other than 0 in this option will cause the program to &lt;b&gt;wait&lt;/b&gt; that amount of seconds before taking the screenshot.</source>
+        <translation>Seleccionar algo que no sea 0 causara que el programa &lt;b&gt;espere&lt;/b&gt; esa cantidad de segundos antes de sacar la captura.</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="509"/>
         <source>Tray icon Popup</source>
         <translation>Popup en el ícono</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="446"/>
+        <location filename="../dialogs/optionsdialog.ui" line="516"/>
         <source>&amp;Sound cue</source>
-        <translation>Sonido</translation>
+        <translation>&amp;Sonido</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="148"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;The naming is inserted after the prefix and is what makes each screenshot file unique to avoid overwriting.&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Numeric&lt;/span&gt;: inserts a number in sequence, &lt;span style=&quot; font-style:italic;&quot;&gt;1, 2, 3&lt;/span&gt;.&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Timestamp&lt;/span&gt;: inserts a unique number (a Unix timestamp) that corresponds with the current time.&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Date&lt;/span&gt;: inserts the current date and time, in the form of dd-MM-yyyy hh.mm.ss.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../dialogs/optionsdialog.ui" line="48"/>
+        <source>File</source>
+        <translation>Archivo</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="169"/>
+        <location filename="../dialogs/optionsdialog.ui" line="141"/>
         <source>(date)</source>
         <translation>(fecha)</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="373"/>
+        <location filename="../dialogs/optionsdialog.ui" line="443"/>
         <source>Periodically check for updates.</source>
         <translation>Buscar actualizaciones periodicamente.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="385"/>
+        <location filename="../dialogs/optionsdialog.ui" line="459"/>
         <source>Language:</source>
         <translation>Idioma:</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="395"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://lightscreen.sourceforge.net/language&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;More information...&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <location filename="../dialogs/optionsdialog.ui" line="506"/>
+        <source>Shows a completion message once the screenshot is saved, clicking this message takes you to the directory where the screenshot was saved.</source>
+        <translation>Muestra un mensaje al completar una captura, clickear en este mensaje lleva al directorio donde la misma fue guardada.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="490"/>
+        <location filename="../dialogs/optionsdialog.ui" line="557"/>
         <source>Advanced</source>
         <translation>Avanzado</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="496"/>
+        <location filename="../dialogs/optionsdialog.ui" line="570"/>
         <source>Copy the screenshot to the clipboard.</source>
         <translation>Copiar la captura.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="530"/>
+        <location filename="../dialogs/optionsdialog.ui" line="601"/>
         <source>Warn when hiding without a tray icon.</source>
         <translation>Avisar cuando se esconde sin ícono.</translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.ui" line="565"/>
+        <location filename="../dialogs/optionsdialog.ui" line="610"/>
+        <source>Check Updates Now</source>
+        <translation>Buscar Actualización Ahora</translation>
+    </message>
+    <message>
+        <location filename="../dialogs/optionsdialog.ui" line="630"/>
         <source>About Lightscreen</source>
         <translation>Acerca de Lightscreen</translation>
     </message>
 </context>
 <context>
-    <name>QObject</name>
+    <name>Screenshot</name>
     <message>
-        <location filename="engines/hotkeyengine.cpp" line="113"/>
-        <source>Print Screen</source>
-        <translation type="obsolete">Imprimir Pantalla</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="114"/>
-        <source>Scroll Lock</source>
-        <translation type="obsolete">Bloq Despl</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="115"/>
-        <source>Insert</source>
-        <translation type="obsolete">Insert</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="116"/>
-        <source>Home</source>
-        <translation type="obsolete">Inicio</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="117"/>
-        <source>Page Down</source>
-        <translation type="obsolete">Av Pag</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="118"/>
-        <source>Delete</source>
-        <translation type="obsolete">Supr</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="119"/>
-        <source>End</source>
-        <translation type="obsolete">Fin</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="120"/>
-        <source>Page Up</source>
-        <translation type="obsolete">Re Pag</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="121"/>
-        <source>Space</source>
-        <translation type="obsolete">Espacio</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="122"/>
-        <source>F1</source>
-        <translation type="obsolete">F1</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="123"/>
-        <source>F2</source>
-        <translation type="obsolete">F2</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="124"/>
-        <source>F3</source>
-        <translation type="obsolete">F3</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="125"/>
-        <source>F4</source>
-        <translation type="obsolete">F4</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="126"/>
-        <source>F5</source>
-        <translation type="obsolete">F5</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="127"/>
-        <source>F6</source>
-        <translation type="obsolete">F6</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="128"/>
-        <source>F7</source>
-        <translation type="obsolete">F7</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="129"/>
-        <source>F8</source>
-        <translation type="obsolete">F8</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="130"/>
-        <source>F9</source>
-        <translation type="obsolete">F9</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="131"/>
-        <source>F10</source>
-        <translation type="obsolete">F10</translation>
-    </message>
-    <message>
-        <location filename="engines/hotkeyengine.cpp" line="132"/>
-        <source>F11</source>
-        <translation type="obsolete">F11</translation>
+        <location filename="../tools/screenshot.cpp" line="216"/>
+        <source>Save as..</source>
+        <translation>Guardar como..</translation>
     </message>
 </context>
 </TS>

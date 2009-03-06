@@ -25,13 +25,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   QDialog(parent)
 {
   ui.setupUi(this);
-
-  if (os::aeroGlass(this))
-  { // The standard QTabBar looks odd when full aero transparency is enabled.
-    setStyleSheet("QTabBar::tab:selected { background: white; margin-top: 2px; padding-right: -1px; padding: 0; border: 1px solid gray; border-bottom: none; }");
-    ui.tabWidget->setTabText(ui.tabWidget->currentIndex(), "  "+tr("General")+"  "); //Fake padding.
-  }
-
   setModal(true);
 
 #if !defined(Q_WS_WIN)
@@ -44,17 +37,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   ui.optiPngCheckBox->setVisible(false);
   ui.optiPngCheckBox->setChecked(false);
 #endif
-
-  QSettings settings;
-
-  if (!settings.contains("options/tray"))
-  { // If there are no settings, get rid of the cancel button so that the user is forced to save them
-    ui.buttonBox->clear();
-    ui.buttonBox->addButton(QDialogButtonBox::Ok);
-
-    // Move the first option window to the center of the screen, since windows usually positions it in a random location since it has no visible parent.
-    move(QApplication::desktop()->screen(QApplication::desktop()->primaryScreen())->rect().center()-QPoint(height()/2, width()/2));
-  }
 
   connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(dialogButtonClicked(QAbstractButton*)));
 
@@ -170,20 +152,20 @@ void OptionsDialog::flipButtonToggled(bool checked)
 {
   setUpdatesEnabled(false);
 
-  ui.hboxLayout->removeWidget(ui.prefixLineEdit);
-  ui.hboxLayout->removeWidget(ui.namingComboBox);
+  ui.filenameLayout->removeWidget(ui.prefixLineEdit);
+  ui.filenameLayout->removeWidget(ui.namingComboBox);
 
   if (checked)
   {
     ui.flipPrefixPushButton->setIcon(QIcon(":/icons/PrefixRight"));
-    ui.hboxLayout->addWidget(ui.namingComboBox);
-    ui.hboxLayout->addWidget(ui.prefixLineEdit);
+    ui.filenameLayout->addWidget(ui.namingComboBox);
+    ui.filenameLayout->addWidget(ui.prefixLineEdit);
   }
   else
   {
     ui.flipPrefixPushButton->setIcon(QIcon(":/icons/PrefixLeft"));
-    ui.hboxLayout->addWidget(ui.prefixLineEdit);
-    ui.hboxLayout->addWidget(ui.namingComboBox);
+    ui.filenameLayout->addWidget(ui.prefixLineEdit);
+    ui.filenameLayout->addWidget(ui.namingComboBox);
   }
 
   setUpdatesEnabled(true); // Avoids flicker
@@ -289,6 +271,15 @@ void OptionsDialog::loadSettings()
 {
   QSettings settings;
 
+  if (!settings.contains("options/tray"))
+  { // If there are no settings, get rid of the cancel button so that the user is forced to save them
+    ui.buttonBox->clear();
+    ui.buttonBox->addButton(QDialogButtonBox::Ok);
+
+    // Move the first option window to the center of the screen, since windows usually positions it in a random location since it has no visible parent.
+    move(QApplication::desktop()->screen(QApplication::desktop()->primaryScreen())->rect().center()-QPoint(height()/2, width()/2));
+  }
+
   settings.beginGroup("file");
   ui.formatComboBox->setCurrentIndex(settings.value("format", 1).toInt());
   ui.prefixLineEdit->setText(settings.value("prefix", "screenshot.").toString());
@@ -298,9 +289,9 @@ void OptionsDialog::loadSettings()
   settings.endGroup();
 
   settings.beginGroup("options");
-  ui.startupCheckBox->setChecked(settings.value("startup").toBool());
-  ui.startupHideCheckBox->setChecked(settings.value("startupHide").toBool());
-  ui.hideCheckBox->setChecked(settings.value("hide").toBool());
+  ui.startupCheckBox->setChecked(settings.value("startup", false).toBool());
+  ui.startupHideCheckBox->setChecked(settings.value("startupHide", false).toBool());
+  ui.hideCheckBox->setChecked(settings.value("hide", true).toBool());
   ui.delaySpinBox->setValue(settings.value("delay", 0).toInt());
   ui.flipPrefixPushButton->setChecked(settings.value("flip", false).toBool());
   ui.trayCheckBox->setChecked(settings.value("tray", true).toBool());
@@ -364,7 +355,7 @@ void OptionsDialog::loadSettings()
 
   settings.beginGroup("open");
   ui.openCheckBox->setChecked(settings.value("enabled").toBool());
-  ui.openHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL+ Qt::Key_PageUp)).value<QKeySequence> ());
+  ui.openHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_PageUp)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("directory");
@@ -481,18 +472,19 @@ bool OptionsDialog::hotkeyCollision()
 bool OptionsDialog::event(QEvent* event)
 {
   if (event->type() == QEvent::LanguageChange)
-  { // TODO: Resize to minimum logical size?
+  {
     ui.retranslateUi(this);
+    resize(minimumSizeHint());
   }
 
   return QDialog::event(event);
 }
 
 #if defined(Q_WS_WIN)
+// Qt does not send the print screen key as a regular QKeyPress event, so we must use the Windows API
 bool OptionsDialog::winEvent(MSG *message, long *result)
 {
-
-  if (message->message == WM_KEYUP)
+  if (message->message == WM_KEYUP || message->message == WM_SYSKEYUP)
   {
     int vk = message->wParam;
 
@@ -504,7 +496,7 @@ bool OptionsDialog::winEvent(MSG *message, long *result)
         keyboardModifiers = keyboardModifiers | Qt::ControlModifier;
       if (GetAsyncKeyState(VK_SHIFT))
         keyboardModifiers = keyboardModifiers | Qt::ShiftModifier;
-      if (GetAsyncKeyState(VK_LMENU))
+      if (GetAsyncKeyState(VK_MENU))
         keyboardModifiers = keyboardModifiers | Qt::AltModifier;
 
       HotkeyWidget *widget = 0;
@@ -519,7 +511,7 @@ bool OptionsDialog::winEvent(MSG *message, long *result)
         widget = ui.openHotkeyWidget;
 
       if (widget)
-        QCoreApplication::postEvent(widget, new QKeyEvent(QEvent::KeyPress, Qt::Key_Print, keyboardModifiers));
+        qApp->postEvent(widget, new QKeyEvent(QEvent::KeyPress, Qt::Key_Print, keyboardModifiers));
     }
   }
 
