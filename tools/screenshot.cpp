@@ -208,7 +208,8 @@ QString Screenshot::save()
       n++;
     }
 
-    action = pixmap().save(fileName+extension(), 0, mOptions.quality);
+    fileName = fileName + extension();
+    action = pixmap().save(fileName, 0, mOptions.quality);
   }
 
   if (mOptions.file && mOptions.saveAs)

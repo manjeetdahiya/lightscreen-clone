@@ -332,7 +332,7 @@ public:
     return qkey_ == qkey;
   }
 
-  bool isValid() { return true; } //TODO: Provisory
+  bool isValid() { return !failed; }
 };
 
 bool GlobalShortcutManager::KeyTrigger::Impl::failed;

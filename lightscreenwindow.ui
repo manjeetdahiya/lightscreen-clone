@@ -45,9 +45,6 @@
          <property name="toolTip">
           <string>Configure Lightscreen</string>
          </property>
-         <property name="whatsThis">
-          <string>Opens the configuration dialog</string>
-         </property>
          <property name="text">
           <string>&amp;Options</string>
          </property>

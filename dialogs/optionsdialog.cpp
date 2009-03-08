@@ -2,6 +2,7 @@
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QMessageBox>
@@ -32,10 +33,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   ui.playSoundCheckBox->setChecked(false);
   ui.cursorCheckBox->setVisible(false);
   ui.cursorCheckBox->setChecked(false);
-  ui.startupCheckBox->setVisible(false);
-  ui.startupCheckBox->setChecked(false);
-  ui.optiPngCheckBox->setVisible(false);
-  ui.optiPngCheckBox->setChecked(false);
 #endif
 
   connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(dialogButtonClicked(QAbstractButton*)));
@@ -53,6 +50,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.targetLineEdit       , SLOT(setDisabled(bool)));
   connect(ui.startupCheckBox  , SIGNAL(toggled(bool)), ui.startupHideCheckBox  , SLOT(setEnabled(bool)));
 
+  connect(ui.qualitySlider  , SIGNAL(valueChanged(int)), ui.qualityValueLabel  , SLOT(setNum(int)));
   connect(ui.moreInformationLabel, SIGNAL(linkActivated(QString)), this, SLOT(link(QString)));
 
   // Getting the language entries
@@ -309,15 +307,17 @@ void OptionsDialog::loadSettings()
   ui.warnHideCheckBox->setChecked(!settings.value("disableHideAlert", false).toBool());
   ui.currentMonitorCheckBox->setChecked(settings.value("currentMonitor", false).toBool());
 
-  if (QFile::exists("optipng.exe")) //TODO: Change value when cross-platform
+#if defined(Q_WS_WIN)
+  if (QFileInfo("optipng.exe").exists())
   {
     ui.optiPngCheckBox->setEnabled(true);
   }
   else
   {
     ui.optiPngCheckBox->setEnabled(false);
-    ui.optiPngCheckBox->setText(ui.optiPngCheckBox->text() + tr(" (File not found)"));
+    ui.optiPngCheckBox->setText(ui.optiPngCheckBox->text() + tr(" (OptiPNG not found)"));
   }
+#endif
 
   QString lang = settings.value("language").toString();
   int index = ui.languageComboBox->findText(lang, Qt::MatchExactly | Qt::MatchCaseSensitive);

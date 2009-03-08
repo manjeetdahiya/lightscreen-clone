@@ -32,10 +32,9 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
   QDialog(parent)
 {
   os::aeroGlass(this);
+  setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint); // Remove the what's this button, no real use in the main window.
 
-  QString language = mSettings.value("options/language").toString().toLower();
-
-  os::translate(language);
+  os::translate(mSettings.value("options/language").toString().toLower());
 
   ui.setupUi(this);
 
@@ -160,13 +159,13 @@ void LightscreenWindow::screenshotAction(int mode)
   delayms = mSettings.value("options/delay", 0).toInt();
   delayms = delayms * 1000; // Converting the delay to milliseconds.
 
+  delayms += 200;
+
 #if defined(Q_WS_WIN)
   if (optionsHide)
   {
     // When on Windows Vista, the window takes a little bit longer to hide
     if (QSysInfo::WindowsVersion == QSysInfo::WV_VISTA)
-      delayms += 400;
-    else
       delayms += 200;
   }
 #endif
@@ -245,12 +244,12 @@ void LightscreenWindow::screenshotCleanup(bool result, QString fileName)
     setVisible(true);
   }
 
+  if (mSettings.value("options/tray").toBool())
+    showTrayNotifier(result);
+
   // Showing message.
   if (mSettings.value("options/message").toBool())
     showScreenshotMessage(result, fileName);
-
-  if (mSettings.value("options/tray").toBool())
-    showTrayNotifier(result);
 
 #if defined(Q_WS_WIN)
   if (mSettings.value("options/playSound", false).toBool())
@@ -272,7 +271,7 @@ void LightscreenWindow::screenshotCleanup(bool result, QString fileName)
     return;
 
   if (mSettings.value("options/optipng").toBool()
-   && mSettings.value("options/format").toInt() == Screenshot::PNG)
+   && mSettings.value("file/format").toInt() == Screenshot::PNG)
     compressPng(fileName);
 }
 
@@ -466,43 +465,12 @@ void LightscreenWindow::applySettings()
 
   mDoCache = false;
 
-#if defined(Q_WS_WIN)
-  // Windows startup settings
-
-  QSettings init("Microsoft", "Windows");
-  init.beginGroup("CurrentVersion");
-  init.beginGroup("Run");
-
-  if (mSettings.value("options/startup").toBool())
-  {
-    QString entry = QDir::toNativeSeparators(QApplication::applicationFilePath());
-
-    if (mSettings.value("options/startupHide").toBool())
-      entry.append(" -h"); // command to automatically hide.
-
-    init.setValue("Lightscreen", entry);
-  }
-  else
-  {
-    init.remove("Lightscreen");
-  }
-
-  init.endGroup();
-  init.endGroup();
-#endif
+  os::setStartup(mSettings.value("options/startup").toBool(), mSettings.value("options/startupHide").toBool());
 }
 
 void LightscreenWindow::compressPng(QString fileName)
 {
-  QStringList args;
-  args << fileName;
-
-  QProcess* optipng = new QProcess(this);
-
-  // Delete the QProcess once it's done.
-  connect(optipng, SIGNAL(finished(int, QProcess::ExitStatus)), optipng, SLOT(deleteLater()));
-
-  optipng->start("optipng", args);
+  QProcess::startDetached("optipng " + fileName);
 }
 
 void LightscreenWindow::connectHotkeys()

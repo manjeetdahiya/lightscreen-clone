@@ -2,13 +2,16 @@
 #include <QBitmap>
 #include <QDesktopWidget>
 #include <QDialog>
+#include <QDir>
+#include <QSettings>
 #include <QLibrary>
 #include <QPixmap>
 #include <QTextEdit>
 #include <QTranslator>
 #include <QWidget>
-
 #include <string>
+
+#include <QMessageBox>
 
 #if defined(Q_WS_WIN)
   #include <windows.h>
@@ -35,7 +38,51 @@ void os::addToRecentDocuments(QString fileName)
 {
 #if defined(Q_WS_WIN)
   SHAddToRecentDocs(SHARD_PATH, fileName.toAscii().data()); // Windows 7 jump lists use this.
+#else
+  Q_UNUSED(fileName)
 #endif
+}
+
+void os::setStartup(bool startup, bool hide)
+{
+QString lightscreen = QDir::toNativeSeparators(QApplication::applicationFilePath());
+
+if (hide)
+  lightscreen.append(" -h");
+
+#if defined(Q_WS_WIN)
+  // Windows startup settings
+  QSettings init("Microsoft", "Windows");
+  init.beginGroup("CurrentVersion");
+  init.beginGroup("Run");
+
+  if (startup)
+  {
+    init.setValue("Lightscreen", lightscreen);
+  }
+  else
+  {
+    init.remove("Lightscreen");
+  }
+
+  init.endGroup();
+  init.endGroup();
+#endif
+
+#if defined(Q_WS_X11)
+  QFile desktopFile(QDir::homePath() + "/.config/autostart/lightscreen.desktop");
+
+  desktopFile.remove();
+
+  if (startup)
+  {   
+    desktopFile.open(QIODevice::WriteOnly);
+    desktopFile.write(QString("[Desktop Entry]\nExec=%1\nType=Application").arg(lightscreen).toAscii());
+  }
+#endif
+
+  Q_UNUSED(startup)
+  Q_UNUSED(hide)
 }
 
 QPixmap os::grabWindow(WId winId)
@@ -88,6 +135,8 @@ void os::setForegroundWindow(QWidget *window)
 #if defined(Q_WS_WIN)
   ShowWindow(window->winId(), SW_RESTORE);
   SetForegroundWindow(window->winId());
+#else
+  Q_UNUSED(window)
 #endif
 }
 
@@ -160,5 +209,6 @@ bool os::aeroGlass(QWidget* target)
   return enabled;
 #else
   Q_UNUSED(target)
+  return false;
 #endif
 }

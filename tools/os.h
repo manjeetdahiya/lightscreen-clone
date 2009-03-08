@@ -14,10 +14,12 @@ namespace os
   bool aeroGlass(QWidget *target);
   // Adds the filename to the Windows recent document list (useful for Windows 7 jump lists)
   void addToRecentDocuments(QString fileName);
-  // Set the target window as the foreground window (Windows only)
-  void setForegroundWindow(QWidget *window);
   // Returns the cursor pixmap in Windows
   QPixmap cursor();
+  // Adds lightscreen to the startup list in Windows & Linux (KDE, Gnome and Xfce for now).
+  void setStartup(bool startup, bool hide);
+  // Set the target window as the foreground window (Windows only)
+  void setForegroundWindow(QWidget *window);
   // Returns the pixmap of the given window id.
   QPixmap grabWindow(WId winId);
   // Translates the ui to the given language name.
