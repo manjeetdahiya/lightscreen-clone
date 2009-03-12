@@ -15,16 +15,12 @@ public:
 public slots:
   void accepted();
   void browse();
-  void changePage();
   void checkUpdatesNow();
   void dialogButtonClicked(QAbstractButton *button);
   void flipButtonToggled(bool checked);
   void languageChange(QString language);
   void link(QString url);
   void saveSettings();
-  void startupRelatedStateChange(int state);
-  void trayRelatedStateChange(int state);
-
 
 protected:
   bool event(QEvent *event);
@@ -34,6 +30,7 @@ protected:
 
 private:
   bool hotkeyCollision();
+  void initConnections();
 
 private:
     Ui::OptionsDialog ui;

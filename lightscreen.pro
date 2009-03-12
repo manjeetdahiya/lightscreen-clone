@@ -22,7 +22,8 @@ FORMS += dialogs/optionsdialog.ui \
     lightscreenwindow.ui
 RESOURCES += lightscreen.qrc
 TRANSLATIONS += translations/spanish.ts \
-    translations/polish.ts
+    translations/polish.ts \
+    translations/untranslated.ts
 RC_FILE += lightscreen.rc
 CODECFORSRC = UTF-8
 QT += network \

@@ -32,6 +32,7 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
   QDialog(parent)
 {
   os::aeroGlass(this);
+
   setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint); // Remove the what's this button, no real use in the main window.
 
   os::translate(mSettings.value("options/language").toString().toLower());
@@ -470,7 +471,19 @@ void LightscreenWindow::applySettings()
 
 void LightscreenWindow::compressPng(QString fileName)
 {
+#if defined(Q_OS_UNIX)
   QProcess::startDetached("optipng " + fileName);
+#else
+  QStringList args;
+  args << fileName;
+
+  QProcess* optipng = new QProcess(this);
+
+  // Delete the QProcess once it's done.
+  connect(optipng, SIGNAL(finished(int, QProcess::ExitStatus)), optipng, SLOT(deleteLater()));
+
+  optipng->start("optipng", args);
+#endif
 }
 
 void LightscreenWindow::connectHotkeys()
@@ -613,13 +626,7 @@ bool LightscreenWindow::event(QEvent *event)
     ui.retranslateUi(this);
 
   if (event->type() == QEvent::Show)
-  {
     os::aeroGlass(this);
-    restoreGeometry(mSettings.value("geometry").toByteArray());
-  }
-
-  if (event->type() == QEvent::Close || event->type() == QEvent::Hide)
-    mSettings.setValue("geometry", saveGeometry());
 
   return QDialog::event(event);
 }

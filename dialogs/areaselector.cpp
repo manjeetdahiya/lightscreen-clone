@@ -65,9 +65,14 @@ void AreaSelector::drawBackground()
   painter.drawText(textRect, Qt::AlignCenter, text);
 
   // Set our pixmap as the background of the widget. This does not work in multiple monitors, it tiles before it should
-  //QPalette newPalette = palette();
-  //newPalette.setBrush(QPalette::Window, brush);
-  //setPalette(newPalette);
+  mPaletteBackground = (qApp->desktop()->numScreens() > 1);
+
+  if (mPaletteBackground)
+  {
+    QPalette newPalette = palette();
+    newPalette.setBrush(QPalette::Window, QBrush(mBackgroundDesktop));
+    setPalette(newPalette);
+  }
 }
 
 void AreaSelector::drawRectangleSelector(QPainter &painter)
@@ -96,6 +101,7 @@ void AreaSelector::drawRectangleSelector(QPainter &painter)
   QRect newRect = QRect(magStart, magEnd);
 
   QPixmap magnified = mCleanDesktop.copy(newRect).scaled(QSize(200, 200));
+
   QPainter magPainter(&magnified);
   magPainter.setPen(QPen(QBrush(QColor(255, 0, 0, 180)), 2)); // Same border pen
   magPainter.drawRect(magnified.rect());
@@ -138,7 +144,10 @@ bool AreaSelector::event(QEvent *event)
   if (event->type() == QEvent::Paint)
   {
     QPainter painter(this);
-    painter.drawPixmap(QPoint(0, 0), mBackgroundDesktop);
+
+    if (!mPaletteBackground)
+      painter.drawPixmap(QPoint(0, 0), mBackgroundDesktop);
+
     drawRectangleSelector(painter);
   }
 

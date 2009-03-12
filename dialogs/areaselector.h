@@ -29,6 +29,7 @@ private:
   QPixmap mCleanDesktop;
   QPixmap mBackgroundDesktop;
   bool mMagnify;
+  bool mPaletteBackground;
 
 };
 

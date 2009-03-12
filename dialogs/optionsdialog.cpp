@@ -1,17 +1,10 @@
-#include <QDateTime>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFileDialog>
-#include <QFileInfo>
-#include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QMessageBox>
 #include <QSettings>
-#include <QTextBrowser>
-#include <QTimer>
 #include <QUrl>
-
-#include <QDebug>
 
 #if defined(Q_WS_WIN)
   #include <windows.h>
@@ -35,24 +28,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   ui.cursorCheckBox->setChecked(false);
 #endif
 
-  connect(ui.buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(dialogButtonClicked(QAbstractButton*)));
-
-  connect(ui.flipPrefixPushButton, SIGNAL(toggled(bool)), this, SLOT(flipButtonToggled(bool)));
-
-  connect(ui.aboutPushButton        , SIGNAL(clicked()), parent, SLOT(showAbout()));
-  connect(ui.checkUpdatesPushButton , SIGNAL(clicked()), this  , SLOT(checkUpdatesNow()));
-
-  connect(ui.screenCheckBox   , SIGNAL(toggled(bool)), ui.screenHotkeyWidget   , SLOT(setEnabled(bool)));
-  connect(ui.areaCheckBox     , SIGNAL(toggled(bool)), ui.areaHotkeyWidget     , SLOT(setEnabled(bool)));
-  connect(ui.windowCheckBox   , SIGNAL(toggled(bool)), ui.windowHotkeyWidget   , SLOT(setEnabled(bool)));
-  connect(ui.openCheckBox     , SIGNAL(toggled(bool)), ui.openHotkeyWidget     , SLOT(setEnabled(bool)));
-  connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
-  connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.targetLineEdit       , SLOT(setDisabled(bool)));
-  connect(ui.startupCheckBox  , SIGNAL(toggled(bool)), ui.startupHideCheckBox  , SLOT(setEnabled(bool)));
-
-  connect(ui.qualitySlider  , SIGNAL(valueChanged(int)), ui.qualityValueLabel  , SLOT(setNum(int)));
-  connect(ui.moreInformationLabel, SIGNAL(linkActivated(QString)), this, SLOT(link(QString)));
-
   // Getting the language entries
   QDir lang(QCoreApplication::applicationDirPath() + "/lang", "*.qm");
   lang.setFilter(QDir::Files);
@@ -71,21 +46,34 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   ui.languageComboBox->addItems(entries);
 
-  connect(ui.languageComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
-
+  initConnections();
   loadSettings();
-
-  connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accepted()));
-
-  connect(ui.startupCheckBox, SIGNAL(stateChanged(int)), this, SLOT(startupRelatedStateChange(int)));
-  connect(ui.trayCheckBox   , SIGNAL(stateChanged(int)), this, SLOT(trayRelatedStateChange(int)));
-
-  connect(ui.browsePushButton, SIGNAL(clicked()), this, SLOT(browse()));
-
-  startupRelatedStateChange(ui.startupCheckBox->checkState());
-  trayRelatedStateChange(ui.trayCheckBox->checkState());
 }
 
+void OptionsDialog::initConnections()
+{
+  connect(ui.buttonBox              , SIGNAL(clicked(QAbstractButton*)), this    , SLOT(dialogButtonClicked(QAbstractButton*)));
+  connect(ui.buttonBox              , SIGNAL(accepted())               , this    , SLOT(accepted()));
+  connect(ui.flipPrefixPushButton   , SIGNAL(toggled(bool))            , this    , SLOT(flipButtonToggled(bool)));
+  connect(ui.browsePushButton       , SIGNAL(clicked())                , this    , SLOT(browse()));
+  connect(ui.aboutPushButton        , SIGNAL(clicked())                , parent(), SLOT(showAbout()));
+  connect(ui.checkUpdatesPushButton , SIGNAL(clicked())                , this    , SLOT(checkUpdatesNow()));
+
+  connect(ui.screenCheckBox   , SIGNAL(toggled(bool)), ui.screenHotkeyWidget   , SLOT(setEnabled(bool)));
+  connect(ui.areaCheckBox     , SIGNAL(toggled(bool)), ui.areaHotkeyWidget     , SLOT(setEnabled(bool)));
+  connect(ui.windowCheckBox   , SIGNAL(toggled(bool)), ui.windowHotkeyWidget   , SLOT(setEnabled(bool)));
+  connect(ui.openCheckBox     , SIGNAL(toggled(bool)), ui.openHotkeyWidget     , SLOT(setEnabled(bool)));
+  connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
+  connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.targetLineEdit       , SLOT(setDisabled(bool)));
+  connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.browsePushButton     , SLOT(setDisabled(bool)));
+  connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.directoryLabel       , SLOT(setDisabled(bool)));
+  connect(ui.startupCheckBox  , SIGNAL(toggled(bool)), ui.startupHideCheckBox  , SLOT(setEnabled(bool)));
+  connect(ui.trayCheckBox     , SIGNAL(toggled(bool)), ui.messageCheckBox      , SLOT(setEnabled(bool)));
+  connect(ui.qualitySlider    , SIGNAL(valueChanged(int)), ui.qualityValueLabel  , SLOT(setNum(int)));
+
+  connect(ui.moreInformationLabel, SIGNAL(linkActivated(QString))      , this, SLOT(link(QString)));
+  connect(ui.languageComboBox    , SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
+}
 /*
  * Slots
  */
@@ -94,7 +82,13 @@ void OptionsDialog::accepted()
 {
   if (hotkeyCollision())
   {
-    QMessageBox::critical(0, tr("Hotkey conflict"), tr("You have assigned the same hotkeys to more than one action."));
+    QMessageBox::critical(this, tr("Hotkey conflict"), tr("You have assigned the same hotkeys to more than one action."));
+    return;
+  }
+
+  if (ui.prefixLineEdit->text().contains(QRegExp("[?:\\\\/*\"<>|]")))
+  {
+    QMessageBox::critical(this, tr("Filename character error"), tr("The filename can't contain any of the following characters: ? : \\ / * \" < > |"));
     return;
   }
 
@@ -110,11 +104,6 @@ void OptionsDialog::browse()
     return;
 
   ui.targetLineEdit->setText(fileName);
-}
-
-void OptionsDialog::changePage()
-{
-
 }
 
 void OptionsDialog::checkUpdatesNow()
@@ -246,22 +235,6 @@ void OptionsDialog::saveSettings()
   settings.endGroup();
 }
 
-void OptionsDialog::startupRelatedStateChange(int state)
-{
-  ui.startupHideCheckBox->setEnabled(state);
-
-  if (!state)
-    ui.startupHideCheckBox->setChecked(false);
-}
-
-void OptionsDialog::trayRelatedStateChange(int state)
-{
-  ui.messageCheckBox->setEnabled(state);
-
-  if (!state)
-    ui.messageCheckBox->setChecked(false);
-}
-
 /*
  * Private
  */
@@ -274,7 +247,7 @@ void OptionsDialog::loadSettings()
     ui.buttonBox->clear();
     ui.buttonBox->addButton(QDialogButtonBox::Ok);
 
-    // Move the first option window to the center of the screen, since windows usually positions it in a random location since it has no visible parent.
+    // Move the first option window to the center of the screen, since Windows usually positions it in a random location since it has no visible parent.
     move(QApplication::desktop()->screen(QApplication::desktop()->primaryScreen())->rect().center()-QPoint(height()/2, width()/2));
   }
 
@@ -308,7 +281,7 @@ void OptionsDialog::loadSettings()
   ui.currentMonitorCheckBox->setChecked(settings.value("currentMonitor", false).toBool());
 
 #if defined(Q_WS_WIN)
-  if (QFileInfo("optipng.exe").exists())
+  if (QFile::exists("optipng.exe"))
   {
     ui.optiPngCheckBox->setEnabled(true);
   }

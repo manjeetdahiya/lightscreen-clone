@@ -8,24 +8,18 @@
 
 int main(int argc, char *argv[])
 {
-  QApplication a(argc, argv);
-  a.setOrganizationName("config");
-  a.setApplicationName ("lightscreen");
-  a.setApplicationVersion("1.0");
-  a.setQuitOnLastWindowClosed(false);
+  QApplication application(argc, argv);
+  application.setOrganizationName("K");
+  application.setApplicationName ("Lightscreen");
+  application.setApplicationVersion("1.0");
+  application.setQuitOnLastWindowClosed(false);
 
-  QSettings::setDefaultFormat(QSettings::IniFormat);
-  QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, QApplication::applicationDirPath());
-  QSettings::setPath(QSettings::IniFormat, QSettings::UserScope  , QApplication::applicationDirPath());
+  LightscreenWindow lightscreen;
 
-  LightscreenWindow w;
+  if (application.arguments().size() == 1)
+    lightscreen.show();
 
-  if (a.arguments().size() == 1)
-    w.show();
-
-  QObject::connect(&w, SIGNAL(accepted()), &a, SLOT(quit()));
-  QObject::connect(&w, SIGNAL(rejected()), &a, SLOT(quit()));
-
-  return a.exec();
+  QObject::connect(&lightscreen, SIGNAL(finished(int)), &application, SLOT(quit()));
+  return application.exec();
 }
 
