@@ -10,11 +10,14 @@ class Updater : public QObject
 public:
 	Updater(QObject *parent = 0);
 
-	bool check();
 	static Updater *instance();
 
 signals:
   void done(bool result);
+
+public slots:
+  void checkWithFeedback();
+  void check();
 
 private slots:
   void httpDone(bool result);

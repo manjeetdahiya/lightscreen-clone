@@ -41,7 +41,6 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
 
   // Actions
   connect(ui.optionsPushButton, SIGNAL(clicked()), this, SLOT(showOptions()));
-
   connect(ui.hidePushButton, SIGNAL(clicked()), this, SLOT(toggleVisibility()));
 
   createTrayIcon();
@@ -415,6 +414,8 @@ void LightscreenWindow::toggleVisibility(QSystemTrayIcon::ActivationReason reaso
 
 void LightscreenWindow::updaterDone(bool result)
 {
+  mSettings.setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
+
   if (!result)
     return;
 
@@ -439,15 +440,8 @@ void LightscreenWindow::updaterDone(bool result)
 }
 
 // Aliases
-void LightscreenWindow::windowHotkey()
-{
-  screenshotAction(1);
-}
-
-void LightscreenWindow::areaHotkey()
-{
-  screenshotAction(2);
-}
+void LightscreenWindow::windowHotkey() { screenshotAction(1); }
+void LightscreenWindow::areaHotkey()   { screenshotAction(2); }
 
 /*
  * Private
@@ -613,6 +607,10 @@ void LightscreenWindow::checkForUpdates()
 {
   if (mSettings.value("disableUpdater", false).toBool())
     return;
+
+  if (QSettings().value("lastUpdateCheck").toInt() + 7
+      > QDate::currentDate().dayOfYear())
+    return; // If 7 days have not passed since the last update check.
 
   connect(Updater::instance(), SIGNAL(done(bool)), this, SLOT(updaterDone(bool)));
   Updater::instance()->check();

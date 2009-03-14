@@ -1,0 +1,43 @@
+#include <QDesktopServices>
+#include <QProgressBar>
+#include <QLabel>
+#include <QLayout>
+#include <QUrl>
+
+#include "updaterdialog.h"
+#include "../tools/os.h"
+
+UpdaterDialog::UpdaterDialog() :
+QProgressDialog(tr("Checking for updates"), tr("Cancel"), 0, 0)
+{
+  setWindowTitle(tr("Updater - Lightscreen"));
+  setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
+  setAutoClose(false);
+
+  QProgressBar *bar = new QProgressBar(this);
+  bar->setTextVisible(false);
+
+  QLabel *label = new QLabel(this);
+  connect(label, SIGNAL(linkActivated(QString)), this, SLOT(link(QString)));
+
+  setLabel(label);
+  setBar(bar);
+}
+
+void UpdaterDialog::updateDone(bool result)
+{
+  if (result)
+    setLabelText(tr("There's a new version available,<br> please see <a href=\"http://lightscreen.sourceforge.net/new-version\">the Lighscreen website</a>."));
+  else
+    setLabelText(tr("No new versions available"));
+
+  setMaximum(1);
+
+  setCancelButtonText(tr("Close"));
+}
+
+void UpdaterDialog::link(QString url)
+{
+  QDesktopServices::openUrl(url);
+}
+

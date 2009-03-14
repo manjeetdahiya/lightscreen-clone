@@ -68,8 +68,8 @@ void OptionsDialog::initConnections()
   connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.browsePushButton     , SLOT(setDisabled(bool)));
   connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.directoryLabel       , SLOT(setDisabled(bool)));
   connect(ui.startupCheckBox  , SIGNAL(toggled(bool)), ui.startupHideCheckBox  , SLOT(setEnabled(bool)));
+  connect(ui.qualitySlider    , SIGNAL(valueChanged(int)), ui.qualityValueLabel, SLOT(setNum(int)));
   connect(ui.trayCheckBox     , SIGNAL(toggled(bool)), ui.messageCheckBox      , SLOT(setEnabled(bool)));
-  connect(ui.qualitySlider    , SIGNAL(valueChanged(int)), ui.qualityValueLabel  , SLOT(setNum(int)));
 
   connect(ui.moreInformationLabel, SIGNAL(linkActivated(QString))      , this, SLOT(link(QString)));
   connect(ui.languageComboBox    , SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
@@ -108,7 +108,7 @@ void OptionsDialog::browse()
 
 void OptionsDialog::checkUpdatesNow()
 {
-  Updater::instance()->check();
+  Updater::instance()->checkWithFeedback();
 }
 
 void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
@@ -250,6 +250,9 @@ void OptionsDialog::loadSettings()
     // Move the first option window to the center of the screen, since Windows usually positions it in a random location since it has no visible parent.
     move(QApplication::desktop()->screen(QApplication::desktop()->primaryScreen())->rect().center()-QPoint(height()/2, width()/2));
   }
+
+  ui.startupCheckBox->toggle();
+  ui.trayCheckBox->toggle();
 
   settings.beginGroup("file");
   ui.formatComboBox->setCurrentIndex(settings.value("format", 1).toInt());

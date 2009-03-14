@@ -86,7 +86,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../lightscreen.qrc">
+             <iconset>
               <normaloff>:/icons/OpenFolder</normaloff>:/icons/OpenFolder</iconset>
             </property>
             <property name="autoDefault">
@@ -152,7 +152,7 @@
           <item row="1" column="2">
            <widget class="QPushButton" name="flipPrefixPushButton">
             <property name="icon">
-             <iconset resource="../lightscreen.qrc">
+             <iconset>
               <normaloff>:/icons/PrefixLeft</normaloff>:/icons/PrefixLeft</iconset>
             </property>
             <property name="checkable">
@@ -761,9 +761,7 @@ Quality is related to file size and of course to readability and overall quality
   <tabstop>aboutPushButton</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
- <resources>
-  <include location="../lightscreen.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

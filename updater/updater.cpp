@@ -1,10 +1,10 @@
 #include <QDate>
 #include <QHttp>
 #include <QSettings>
+#include <QApplication>
 
 #include "updater.h"
-
-#define LS_CURRENT_VERSION 0.6
+#include "../dialogs/updaterdialog.cpp"
 
 Updater::Updater(QObject *parent) :
   QObject(parent)
@@ -12,35 +12,30 @@ Updater::Updater(QObject *parent) :
   connect(&mHttp, SIGNAL(done(bool)), this, SLOT(httpDone(bool)));
 }
 
-/*
- * NOTE: Returns true if the check was initiated (not completed).
- */
-bool Updater::check()
+void Updater::check()
 {
-  if (QSettings().value("lastUpdateCheck").toInt() + 7
-      > QDate::currentDate().dayOfYear())
-    return false; // If 7 days have not passed since the last update check.
+  if (mHttp.hasPendingRequests())
+    return;
 
   mHttp.setHost("lightscreen.sourceforge.net");
   mHttp.get("/version");
+}
 
-  return true;
+void Updater::checkWithFeedback()
+{
+  UpdaterDialog updaterDialog;
+  connect(this, SIGNAL(done(bool)), &updaterDialog, SLOT(updateDone(bool)));
+
+  check();
+  updaterDialog.exec();
 }
 
 void Updater::httpDone(bool result)
 {
   QByteArray data = mHttp.readAll();
+  double version  = QString(data).toDouble();
 
-  bool ok;
-
-  double version = QString(data).toDouble(&ok);
-
-  QSettings().setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
-
-  if (version > LS_CURRENT_VERSION)
-    emit done(true);// New version available
-  else
-    emit done(false);
+  emit done((version > qApp->applicationVersion().toDouble()));
 }
 
 Updater* Updater::mInstance = 0;
