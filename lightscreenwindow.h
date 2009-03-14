@@ -9,6 +9,7 @@
 
 class QHttp;
 class Updater;
+
 class LightscreenWindow : public QDialog
 {
     Q_OBJECT
@@ -27,7 +28,6 @@ public slots:
   void restoreSystemTrayNotifier();
   void screenshotAction(int mode = 0);
   void screenshotActionTriggered(QAction* action);
-  void screenshotCleanup(bool result, QString fileName);
   void showAbout();
   void showHotkeyError(QStringList hotkeys);
   void showOptions();

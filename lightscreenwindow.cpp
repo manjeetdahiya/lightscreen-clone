@@ -41,7 +41,7 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
 
   // Actions
   connect(ui.optionsPushButton, SIGNAL(clicked()), this, SLOT(showOptions()));
-  connect(ui.hidePushButton, SIGNAL(clicked()), this, SLOT(toggleVisibility()));
+  connect(ui.hidePushButton   , SIGNAL(clicked()), this, SLOT(toggleVisibility()));
 
   createTrayIcon();
   createScreenshotButtonMenu();
@@ -145,11 +145,16 @@ void LightscreenWindow::screenshotAction(int mode)
   QString fileName;
   static int lastMode = -1;
   int delayms = -1;
+  static bool wasHidden;
+
+  if (lastMode == -1)
+    wasHidden = !isVisible();
+
   bool optionsHide = mSettings.value("options/hide").toBool(); // Option cache, used a couple of times.
   static Screenshot::Options options;
 
   // Applying pre-screenshot settings
-  if (optionsHide)
+  if (optionsHide && !wasHidden)
   {
     setVisible(false);
     mTrayIcon->hide();
@@ -225,7 +230,38 @@ void LightscreenWindow::screenshotAction(int mode)
     result = image;
   }
 
-  screenshotCleanup(result, fileName);
+  // Reversing settings
+  if (mSettings.value("options/hide").toBool())
+  {
+    if (mSettings.value("options/tray").toBool())
+      mTrayIcon->show();
+
+    if (!wasHidden)
+      setVisible(true);
+  }
+
+  if (mSettings.value("options/tray").toBool())
+  {
+    showTrayNotifier(result);
+
+    if (mSettings.value("options/message").toBool())
+      showScreenshotMessage(result, fileName);
+  }
+
+#if defined(Q_WS_WIN)
+  if (mSettings.value("options/playSound", false).toBool())
+  { //TODO: Cross-platform -- see freedesktop.org? mac?
+    if (result)
+      QSound("Media/notify.wav").play();
+    else
+      QSound ("Media/chords.wav").play();
+  }
+#endif
+
+  if (result
+   && mSettings.value("options/optipng").toBool()
+   && mSettings.value("file/format").toInt() == Screenshot::PNG)
+    compressPng(fileName);
 
   lastMode = -1;
 }
@@ -233,46 +269,6 @@ void LightscreenWindow::screenshotAction(int mode)
 void LightscreenWindow::screenshotActionTriggered(QAction* action)
 {
   screenshotAction(action->data().toInt());
-}
-
-void LightscreenWindow::screenshotCleanup(bool result, QString fileName)
-{
-  // Reversing settings
-  if (mSettings.value("options/hide").toBool())
-  {
-    mTrayIcon->show();
-    setVisible(true);
-  }
-
-  if (mSettings.value("options/tray").toBool())
-    showTrayNotifier(result);
-
-  // Showing message.
-  if (mSettings.value("options/message").toBool())
-    showScreenshotMessage(result, fileName);
-
-#if defined(Q_WS_WIN)
-  if (mSettings.value("options/playSound", false).toBool())
-  { //TODO: Cross-platform -- see freedesktop.org? mac?
-    if (result)
-    {
-      QSound sound("Media/notify.wav");
-      sound.play();
-    }
-    else
-    {
-      QSound sound("Media/chords.wav");
-      sound.play();
-    }
-  }
-#endif
-
-  if (!result)
-    return;
-
-  if (mSettings.value("options/optipng").toBool()
-   && mSettings.value("file/format").toInt() == Screenshot::PNG)
-    compressPng(fileName);
 }
 
 void LightscreenWindow::showOptions()
@@ -482,7 +478,7 @@ void LightscreenWindow::compressPng(QString fileName)
 
 void LightscreenWindow::connectHotkeys()
 {
-  // Set to true because if the hotkey is disabled it show an error.
+  // Set to true because if the hotkey is disabled it will show an error.
   bool screen = true, area = true, window = true, open = true, directory = true;
 
   if (mSettings.value("actions/screen/enabled").toBool())
