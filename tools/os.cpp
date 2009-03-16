@@ -45,7 +45,7 @@ void os::addToRecentDocuments(QString fileName)
 
 void os::setStartup(bool startup, bool hide)
 {
-QString lightscreen = QDir::toNativeSeparators(QApplication::applicationFilePath());
+QString lightscreen = QDir::toNativeSeparators(qApp->applicationFilePath());
 
 if (hide)
   lightscreen.append(" -h");

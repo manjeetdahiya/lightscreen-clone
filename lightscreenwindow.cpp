@@ -119,7 +119,7 @@ void LightscreenWindow::goToFolder()
   QString folder = mSettings.value("file/target").toString();
 
   if (folder.isEmpty())
-    folder = QApplication::applicationDirPath();
+    folder = qApp->applicationDirPath();
 
   if (QDir::toNativeSeparators(folder.at(folder.size()-1)) != QDir::separator())
     folder.append(QDir::separator());
@@ -248,15 +248,13 @@ void LightscreenWindow::screenshotAction(int mode)
       showScreenshotMessage(result, fileName);
   }
 
-#if defined(Q_WS_WIN)
   if (mSettings.value("options/playSound", false).toBool())
-  { //TODO: Cross-platform -- see freedesktop.org? mac?
+  {
     if (result)
-      QSound("Media/notify.wav").play();
+      QSound("sounds/ls.screenshot.wav").play();
     else
-      QSound ("Media/chords.wav").play();
+      QSound("sounds/ls.error.wav").play();
   }
-#endif
 
   if (result
    && mSettings.value("options/optipng").toBool()

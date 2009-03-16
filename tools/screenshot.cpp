@@ -35,7 +35,7 @@ void Screenshot::activeWindow()
   HWND fWindow = GetForegroundWindow();
 
   if (fWindow == NULL)
-  return;
+    return;
 
   if (fWindow == GetDesktopWindow())
    wholeScreen();
@@ -153,11 +153,11 @@ QPixmap Screenshot::grabDesktop()
   QRect geometry;
 
   if (mOptions.currentMonitor)
-      geometry = QApplication::desktop()->screenGeometry(QCursor::pos());
+      geometry = qApp->desktop()->screenGeometry(QCursor::pos());
   else
-      geometry = QApplication::desktop()->geometry();
+      geometry = qApp->desktop()->geometry();
 
-  return QPixmap::grabWindow(QApplication::desktop()->winId(), geometry.x(), geometry.y(), geometry.width(), geometry.height());
+  return QPixmap::grabWindow(qApp->desktop()->winId(), geometry.x(), geometry.y(), geometry.width(), geometry.height());
 }
 
 void Screenshot::setPixmap(QPixmap pixmap)

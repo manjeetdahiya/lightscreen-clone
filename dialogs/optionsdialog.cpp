@@ -248,7 +248,7 @@ void OptionsDialog::loadSettings()
     ui.buttonBox->addButton(QDialogButtonBox::Ok);
 
     // Move the first option window to the center of the screen, since Windows usually positions it in a random location since it has no visible parent.
-    move(QApplication::desktop()->screen(QApplication::desktop()->primaryScreen())->rect().center()-QPoint(height()/2, width()/2));
+    move(qApp->desktop()->screen(qApp->desktop()->primaryScreen())->rect().center()-QPoint(height()/2, width()/2));
   }
 
   ui.startupCheckBox->toggle();
@@ -462,33 +462,8 @@ bool OptionsDialog::winEvent(MSG *message, long *result)
 {
   if (message->message == WM_KEYUP || message->message == WM_SYSKEYUP)
   {
-    int vk = message->wParam;
-
-    if (vk == VK_SNAPSHOT)
-    {
-      QFlags<Qt::KeyboardModifier> keyboardModifiers;
-
-      if (GetAsyncKeyState(VK_CONTROL))
-        keyboardModifiers = keyboardModifiers | Qt::ControlModifier;
-      if (GetAsyncKeyState(VK_SHIFT))
-        keyboardModifiers = keyboardModifiers | Qt::ShiftModifier;
-      if (GetAsyncKeyState(VK_MENU))
-        keyboardModifiers = keyboardModifiers | Qt::AltModifier;
-
-      HotkeyWidget *widget = 0;
-
-      if (ui.screenHotkeyWidget->hasFocus())
-        widget = ui.screenHotkeyWidget;
-      if (ui.areaHotkeyWidget->hasFocus())
-        widget = ui.areaHotkeyWidget;
-      if (ui.windowHotkeyWidget->hasFocus())
-        widget = ui.windowHotkeyWidget;
-      if (ui.openHotkeyWidget->hasFocus())
-        widget = ui.openHotkeyWidget;
-
-      if (widget)
-        qApp->postEvent(widget, new QKeyEvent(QEvent::KeyPress, Qt::Key_Print, keyboardModifiers));
-    }
+    if (message->wParam == VK_SNAPSHOT)
+        qApp->postEvent(qApp->focusWidget(), new QKeyEvent(QEvent::KeyPress, Qt::Key_Print,  qApp->keyboardModifiers()));
   }
 
   return QDialog::winEvent(message, result);

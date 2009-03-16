@@ -3,19 +3,15 @@
 
 #include <QDialog>
 
-class QLabel;
-class QRubberBand;
-
 class AreaSelector: public QDialog
 {
-  Q_OBJECT
 
 public:
   AreaSelector(QPixmap desktop, bool magnify = false);
   QRect rect();
   QPixmap pixmap();
 
-private slots:
+private:
   void drawBackground();
   void drawRectangleSelector(QPainter &painter);
 

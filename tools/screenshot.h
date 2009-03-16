@@ -52,6 +52,7 @@ public:
 
   Screenshot();
   Screenshot(Screenshot::Options options);
+
   Screenshot::Options &options();
   void setOptions(Screenshot::Options options);
 

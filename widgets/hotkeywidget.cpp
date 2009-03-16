@@ -39,6 +39,7 @@ bool HotkeyWidget::event(QEvent *event)
   if (event->type() == QEvent::FocusIn)
   {
     setText(tr("Type your hotkey"));
+    grabKeyboard();
   }
   if (event->type() == QEvent::FocusOut)
   {
@@ -48,6 +49,7 @@ bool HotkeyWidget::event(QEvent *event)
       showError();
     }
 
+    releaseKeyboard();
     setHotkeyText(); // Reset the text
   }
   if (event->type() == QEvent::KeyPress)

@@ -8,16 +8,18 @@
 #include "../tools/os.h"
 
 UpdaterDialog::UpdaterDialog() :
-QProgressDialog(tr("Checking for updates"), tr("Cancel"), 0, 0)
+QProgressDialog("", tr("Cancel"), 0, 0)
 {
   setWindowTitle(tr("Updater - Lightscreen"));
   setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
   setAutoClose(false);
 
+
   QProgressBar *bar = new QProgressBar(this);
   bar->setTextVisible(false);
+  bar->setRange(0, 0);
 
-  QLabel *label = new QLabel(this);
+  QLabel *label = new QLabel(tr("Checking for updates"), this);
   connect(label, SIGNAL(linkActivated(QString)), this, SLOT(link(QString)));
 
   setLabel(label);

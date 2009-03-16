@@ -11,7 +11,7 @@ class AboutDialog : public QDialog
 public:
     AboutDialog(QWidget *parent = 0);
 
-public slots:
+private slots:
   void openUrl(QString url);
 
 private:
