@@ -85,6 +85,29 @@ if (hide)
   Q_UNUSED(hide)
 }
 
+QString os::getDocumentsPath()
+{
+#if defined(Q_WS_WIN)
+
+  TCHAR szPath[MAX_PATH];
+
+  if(SUCCEEDED(SHGetFolderPath(NULL,
+                               CSIDL_PERSONAL|CSIDL_FLAG_CREATE,
+                               NULL,
+                               0,
+                               szPath)))
+  {
+    std::wstring path(szPath);
+
+    return QString::fromStdWString(path);
+  }
+
+  return "";
+#else
+  return QDir::homePath();
+#endif
+}
+
 QPixmap os::grabWindow(WId winId)
 {
 #if defined(Q_WS_WIN)

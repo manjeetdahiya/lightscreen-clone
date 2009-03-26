@@ -57,7 +57,7 @@ any key or using the right or middle mouse buttons.</source>
         <translation type="unfinished">Wpisz twój klawisz skrótu</translation>
     </message>
     <message>
-        <location filename="../widgets/hotkeywidget.cpp" line="45"/>
+        <location filename="../widgets/hotkeywidget.cpp" line="46"/>
         <source>Invalid hotkey</source>
         <translation type="unfinished">Błąd klawisza skrótu</translation>
     </message>
@@ -65,149 +65,149 @@ any key or using the right or middle mouse buttons.</source>
 <context>
     <name>LightscreenWindow</name>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="82"/>
-        <location filename="../lightscreenwindow.cpp" line="139"/>
-        <location filename="../lightscreenwindow.cpp" line="369"/>
-        <location filename="../lightscreenwindow.cpp" line="422"/>
+        <location filename="../lightscreenwindow.cpp" line="84"/>
+        <location filename="../lightscreenwindow.cpp" line="141"/>
+        <location filename="../lightscreenwindow.cpp" line="365"/>
+        <location filename="../lightscreenwindow.cpp" line="420"/>
         <source>Lightscreen</source>
         <translation>Lightscreen</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="83"/>
+        <location filename="../lightscreenwindow.cpp" line="85"/>
         <source>You have chosen to hide Lightscreen when there&apos;s no system tray icon, so you will not be able to access the program &lt;b&gt;unless you have selected a hotkey to do so&lt;/b&gt;.&lt;br&gt;What do you want to do?</source>
         <translation>Wybrałeś ukrycie programu Lightscreen bez ikony w zasobniku systemowym, dlatego program będzie niedostępny &lt;b&gt;chyba że ustawiłeś dla niego klawisz skrótu&lt;/b&gt;.&lt;br&gt;Czy chcesz to wykonać?</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="86"/>
+        <location filename="../lightscreenwindow.cpp" line="88"/>
         <source>Hide but enable tray</source>
         <translation>Ukryj ale włącz zasobnik</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="88"/>
+        <location filename="../lightscreenwindow.cpp" line="90"/>
         <source>Hide and don&apos;t warn</source>
         <translation>Ukryj i nie ostrzegaj</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="90"/>
+        <location filename="../lightscreenwindow.cpp" line="92"/>
         <source>Just hide</source>
         <translation>Tylko ukryj</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="310"/>
+        <location filename="../lightscreenwindow.cpp" line="306"/>
         <source>The screenshot was not taken</source>
         <translation>Nie zrobiono zrzutu ekranu</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="311"/>
+        <location filename="../lightscreenwindow.cpp" line="307"/>
         <source>There was an error or you did not select a valid area.</source>
         <translation>Nastąpił błąd albo nie wybrałeś właściwego obszaru.</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="348"/>
+        <location filename="../lightscreenwindow.cpp" line="344"/>
         <source>Some hotkeys could not be registered, they might already be in use</source>
         <translation type="unfinished">Nie można zarejestrować niektórych klawiszy skrótu, mogą już być w użytku</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="366"/>
+        <location filename="../lightscreenwindow.cpp" line="362"/>
         <source>&lt;br&gt;&lt;i&gt;What do you want to do?&lt;/i&gt;</source>
         <translation type="unfinished">&lt;br&gt;&lt;i&gt;Co chcesz wykonać?&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="563"/>
+        <location filename="../lightscreenwindow.cpp" line="551"/>
         <source>Show&amp;/Hide</source>
         <translation>Pokaż&amp;/Ukryj</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="527"/>
-        <location filename="../lightscreenwindow.cpp" line="566"/>
+        <location filename="../lightscreenwindow.cpp" line="515"/>
+        <location filename="../lightscreenwindow.cpp" line="554"/>
         <source>&amp;Screen</source>
         <translation>&amp;Ekran</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="322"/>
+        <location filename="../lightscreenwindow.cpp" line="318"/>
         <source>Sucess!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="327"/>
+        <location filename="../lightscreenwindow.cpp" line="323"/>
         <source>Failed!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="352"/>
+        <location filename="../lightscreenwindow.cpp" line="348"/>
         <source>&lt;br&gt;The failed hotkeys are the following:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="363"/>
+        <location filename="../lightscreenwindow.cpp" line="359"/>
         <source>&lt;br&gt;The failed hotkey is &lt;b&gt;%1&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="372"/>
+        <location filename="../lightscreenwindow.cpp" line="368"/>
         <source>Change</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="373"/>
+        <location filename="../lightscreenwindow.cpp" line="369"/>
         <source>Disable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="374"/>
+        <location filename="../lightscreenwindow.cpp" line="370"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="530"/>
-        <location filename="../lightscreenwindow.cpp" line="569"/>
+        <location filename="../lightscreenwindow.cpp" line="518"/>
+        <location filename="../lightscreenwindow.cpp" line="557"/>
         <source>&amp;Window</source>
         <translation>&amp;Okno</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="533"/>
-        <location filename="../lightscreenwindow.cpp" line="572"/>
+        <location filename="../lightscreenwindow.cpp" line="521"/>
+        <location filename="../lightscreenwindow.cpp" line="560"/>
         <source>&amp;Area</source>
         <translation>&amp;Obsz&amp;ar</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="582"/>
+        <location filename="../lightscreenwindow.cpp" line="570"/>
         <source>View &amp;Options</source>
         <translation type="unfinished">Pokaż &amp;Opcje</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="536"/>
-        <location filename="../lightscreenwindow.cpp" line="585"/>
+        <location filename="../lightscreenwindow.cpp" line="524"/>
+        <location filename="../lightscreenwindow.cpp" line="573"/>
         <source>&amp;Go to Folder</source>
         <translation>&amp;Przejdź do folderu</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="591"/>
+        <location filename="../lightscreenwindow.cpp" line="579"/>
         <source>&amp;Quit</source>
         <translation type="unfinished">&amp;Zakończ</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="304"/>
+        <location filename="../lightscreenwindow.cpp" line="300"/>
         <source>Saved to %1%2</source>
         <translation>Zapisane do %1%2</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="588"/>
+        <location filename="../lightscreenwindow.cpp" line="576"/>
         <source>&amp;About Lightscreen</source>
         <translation>Informacje o &amp;Lightscreen</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="423"/>
+        <location filename="../lightscreenwindow.cpp" line="421"/>
         <source>There&apos;s a new version of Lightscreen available.&lt;br&gt;Would you like to see more information?&lt;br&gt;(&lt;em&gt;You can turn this notification off&lt;/em&gt;)</source>
         <translation type="unfinished">Dostępna jest nowa wersja programu Lightscreen.&lt;br&gt;Czy chcesz zobaczyć dalsze informacje?&lt;br&gt;(&lt;em&gt;Możesz wyłączyć ten komunikat&lt;/em&gt;)</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="427"/>
+        <location filename="../lightscreenwindow.cpp" line="425"/>
         <source>Turn Off</source>
         <translation>Wyłącz</translation>
     </message>
     <message>
-        <location filename="../lightscreenwindow.cpp" line="428"/>
+        <location filename="../lightscreenwindow.cpp" line="426"/>
         <source>Remind Me Later</source>
         <translation>Przypominaj później</translation>
     </message>
@@ -283,7 +283,7 @@ any key or using the right or middle mouse buttons.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dialogs/optionsdialog.cpp" line="291"/>
+        <location filename="../dialogs/optionsdialog.cpp" line="294"/>
         <source> (OptiPNG not found)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -585,8 +585,41 @@ Quality is related to file size and of course to readability and overall quality
 <context>
     <name>Screenshot</name>
     <message>
-        <location filename="../tools/screenshot.cpp" line="217"/>
+        <location filename="../tools/screenshot.cpp" line="198"/>
         <source>Save as..</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>UpdaterDialog</name>
+    <message>
+        <location filename="../dialogs/updaterdialog.cpp" line="11"/>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/updaterdialog.cpp" line="13"/>
+        <source>Updater - Lightscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/updaterdialog.cpp" line="22"/>
+        <source>Checking for updates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/updaterdialog.cpp" line="32"/>
+        <source>There&apos;s a new version available,&lt;br&gt; please see &lt;a href=&quot;http://lightscreen.sourceforge.net/new-version&quot;&gt;the Lighscreen website&lt;/a&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/updaterdialog.cpp" line="34"/>
+        <source>No new versions available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/updaterdialog.cpp" line="38"/>
+        <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

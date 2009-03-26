@@ -258,7 +258,7 @@ void OptionsDialog::loadSettings()
   ui.formatComboBox->setCurrentIndex(settings.value("format", 1).toInt());
   ui.prefixLineEdit->setText(settings.value("prefix", "screenshot.").toString());
   ui.namingComboBox->setCurrentIndex(settings.value("naming", 0).toInt());
-  ui.targetLineEdit->setText(settings.value("target", QDir::homePath() + "/screenshots").toString()); // Defaults to $HOME$/screenshots
+  ui.targetLineEdit->setText(settings.value("target", os::getDocumentsPath() + QDir::separator() + "screenshots").toString()); // Defaults to $HOME$/screenshots
   ui.fileGroupBox->setChecked(settings.value("enabled", true).toBool());
   settings.endGroup();
 

@@ -20,6 +20,8 @@ namespace os
   void setStartup(bool startup, bool hide);
   // Set the target window as the foreground window (Windows only)
   void setForegroundWindow(QWidget *window);
+  // Returns the current users's Documents/My Documents folder
+  QString getDocumentsPath();
   // Returns the pixmap of the given window id.
   QPixmap grabWindow(WId winId);
   // Translates the ui to the given language name.
