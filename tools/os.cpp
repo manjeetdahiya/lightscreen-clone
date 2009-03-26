@@ -102,9 +102,9 @@ QString os::getDocumentsPath()
     return QString::fromStdWString(path);
   }
 
-  return "";
+  return QDir::homePath() + QDir::separator() + "My Documents";
 #else
-  return QDir::homePath();
+  return QDir::homePath() + QDir::separator() + "Documents";
 #endif
 }
 
