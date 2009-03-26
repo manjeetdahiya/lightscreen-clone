@@ -59,7 +59,6 @@ public:
 public slots:
   bool take();
   QString save();
-  QPixmap& pixmap();
 
 private:
   void    activeWindow();
@@ -67,12 +66,11 @@ private:
   QString extension();
   void    selectedArea();
   void    wholeScreen();
-  void    setPixmap(QPixmap pixmap);
-  QPixmap grabDesktop();
+  void    grabDesktop();
 
 private:
-  Screenshot::Options mOptions;
   QPixmap mPixmap;
+  Screenshot::Options mOptions;
 
 };
 

@@ -38,9 +38,12 @@ void Screenshot::activeWindow()
     return;
 
   if (fWindow == GetDesktopWindow())
+  {
    wholeScreen();
+   return;
+  }
 
-  setPixmap(os::grabWindow(GetForegroundWindow()));
+  mPixmap = os::grabWindow(GetForegroundWindow());
 #else
   wholeScreen();
 #endif
@@ -121,34 +124,34 @@ void Screenshot::selectedArea()
 
   alreadySelecting = true;
 
-  QPixmap desktop = grabDesktop();
+  grabDesktop();
 
-  if (desktop.isNull())
+  if (mPixmap.isNull())
     return;
 
-  AreaSelector selector (desktop, mOptions.magnify);
+  AreaSelector selector (mPixmap, mOptions.magnify);
   int result = selector.exec();
 
   alreadySelecting = false;
 
   if (result == QDialog::Accepted && selector.rect().isValid())
-    setPixmap(selector.pixmap());
+    mPixmap = selector.pixmap();
   else
     return;
 }
 
 void Screenshot::wholeScreen()
 {
-  setPixmap(grabDesktop());
-
-  if (mOptions.cursor && !pixmap().isNull())
+  grabDesktop();
+/*
+  if (mOptions.cursor && !mPixmap.isNull())
   {
-    QPainter painter(&pixmap());
+    QPainter painter(&mPixmap);
     painter.drawPixmap(QCursor::pos(), os::cursor());
-  }
+  }*/
 }
 
-QPixmap Screenshot::grabDesktop()
+void Screenshot::grabDesktop()
 {
   QRect geometry;
 
@@ -157,17 +160,7 @@ QPixmap Screenshot::grabDesktop()
   else
       geometry = qApp->desktop()->geometry();
 
-  return QPixmap::grabWindow(qApp->desktop()->winId(), geometry.x(), geometry.y(), geometry.width(), geometry.height());
-}
-
-void Screenshot::setPixmap(QPixmap pixmap)
-{
-  mPixmap = pixmap;
-}
-
-QPixmap& Screenshot::pixmap()
-{
-  return mPixmap;
+  mPixmap = QPixmap::grabWindow(qApp->desktop()->winId(), geometry.x(), geometry.y(), geometry.width(), geometry.height());
 }
 
 bool Screenshot::take()
@@ -187,7 +180,7 @@ bool Screenshot::take()
     break;
   }
 
-  return !pixmap().isNull();
+  return !(mPixmap.isNull());
 }
 
 QString Screenshot::save()
@@ -199,28 +192,16 @@ QString Screenshot::save()
   {
     fileName = newFileName();
 
-    // Optimize?
-    int n = 1;
-    QString original = fileName;
-    while (QFile::exists(fileName+extension()))
-    {
-      fileName = QString("%1 (%2)").arg(original).arg(n);
-      n++;
-    }
-
     fileName = fileName + extension();
-    action = pixmap().save(fileName, 0, mOptions.quality);
-  }
-
-  if (mOptions.file && mOptions.saveAs)
+  } else if (mOptions.file && mOptions.saveAs)
   {
     fileName = QFileDialog::getSaveFileName(0, tr("Save as.."), newFileName(), "*"+extension());
+  }
 
-    if (fileName.isEmpty())
+  if (fileName.isEmpty())
       action = false;
     else
-      action = pixmap().save(fileName, 0, mOptions.quality);
-  }
+      action = mPixmap.save(fileName, 0, mOptions.quality);
 
   if (mOptions.file)
   { // Windows only
@@ -228,7 +209,7 @@ QString Screenshot::save()
   }
 
   if (mOptions.clipboard)
-    qApp->clipboard()->setPixmap(pixmap());
+    QApplication::clipboard()->setPixmap(mPixmap, QClipboard::Clipboard);
 
   if (action)
     return fileName;

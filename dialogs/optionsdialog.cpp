@@ -131,7 +131,7 @@ void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
       return;
 
     QSettings().clear();
-    accept();
+    loadSettings();
   }
 }
 
@@ -278,7 +278,7 @@ void OptionsDialog::loadSettings()
   ui.saveAsCheckBox->setChecked(settings.value("saveAs", false).toBool());
 
   // Advanced
-  ui.clipboardCheckBox->setChecked(settings.value("clipboard", true).toBool());
+  ui.clipboardCheckBox->setChecked(settings.value("clipboard", false).toBool());
   ui.optiPngCheckBox->setChecked(settings.value("optipng", true).toBool());
   ui.warnHideCheckBox->setChecked(!settings.value("disableHideAlert", false).toBool());
   ui.currentMonitorCheckBox->setChecked(settings.value("currentMonitor", false).toBool());

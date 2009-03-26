@@ -46,6 +46,9 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
   createTrayIcon();
   createScreenshotButtonMenu();
 
+  if (!mSettings.contains("file/format"))
+    showOptions(); // There are no options (or the options config is invalid or incomplete)
+
   applySettings();
 
   checkForUpdates();
@@ -443,9 +446,6 @@ void LightscreenWindow::areaHotkey()   { screenshotAction(2); }
 
 void LightscreenWindow::applySettings()
 {
-  if (!mSettings.contains("file/format"))
-    showOptions(); // There are no options (or the options config is invalid or incomplete)
-
   mSettings.sync();
 
   mTrayIcon->setVisible(mSettings.value("options/tray").toBool());
