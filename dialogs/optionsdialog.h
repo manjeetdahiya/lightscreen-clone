@@ -2,6 +2,7 @@
 #define OPTIONSDIALOG_H
 
 #include <QtGui/QDialog>
+#include <QSettings>
 #include "ui_optionsdialog.h"
 
 class QAbstractButton;
@@ -20,6 +21,7 @@ public slots:
   void flipButtonToggled(bool checked);
   void languageChange(QString language);
   void link(QString url);
+  void rejected();
   void saveSettings();
 
 protected:
@@ -31,11 +33,12 @@ protected:
 private:
   bool hotkeyCollision();
   void initConnections();
+  void loadSettings();
 
 private:
     Ui::OptionsDialog ui;
+    QSettings mSettings;
 
-    void loadSettings();
 };
 
 #endif // OPTIONSDIALOG_H

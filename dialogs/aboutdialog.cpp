@@ -16,7 +16,10 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
 void AboutDialog::openUrl(QString url)
 {
-  QDesktopServices::openUrl(QUrl(url));
+  if (url == "#aboutqt")
+    qApp->aboutQt();
+  else
+    QDesktopServices::openUrl(QUrl(url));
 }
 
 

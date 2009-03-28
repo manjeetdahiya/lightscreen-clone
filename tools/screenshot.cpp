@@ -143,12 +143,12 @@ void Screenshot::selectedArea()
 void Screenshot::wholeScreen()
 {
   grabDesktop();
-/*
+
   if (mOptions.cursor && !mPixmap.isNull())
   {
     QPainter painter(&mPixmap);
     painter.drawPixmap(QCursor::pos(), os::cursor());
-  }*/
+  }
 }
 
 void Screenshot::grabDesktop()

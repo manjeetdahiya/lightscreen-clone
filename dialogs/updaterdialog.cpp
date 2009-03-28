@@ -14,7 +14,6 @@ QProgressDialog("", tr("Cancel"), 0, 0)
   setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint);
   setAutoClose(false);
 
-
   QProgressBar *bar = new QProgressBar(this);
   bar->setTextVisible(false);
   bar->setRange(0, 0);
