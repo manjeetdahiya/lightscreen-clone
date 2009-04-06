@@ -16,6 +16,9 @@
   <layout class="QVBoxLayout" name="optionsLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -86,7 +89,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../lightscreen.qrc">
               <normaloff>:/icons/OpenFolder</normaloff>:/icons/OpenFolder</iconset>
             </property>
             <property name="autoDefault">
@@ -137,11 +140,6 @@
               </item>
               <item>
                <property name="text">
-                <string>(timestamp)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
                 <string>(date)</string>
                </property>
               </item>
@@ -152,7 +150,7 @@
           <item row="1" column="2">
            <widget class="QPushButton" name="flipPrefixPushButton">
             <property name="icon">
-             <iconset>
+             <iconset resource="../lightscreen.qrc">
               <normaloff>:/icons/PrefixLeft</normaloff>:/icons/PrefixLeft</iconset>
             </property>
             <property name="checkable">
@@ -181,9 +179,6 @@
           </item>
           <item row="2" column="1">
            <widget class="QComboBox" name="formatComboBox">
-            <property name="whatsThis">
-             <string/>
-            </property>
             <item>
              <property name="text">
               <string>PNG</string>
@@ -197,11 +192,6 @@
             <item>
              <property name="text">
               <string>BMP</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>TIFF</string>
              </property>
             </item>
            </widget>
@@ -761,7 +751,9 @@ Quality is related to file size and of course to readability and overall quality
   <tabstop>aboutPushButton</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../lightscreen.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

@@ -21,6 +21,13 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   ui.setupUi(this);
   setModal(true);
 
+  if (os::aeroGlass(this))
+  {
+    ui.tabWidget->setStyleSheet("QTabWidget::pane { border: 1px solid #898c95; border-radius: 5px; background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0.988636, y2:0.608, stop:0 rgba(235, 235, 235, 255), stop:1 rgba(255, 255, 255, 255)); }  QTabWidget::tab-bar { left: 5px; }");
+    layout()->setMargin(3);
+    resize(minimumSizeHint());
+  }
+
 #if !defined(Q_WS_WIN)
   ui.playSoundCheckBox->setVisible(false);
   ui.playSoundCheckBox->setChecked(false);
@@ -171,72 +178,74 @@ void OptionsDialog::link(QString url)
 
 void OptionsDialog::rejected()
 {
-  languageChange(mSettings.value("options/language").toString()); // Revert language to default.
+  languageChange(QSettings().value("options/language").toString()); // Revert language to default.
 }
 
 void OptionsDialog::saveSettings()
 {
-  mSettings.beginGroup("file");
-  mSettings.setValue("format", ui.formatComboBox->currentIndex());
-  mSettings.setValue("prefix", ui.prefixLineEdit->text());
-  mSettings.setValue("naming", ui.namingComboBox->currentIndex());
-  mSettings.setValue("target", ui.targetLineEdit->text());
-  mSettings.setValue("enabled", ui.fileGroupBox->isChecked());
-  mSettings.endGroup();
+  QSettings settings;
 
-  mSettings.beginGroup("options");
-  mSettings.setValue("startup", ui.startupCheckBox->isChecked());
-  mSettings.setValue("startupHide", ui.startupHideCheckBox->isChecked());
-  mSettings.setValue("hide", ui.hideCheckBox->isChecked());
-  mSettings.setValue("delay", ui.delaySpinBox->value());
-  mSettings.setValue("flip", ui.flipPrefixPushButton->isChecked());
-  mSettings.setValue("tray", ui.trayCheckBox->isChecked());
-  mSettings.setValue("message", ui.messageCheckBox->isChecked());
-  mSettings.setValue("quality", ui.qualitySlider->value());
-  mSettings.setValue("playSound", ui.playSoundCheckBox->isChecked());
+  settings.beginGroup("file");
+  settings.setValue("format", ui.formatComboBox->currentIndex());
+  settings.setValue("prefix", ui.prefixLineEdit->text());
+  settings.setValue("naming", ui.namingComboBox->currentIndex());
+  settings.setValue("target", ui.targetLineEdit->text());
+  settings.setValue("enabled", ui.fileGroupBox->isChecked());
+  settings.endGroup();
+
+  settings.beginGroup("options");
+  settings.setValue("startup", ui.startupCheckBox->isChecked());
+  settings.setValue("startupHide", ui.startupHideCheckBox->isChecked());
+  settings.setValue("hide", ui.hideCheckBox->isChecked());
+  settings.setValue("delay", ui.delaySpinBox->value());
+  settings.setValue("flip", ui.flipPrefixPushButton->isChecked());
+  settings.setValue("tray", ui.trayCheckBox->isChecked());
+  settings.setValue("message", ui.messageCheckBox->isChecked());
+  settings.setValue("quality", ui.qualitySlider->value());
+  settings.setValue("playSound", ui.playSoundCheckBox->isChecked());
   // We save the explicit string because addition/removal of language files can cause it to change
-  mSettings.setValue("language", ui.languageComboBox->currentText());
+  settings.setValue("language", ui.languageComboBox->currentText());
   // This settings is inverted because the first iteration of the Updater did not have a settings but instead relied on the messagebox choice of the user.
-  mSettings.setValue("disableUpdater", !ui.updaterCheckBox->isChecked());
-  mSettings.setValue("magnify", ui.magnifyCheckBox->isChecked());
-  mSettings.setValue("cursor", ui.cursorCheckBox->isChecked());
-  mSettings.setValue("saveAs", ui.saveAsCheckBox->isChecked());
+  settings.setValue("disableUpdater", !ui.updaterCheckBox->isChecked());
+  settings.setValue("magnify", ui.magnifyCheckBox->isChecked());
+  settings.setValue("cursor", ui.cursorCheckBox->isChecked());
+  settings.setValue("saveAs", ui.saveAsCheckBox->isChecked());
 
   // Advanced
-  mSettings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
-  mSettings.setValue("clipboard", ui.clipboardCheckBox->isChecked());
-  mSettings.setValue("optipng", ui.optiPngCheckBox->isChecked());
-  mSettings.setValue("currentMonitor", ui.currentMonitorCheckBox->isChecked());
-  mSettings.endGroup();
+  settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
+  settings.setValue("clipboard", ui.clipboardCheckBox->isChecked());
+  settings.setValue("optipng", ui.optiPngCheckBox->isChecked());
+  settings.setValue("currentMonitor", ui.currentMonitorCheckBox->isChecked());
+  settings.endGroup();
 
-  mSettings.beginGroup("actions");
+  settings.beginGroup("actions");
 
-  mSettings.beginGroup("screen");
-  mSettings.setValue("enabled", ui.screenCheckBox->isChecked());
-  mSettings.setValue("hotkey", ui.screenHotkeyWidget->hotkey());
-  mSettings.endGroup();
+  settings.beginGroup("screen");
+  settings.setValue("enabled", ui.screenCheckBox->isChecked());
+  settings.setValue("hotkey", ui.screenHotkeyWidget->hotkey());
+  settings.endGroup();
 
-  mSettings.beginGroup("area");
-  mSettings.setValue("enabled", ui.areaCheckBox->isChecked());
-  mSettings.setValue("hotkey", ui.areaHotkeyWidget->hotkey());
-  mSettings.endGroup();
+  settings.beginGroup("area");
+  settings.setValue("enabled", ui.areaCheckBox->isChecked());
+  settings.setValue("hotkey", ui.areaHotkeyWidget->hotkey());
+  settings.endGroup();
 
-  mSettings.beginGroup("window");
-  mSettings.setValue("enabled", ui.windowCheckBox->isChecked());
-  mSettings.setValue("hotkey", ui.windowHotkeyWidget->hotkey());
-  mSettings.endGroup();
+  settings.beginGroup("window");
+  settings.setValue("enabled", ui.windowCheckBox->isChecked());
+  settings.setValue("hotkey", ui.windowHotkeyWidget->hotkey());
+  settings.endGroup();
 
-  mSettings.beginGroup("open");
-  mSettings.setValue("enabled", ui.openCheckBox->isChecked());
-  mSettings.setValue("hotkey", ui.openHotkeyWidget->hotkey());
-  mSettings.endGroup();
+  settings.beginGroup("open");
+  settings.setValue("enabled", ui.openCheckBox->isChecked());
+  settings.setValue("hotkey", ui.openHotkeyWidget->hotkey());
+  settings.endGroup();
 
-  mSettings.beginGroup("directory");
-  mSettings.setValue("enabled", ui.directoryCheckBox->isChecked());
-  mSettings.setValue("hotkey", ui.directoryHotkeyWidget->hotkey());
-  mSettings.endGroup();
+  settings.beginGroup("directory");
+  settings.setValue("enabled", ui.directoryCheckBox->isChecked());
+  settings.setValue("hotkey", ui.directoryHotkeyWidget->hotkey());
+  settings.endGroup();
 
-  mSettings.endGroup();
+  settings.endGroup();
 }
 
 /*
@@ -244,46 +253,49 @@ void OptionsDialog::saveSettings()
  */
 void OptionsDialog::loadSettings()
 {
-  if (!mSettings.contains("options/tray"))
+  QSettings settings;
+
+  if (!settings.contains("file/format"))
   { // If there are no settings, get rid of the cancel button so that the user is forced to save them
     ui.buttonBox->clear();
     ui.buttonBox->addButton(QDialogButtonBox::Ok);
 
     // Move the first option window to the center of the screen, since Windows usually positions it in a random location since it has no visible parent.
-    move(qApp->desktop()->screen(qApp->desktop()->primaryScreen())->rect().center()-QPoint(height()/2, width()/2));
+    if (!(static_cast<QWidget*>(parent())->isVisible()))
+      move(qApp->desktop()->screen(qApp->desktop()->primaryScreen())->rect().center()-QPoint(height()/2, width()/2));
   }
 
   ui.startupCheckBox->toggle();
   ui.trayCheckBox->toggle();
 
-  mSettings.beginGroup("file");
-  ui.formatComboBox->setCurrentIndex(mSettings.value("format", 1).toInt());
-  ui.prefixLineEdit->setText(mSettings.value("prefix", "screenshot.").toString());
-  ui.namingComboBox->setCurrentIndex(mSettings.value("naming", 0).toInt());
-  ui.targetLineEdit->setText(mSettings.value("target", os::getDocumentsPath() + QDir::separator() + "screenshots").toString()); // Defaults to $HOME$/screenshots
-  ui.fileGroupBox->setChecked(mSettings.value("enabled", true).toBool());
-  mSettings.endGroup();
+  settings.beginGroup("file");
+  ui.formatComboBox->setCurrentIndex(settings.value("format", 1).toInt());
+  ui.prefixLineEdit->setText(settings.value("prefix", "screenshot.").toString());
+  ui.namingComboBox->setCurrentIndex(settings.value("naming", 0).toInt());
+  ui.targetLineEdit->setText(settings.value("target", os::getDocumentsPath() + QDir::separator() + "screenshots").toString()); // Defaults to $HOME$/screenshots
+  ui.fileGroupBox->setChecked(settings.value("enabled", true).toBool());
+  settings.endGroup();
 
-  mSettings.beginGroup("options");
-  ui.startupCheckBox->setChecked(mSettings.value("startup", false).toBool());
-  ui.startupHideCheckBox->setChecked(mSettings.value("startupHide", false).toBool());
-  ui.hideCheckBox->setChecked(mSettings.value("hide", true).toBool());
-  ui.delaySpinBox->setValue(mSettings.value("delay", 0).toInt());
-  ui.flipPrefixPushButton->setChecked(mSettings.value("flip", false).toBool());
-  ui.trayCheckBox->setChecked(mSettings.value("tray", true).toBool());
-  ui.messageCheckBox->setChecked(mSettings.value("message").toBool());
-  ui.qualitySlider->setValue(mSettings.value("quality", 100).toInt());
-  ui.playSoundCheckBox->setChecked(mSettings.value("playSound", false).toBool());
-  ui.updaterCheckBox->setChecked(!mSettings.value("disableUpdater", false).toBool());
-  ui.magnifyCheckBox->setChecked(mSettings.value("magnify", false).toBool());
-  ui.cursorCheckBox->setChecked(mSettings.value("cursor", false).toBool());
-  ui.saveAsCheckBox->setChecked(mSettings.value("saveAs", false).toBool());
+  settings.beginGroup("options");
+  ui.startupCheckBox->setChecked(settings.value("startup", false).toBool());
+  ui.startupHideCheckBox->setChecked(settings.value("startupHide", false).toBool());
+  ui.hideCheckBox->setChecked(settings.value("hide", true).toBool());
+  ui.delaySpinBox->setValue(settings.value("delay", 0).toInt());
+  ui.flipPrefixPushButton->setChecked(settings.value("flip", false).toBool());
+  ui.trayCheckBox->setChecked(settings.value("tray", true).toBool());
+  ui.messageCheckBox->setChecked(settings.value("message").toBool());
+  ui.qualitySlider->setValue(settings.value("quality", 100).toInt());
+  ui.playSoundCheckBox->setChecked(settings.value("playSound", false).toBool());
+  ui.updaterCheckBox->setChecked(!settings.value("disableUpdater", false).toBool());
+  ui.magnifyCheckBox->setChecked(settings.value("magnify", false).toBool());
+  ui.cursorCheckBox->setChecked(settings.value("cursor", false).toBool());
+  ui.saveAsCheckBox->setChecked(settings.value("saveAs", false).toBool());
 
   // Advanced
-  ui.clipboardCheckBox->setChecked(mSettings.value("clipboard", false).toBool());
-  ui.optiPngCheckBox->setChecked(mSettings.value("optipng", true).toBool());
-  ui.warnHideCheckBox->setChecked(!mSettings.value("disableHideAlert", false).toBool());
-  ui.currentMonitorCheckBox->setChecked(mSettings.value("currentMonitor", false).toBool());
+  ui.clipboardCheckBox->setChecked(settings.value("clipboard", false).toBool());
+  ui.optiPngCheckBox->setChecked(settings.value("optipng", true).toBool());
+  ui.warnHideCheckBox->setChecked(!settings.value("disableHideAlert", false).toBool());
+  ui.currentMonitorCheckBox->setChecked(settings.value("currentMonitor", false).toBool());
 
 #if defined(Q_WS_WIN)
   if (QFile::exists("optipng.exe"))
@@ -297,7 +309,7 @@ void OptionsDialog::loadSettings()
   }
 #endif
 
-  QString lang = mSettings.value("language").toString();
+  QString lang = settings.value("language").toString();
   int index = ui.languageComboBox->findText(lang, Qt::MatchExactly | Qt::MatchCaseSensitive);
 
   if (index == -1)
@@ -305,9 +317,9 @@ void OptionsDialog::loadSettings()
 
   ui.languageComboBox->setCurrentIndex(index);
 
-  mSettings.endGroup();
+  settings.endGroup();
 
-  mSettings.beginGroup("actions");
+  settings.beginGroup("actions");
 
   // This toggle is for the first run
   ui.screenCheckBox->toggle();
@@ -316,32 +328,32 @@ void OptionsDialog::loadSettings()
   ui.openCheckBox->toggle();
   ui.directoryCheckBox->toggle();
 
-  mSettings.beginGroup("screen");
-  ui.screenCheckBox->setChecked(mSettings.value("enabled", true).toBool());
-  ui.screenHotkeyWidget->setHotkey(mSettings.value("hotkey", QKeySequence(Qt::Key_Print)).value<QKeySequence> ());
-  mSettings.endGroup();
+  settings.beginGroup("screen");
+  ui.screenCheckBox->setChecked(settings.value("enabled", true).toBool());
+  ui.screenHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::Key_Print)).value<QKeySequence> ());
+  settings.endGroup();
 
-  mSettings.beginGroup("area");
-  ui.areaCheckBox->setChecked(mSettings.value("enabled").toBool());
-  ui.areaHotkeyWidget->setHotkey(mSettings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_Print)).value<QKeySequence> ());
-  mSettings.endGroup();
+  settings.beginGroup("area");
+  ui.areaCheckBox->setChecked(settings.value("enabled").toBool());
+  ui.areaHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_Print)).value<QKeySequence> ());
+  settings.endGroup();
 
-  mSettings.beginGroup("window");
-  ui.windowCheckBox->setChecked(mSettings.value("enabled").toBool());
-  ui.windowHotkeyWidget->setHotkey(mSettings.value("hotkey", QKeySequence(Qt::SHIFT + Qt::Key_Print)).value<QKeySequence> ());
-  mSettings.endGroup();
+  settings.beginGroup("window");
+  ui.windowCheckBox->setChecked(settings.value("enabled").toBool());
+  ui.windowHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::ALT + Qt::Key_Print)).value<QKeySequence> ());
+  settings.endGroup();
 
-  mSettings.beginGroup("open");
-  ui.openCheckBox->setChecked(mSettings.value("enabled").toBool());
-  ui.openHotkeyWidget->setHotkey(mSettings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_PageUp)).value<QKeySequence> ());
-  mSettings.endGroup();
+  settings.beginGroup("open");
+  ui.openCheckBox->setChecked(settings.value("enabled").toBool());
+  ui.openHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL + Qt::Key_PageUp)).value<QKeySequence> ());
+  settings.endGroup();
 
-  mSettings.beginGroup("directory");
-  ui.directoryCheckBox->setChecked(mSettings.value("enabled").toBool());
-  ui.directoryHotkeyWidget->setHotkey(mSettings.value("hotkey", QKeySequence(Qt::SHIFT + Qt::Key_PageUp)).value<QKeySequence> ());
-  mSettings.endGroup();
+  settings.beginGroup("directory");
+  ui.directoryCheckBox->setChecked(settings.value("enabled").toBool());
+  ui.directoryHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::SHIFT + Qt::Key_PageUp)).value<QKeySequence> ());
+  settings.endGroup();
 
-  mSettings.endGroup();
+  settings.endGroup();
 }
 
 bool OptionsDialog::hotkeyCollision()

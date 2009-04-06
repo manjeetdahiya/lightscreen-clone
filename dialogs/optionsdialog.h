@@ -2,7 +2,6 @@
 #define OPTIONSDIALOG_H
 
 #include <QtGui/QDialog>
-#include <QSettings>
 #include "ui_optionsdialog.h"
 
 class QAbstractButton;
@@ -37,7 +36,6 @@ private:
 
 private:
     Ui::OptionsDialog ui;
-    QSettings mSettings;
 
 };
 

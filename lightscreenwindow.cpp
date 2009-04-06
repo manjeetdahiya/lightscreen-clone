@@ -8,6 +8,7 @@
 #include <QHttp>
 #include <QMenu>
 #include <QMessageBox>
+#include <QPointer>
 #include <QProcess>
 #include <QSettings>
 #include <QSound>
@@ -275,8 +276,10 @@ void LightscreenWindow::screenshotActionTriggered(QAction* action)
 void LightscreenWindow::showOptions()
 {
   GlobalShortcutManager::clear();
-  OptionsDialog optionsDialog(this);
-  optionsDialog.exec();
+
+  QPointer<OptionsDialog> optionsDialog = new OptionsDialog(this);
+  optionsDialog->exec();
+  delete optionsDialog;
 
   applySettings();
 }
@@ -328,8 +331,9 @@ void LightscreenWindow::showTrayNotifier(bool result)
 
 void LightscreenWindow::showAbout()
 {
-  AboutDialog aboutDialog;
-  aboutDialog.exec();
+  QPointer<AboutDialog> aboutDialog = new AboutDialog(this);
+  aboutDialog->exec();
+  delete aboutDialog;
 }
 
 void LightscreenWindow::showHotkeyError(QStringList hotkeys)
@@ -446,8 +450,6 @@ void LightscreenWindow::areaHotkey()   { screenshotAction(2); }
 
 void LightscreenWindow::applySettings()
 {
-  mSettings.sync();
-
   mTrayIcon->setVisible(mSettings.value("options/tray").toBool());
 
   connectHotkeys();

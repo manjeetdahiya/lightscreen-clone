@@ -79,10 +79,7 @@ QString Screenshot::newFileName()
 
     naming = naming.arg(naming_largest + 1);
   break;
-  case 1: // Timestamp
-    naming = naming.arg(QDateTime::currentDateTime().toTime_t());
-    break;
-  case 2: // Date
+  case 1: // Date
     naming = naming.arg(QDateTime::currentDateTime().toString("dd-MM-yyyy hh.mm.ss"));
     break;
   }
@@ -109,8 +106,6 @@ QString Screenshot::extension()
     return ".jpg";
   if (mOptions.format == 2)
     return ".bmp";
-  if (mOptions.format == 3)
-    return ".tiff";
 
   return ".jpg"; //default
 }

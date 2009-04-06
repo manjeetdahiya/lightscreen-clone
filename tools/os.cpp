@@ -120,8 +120,8 @@ QPixmap os::grabWindow(WId winId)
   {
     if (QSysInfo::WindowsVersion >= QSysInfo::WV_VISTA)
     {// TODO: WTF!
-      rcWindow.right += 8;
-      rcWindow.left -= 8;
+      rcWindow.right -= 8;
+      rcWindow.left += 8;
       rcWindow.top += 8;
       rcWindow.bottom -= 8;
     }
@@ -207,7 +207,7 @@ bool os::aeroGlass(QWidget* target)
   if (QSysInfo::WindowsVersion < QSysInfo::WV_VISTA)
     return false;  // Glass frame only for Windows Vista and above.
 
-  static QLibrary dwmapi("dwmapi");
+  QLibrary dwmapi("dwmapi");
 
   pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)dwmapi.resolve("DwmIsCompositionEnabled");
 
@@ -220,13 +220,9 @@ bool os::aeroGlass(QWidget* target)
 
     MARGINS margins = { -1}; //setting it to -1 makes the glass available throughout the entire window
 
-    enabled = SUCCEEDED(pDwmExtendFrameIntoClientArea(target->winId(), &margins));
+    pDwmExtendFrameIntoClientArea(target->winId(), &margins);
 
-    if (enabled)
-    {
-      target->setAttribute(Qt::WA_NoSystemBackground);
-      target->setAttribute(Qt::WA_OpaquePaintEvent);
-    }
+    target->setAttribute(Qt::WA_NoSystemBackground);
   }
 
   return enabled;

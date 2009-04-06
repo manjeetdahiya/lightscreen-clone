@@ -4,15 +4,13 @@
 #include <QPainter>
 #include <QPixmap>
 
-#if defined(Q_WS_WIN)
-  #include "windows.h"
-#endif
-
+#include "../tools/os.h"
 #include "areaselector.h"
 
 AreaSelector::AreaSelector(QPixmap desktop, bool magnify) : mCleanDesktop(desktop), mMagnify(magnify)
 {
   setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+  os::setForegroundWindow(this);
   setCursor(Qt::CrossCursor);
 
   resize(desktop.size());

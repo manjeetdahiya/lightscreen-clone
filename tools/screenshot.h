@@ -22,7 +22,7 @@ public:
   enum Naming
   {
     Numeric = 0,
-    Timestamp = 1
+    Date = 1,
   };
 
   enum Mode

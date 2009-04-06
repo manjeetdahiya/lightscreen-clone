@@ -36,6 +36,10 @@ void HotkeyWidget::setHotkeyText()
 
 bool HotkeyWidget::event(QEvent *event)
 {
+  if (event->type() == QEvent::LanguageChange)
+  {
+    setHotkeyText();
+  }
   if (event->type() == QEvent::FocusIn)
   {
     setText(tr("Type your hotkey"));
