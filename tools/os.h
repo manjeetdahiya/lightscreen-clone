@@ -20,6 +20,8 @@ namespace os
   void setStartup(bool startup, bool hide);
   // Set the target window as the foreground window (Windows only)
   void setForegroundWindow(QWidget *window);
+  // Quits any other instances of Lightscreen
+  void singleInstance();
   // Returns the current users's Documents/My Documents folder
   QString getDocumentsPath();
   // Returns the pixmap of the given window id.

@@ -14,6 +14,8 @@ int main(int argc, char *argv[])
   application.setApplicationVersion("1.0");
   application.setQuitOnLastWindowClosed(false);
 
+  os::singleInstance();
+
   LightscreenWindow lightscreen;
 
   if (application.arguments().size() == 1)

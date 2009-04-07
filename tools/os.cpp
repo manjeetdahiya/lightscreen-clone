@@ -179,6 +179,26 @@ QPixmap os::cursor()
 #endif
 }
 
+void os::singleInstance()
+{
+#ifdef Q_WS_WIN
+  WCHAR* mutexName = (WCHAR*)QApplication::applicationName().toAscii().data();
+
+  ::CreateMutex(NULL, FALSE, mutexName);
+
+  if (::GetLastError() == ERROR_ALREADY_EXISTS)
+  {
+    std::wstring str = QString("Lightscreen").toStdWString();
+    HWND hLsWnd = ::FindWindow(NULL, str.c_str());
+
+    if (hLsWnd)
+      ::PostMessage(hLsWnd, WM_QUIT, 0, 0);
+  }
+#else
+  Q_UNUSED(name)
+#endif
+}
+
 void os::translate(QString language)
 {
   static QTranslator *translator = 0;
