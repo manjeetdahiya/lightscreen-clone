@@ -206,6 +206,8 @@ QString Screenshot::save()
   if (mOptions.clipboard)
     QApplication::clipboard()->setPixmap(mPixmap, QClipboard::Clipboard);
 
+  mPixmap = QPixmap();
+
   if (action)
     return fileName;
   else

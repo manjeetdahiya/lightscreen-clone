@@ -23,7 +23,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   if (os::aeroGlass(this))
   {
-    ui.tabWidget->setStyleSheet("QTabWidget::pane { border: 1px solid #898c95; border-radius: 5px; background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0.988636, y2:0.608, stop:0 rgba(235, 235, 235, 255), stop:1 rgba(255, 255, 255, 255)); }  QTabWidget::tab-bar { left: 5px; }");
+    ui.tabWidget->setStyleSheet("QTabWidget::pane { padding: 3px; border: 1px solid #898c95; border-radius: 5px; background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0.988636, y2:0.608, stop:0 rgba(235, 235, 235, 255), stop:1 rgba(255, 255, 255, 255)); }  QTabWidget::tab-bar { left: 5px; }");
     layout()->setMargin(3);
     resize(minimumSizeHint());
   }

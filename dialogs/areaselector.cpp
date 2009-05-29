@@ -26,7 +26,11 @@ QRect AreaSelector::rect()
 
 QPixmap AreaSelector::pixmap()
 {
-  return mCleanDesktop.copy(rect());
+  mBackgroundDesktop = QPixmap();
+  QPixmap result     = mCleanDesktop.copy(rect());
+  mCleanDesktop      = QPixmap();
+
+  return result;
 }
 
 // Drawing slots
@@ -90,8 +94,8 @@ void AreaSelector::drawRectangleSelector(QPainter &painter)
     return;
 
   // Drawing the magnified version
-  QPoint magEnd = mPos;
-  magEnd += QPoint(50, 50);
+  QPoint magEnd   = mPos;
+  magEnd   += QPoint(50, 50);
 
   QPoint magStart = mPos;
   magStart -= QPoint(50, 50);

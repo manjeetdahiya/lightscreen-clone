@@ -16,6 +16,8 @@
 #include <QTimer>
 #include <QUrl>
 
+#include <QDebug>
+
 /*
  * Lightscreen includes
  */
@@ -33,12 +35,14 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
   QDialog(parent)
 {
   os::aeroGlass(this);
-
-  setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint); // Remove the what's this button, no real use in the main window.
-
   os::translate(mSettings.value("options/language").toString().toLower());
 
   ui.setupUi(this);
+
+  setMaximumSize(size());
+  setMinimumSize(size());
+
+  setWindowFlags(windowFlags() ^ Qt::WindowContextHelpButtonHint); // Remove the what's this button, no real use in the main window.
 
   // Actions
   connect(ui.optionsPushButton, SIGNAL(clicked()), this, SLOT(showOptions()));
@@ -528,8 +532,8 @@ void LightscreenWindow::createScreenshotButtonMenu()
 
   QActionGroup *screenshotGroup = new QActionGroup(this);
   screenshotGroup->addAction(screenAction);
-  screenshotGroup->addAction(areaAction);
   screenshotGroup->addAction(windowAction);
+  screenshotGroup->addAction(areaAction);
 
   connect(screenshotGroup, SIGNAL(triggered(QAction*)), this, SLOT(screenshotActionTriggered(QAction*)));
 
@@ -613,15 +617,24 @@ void LightscreenWindow::checkForUpdates()
 }
 
 // Event handling
-
 bool LightscreenWindow::event(QEvent *event)
 {
-  if (event->type() == QEvent::LanguageChange)
-    ui.retranslateUi(this);
+  if (event->type() == QEvent::Hide
+   || event->type() == QEvent::Close)
+  {
+    mSettings.setValue("position", pos());
+  }
 
   if (event->type() == QEvent::Show)
+  {
     os::aeroGlass(this);
+
+    if (!mSettings.value("position").toPoint().isNull())
+      move(mSettings.value("position").toPoint());
+  }
 
   return QDialog::event(event);
 }
+
+
 

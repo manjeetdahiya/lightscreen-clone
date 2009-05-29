@@ -5,6 +5,7 @@
 
 class AreaSelector: public QDialog
 {
+  Q_OBJECT
 
 public:
   AreaSelector(QPixmap desktop, bool magnify = false);

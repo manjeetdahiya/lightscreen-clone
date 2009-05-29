@@ -2,6 +2,7 @@
 #define LIGHTSCREENWINDOW_H
 
 #include <QtGui/QDialog>
+#include <QPointer>
 #include <QSystemTrayIcon>
 #include <QSettings>
 
@@ -45,14 +46,13 @@ private:
   void createTrayIcon();
 
 protected:
-  //Events:
   bool event(QEvent *event);
 
 private:
   bool             mReviveMain;
   bool             mDoCache;
   QSettings        mSettings;
-  QSystemTrayIcon *mTrayIcon;
+  QPointer<QSystemTrayIcon> mTrayIcon;
   Ui::LightscreenWindowClass ui;
 
 };

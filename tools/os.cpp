@@ -171,7 +171,14 @@ QPixmap os::cursor()
   GetIconInfo(GetCursor(), &iconInfo);
 
   QPixmap result = QPixmap::fromWinHBITMAP(iconInfo.hbmColor);
-  result.setMask(QBitmap(QPixmap::fromWinHBITMAP(iconInfo.hbmMask)));
+
+  QPixmap mask = mask.fromWinHBITMAP(iconInfo.hbmMask);
+  QBitmap bitmap(mask);
+
+  result.setMask(bitmap);
+
+  mask   = QPixmap();
+  bitmap = QBitmap();
 
   return result;
 #else
@@ -194,8 +201,6 @@ void os::singleInstance()
     if (hLsWnd)
       ::PostMessage(hLsWnd, WM_QUIT, 0, 0);
   }
-#else
-  Q_UNUSED(name)
 #endif
 }
 
