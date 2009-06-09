@@ -1,5 +1,7 @@
+#include <QCompleter>
 #include <QDesktopServices>
 #include <QDesktopWidget>
+#include <QDirModel>
 #include <QFileDialog>
 #include <QKeyEvent>
 #include <QMessageBox>
@@ -34,6 +36,10 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   ui.cursorCheckBox->setVisible(false);
   ui.cursorCheckBox->setChecked(false);
 #endif
+
+  QCompleter *completer = new QCompleter(this);
+  completer->setModel(new QDirModel(QStringList(), QDir::Dirs, QDir::Name, completer));
+  ui.targetLineEdit->setCompleter(completer);
 
   // Getting the language entries
   QDir lang(QCoreApplication::applicationDirPath() + "/lang", "*.qm");
