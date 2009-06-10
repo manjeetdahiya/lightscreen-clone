@@ -169,6 +169,14 @@ void OptionsDialog::flipButtonToggled(bool checked)
     ui.filenameLayout->addWidget(ui.namingComboBox);
   }
 
+  if (ui.prefixLineEdit->text() == "screenshot."
+   && checked)
+    ui.prefixLineEdit->setText(".screenshot");
+
+  if (ui.prefixLineEdit->text() == ".screenshot"
+   && !checked)
+    ui.prefixLineEdit->setText("screenshot.");
+
   setUpdatesEnabled(true); // Avoids flicker
 }
 

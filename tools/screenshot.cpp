@@ -124,15 +124,12 @@ void Screenshot::selectedArea()
   if (mPixmap.isNull())
     return;
 
-  AreaSelector selector (mPixmap, mOptions.magnify);
-  int result = selector.exec();
+  AreaSelector selector(0, mPixmap, mOptions.magnify);
+  selector.exec();
 
   alreadySelecting = false;
 
-  if (result == QDialog::Accepted && selector.rect().isValid())
-    mPixmap = selector.pixmap();
-  else
-    return;
+  mPixmap = selector.pixmap;
 }
 
 void Screenshot::wholeScreen()
