@@ -37,7 +37,7 @@ AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
   acceptWidget = new QWidget(this);
   acceptWidget->resize(110, 60);
   acceptWidget->setWindowOpacity(0.4);
-  acceptWidget->setStyleSheet("QWidget { background-color: black; border-radius: 4px;  } QPushButton { height: 50px; color: white; padding: 0; } QPushButton:hover { image: url(:/icons/AreaHover) }");
+  acceptWidget->setStyleSheet("QWidget { background: url(:/icons/AreaBackground); } QPushButton { background: transparent; border: none; height: 50px; color: white; padding: 0; } QPushButton:hover { image: url(:/icons/AreaHover) }");
 
   QPushButton *awAcceptButton = new QPushButton(QIcon(":/icons/AreaAccept"), "");
   connect(awAcceptButton, SIGNAL(clicked()), this, SLOT(grabRect()));
@@ -314,7 +314,16 @@ void AreaSelector::mouseMoveEvent(QMouseEvent* e)
       r.setBottomRight(limitPointToRect(r.bottomRight(), rect()));
       selection = r;
     }
-    acceptWidget->move(e->pos() + QPoint(5, 5));
+
+    QPoint acceptPos = e->pos() + QPoint(5, 5);
+
+    if ((acceptPos.x()+120) > pixmap.rect().width())
+      acceptPos.setX(acceptPos.x()-120);
+
+    if ((acceptPos.y()+70) > pixmap.rect().height())
+      acceptPos.setY(acceptPos.y()-70);
+
+    acceptWidget->move(acceptPos);
     update();
   }
   else
@@ -358,7 +367,9 @@ void AreaSelector::mouseMoveEvent(QMouseEvent* e)
 
 void AreaSelector::mouseReleaseEvent(QMouseEvent* e)
 {
-  acceptWidget->show();
+  if (!selection.isNull())
+    acceptWidget->show();
+
   mouseDown = false;
   newSelection = false;
   idleTimer.start();

@@ -15,6 +15,7 @@
         <file alias="AreaAccept" >images/area-accept.png</file>
         <file alias="AreaCancel" >images/area-cancel.png</file>
         <file alias="AreaHover" >images/area-hover.png</file>
+        <file alias="AreaBackground" >images/area-background.png</file>
     </qresource>
     <qresource prefix="/logo" >
         <file alias="big" >images/LSBig.png</file>
