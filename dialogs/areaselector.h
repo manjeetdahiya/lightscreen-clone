@@ -12,6 +12,7 @@
 #include <QVector>
 #include <QRect>
 #include <QTimer>
+#include <QTimeLine>
 
 class QPaintEvent;
 class QResizeEvent;
@@ -29,6 +30,7 @@ protected slots:
     void displayHelp();
     void grabRect();
     void cancel();
+    void animationTick(int frame);
 
 signals:
     void regionGrabbed( const QPixmap & );
@@ -55,8 +57,10 @@ protected:
     QPoint dragStartPoint;
     QRect  selectionBeforeDrag;
     QTimer idleTimer;
+    QTimeLine animationTimeLine;
     bool showHelp;
     bool grabbing;
+    int overlayAlpha;
 
     // naming convention for handles
     // T top, B bottom, R Right, L left

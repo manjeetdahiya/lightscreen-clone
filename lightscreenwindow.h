@@ -6,6 +6,7 @@
 #include <QSystemTrayIcon>
 #include <QSettings>
 
+#include "updater/updater.h"
 #include "ui_lightscreenwindow.h"
 
 class QHttp;
@@ -35,7 +36,8 @@ public slots:
   void showScreenshotMessage(bool result, QString fileName);
   void showTrayNotifier(bool result);
   void toggleVisibility(QSystemTrayIcon::ActivationReason reason = QSystemTrayIcon::DoubleClick);
-  void updaterDone(bool result);
+  void updaterCheckDone(Updater::Result result);
+  void updaterCanceled(bool reminder);
   void windowHotkey();
 
 private:

@@ -12,11 +12,12 @@
 #include <QToolTip>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QTimeLine>
 
 AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
   QDialog(parent), pixmap(pixmap),  magnify(magnify), selection(), mouseDown(false), newSelection(false),
   handleSize(10), mouseOverHandle(0), idleTimer(),
-  showHelp(true), grabbing(false),
+  showHelp(true), grabbing(false), overlayAlpha(1),
   TLHandle(0,0,handleSize,handleSize), TRHandle(0,0,handleSize,handleSize),
   BLHandle(0,0,handleSize,handleSize), BRHandle(0,0,handleSize,handleSize),
   LHandle(0,0,handleSize,handleSize), THandle(0,0,handleSize,handleSize),
@@ -32,6 +33,10 @@ AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
   setCursor(Qt::CrossCursor);
   connect(&idleTimer, SIGNAL(timeout()), this, SLOT(displayHelp()));
   idleTimer.start(3000);
+  connect(&animationTimeLine, SIGNAL(frameChanged(int)), this, SLOT(animationTick(int)));
+  animationTimeLine.setFrameRange(0, 80);
+  animationTimeLine.setDuration(500);
+  animationTimeLine.start();
 
   // Creating accept widget:
   acceptWidget = new QWidget(this);
@@ -77,10 +82,10 @@ void AreaSelector::paintEvent(QPaintEvent* e)
   QPainter painter(this);
 
   QPalette pal = palette();
-  QFont font = QToolTip::font();
+  QFont font   = QToolTip::font();
 
   QColor handleColor(255, 0, 0, 180);
-  QColor overlayColor(0, 0, 0, 85);
+  QColor overlayColor(0, 0, 0, overlayAlpha);
   QColor textColor = pal.color(QPalette::Active, QPalette::Text);
   QColor textBackgroundColor = pal.color(QPalette::Active, QPalette::Base);
   painter.drawPixmap(0, 0, pixmap);
@@ -98,7 +103,7 @@ void AreaSelector::paintEvent(QPaintEvent* e)
   painter.setBrush(Qt::NoBrush);
   painter.drawRect(r);
 
-  if (showHelp)
+  if (showHelp && overlayAlpha == 80)
   {
     //Drawing the explanatory text.
     QRect helpRect = qApp->desktop()->screenGeometry(qApp->desktop()->primaryScreen());
@@ -414,6 +419,14 @@ void AreaSelector::cancel()
 {
   pixmap = QPixmap();
   reject();
+}
+
+void AreaSelector::animationTick(int frame)
+{
+  if (overlayAlpha != 80)
+    overlayAlpha = frame;
+
+  update();
 }
 
 void AreaSelector::updateHandles()

@@ -16,8 +16,6 @@
 #include <QTimer>
 #include <QUrl>
 
-#include <QDebug>
-
 /*
  * Lightscreen includes
  */
@@ -417,31 +415,25 @@ void LightscreenWindow::toggleVisibility(QSystemTrayIcon::ActivationReason reaso
   }
 }
 
-void LightscreenWindow::updaterDone(bool result)
+void LightscreenWindow::updaterCheckDone(Updater::Result result)
 {
-  mSettings.setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
+  switch (result)
+  {
+    case Updater::NoVersion:
+      mSettings.setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
+    break;
+    default:
+      setEnabled(false);
+    break;
+  }
+}
 
-  if (!result)
-    return;
+void LightscreenWindow::updaterCanceled(bool reminder)
+{
+  setEnabled(true);
 
-  QMessageBox msgBox;
-  msgBox.setWindowTitle(tr("Lightscreen"));
-  msgBox.setText(tr("There's a new version of Lightscreen available.<br>Would you like to see more information?<br>(<em>You can turn this notification off</em>)"));
-  msgBox.setIcon(QMessageBox::Information);
-
-  QPushButton *yesButton     = msgBox.addButton(QMessageBox::Yes);
-  QPushButton *turnOffButton = msgBox.addButton(tr("Turn Off"), QMessageBox::ActionRole);
-  QPushButton *remindButton  = msgBox.addButton(tr("Remind Me Later"), QMessageBox::RejectRole);
-
-  Q_UNUSED(remindButton);
-
-  msgBox.exec();
-
-  if (msgBox.clickedButton() == yesButton)
-    QDesktopServices::openUrl(QUrl("http://lightscreen.sourceforge.net/new-version"));
-  else if (msgBox.clickedButton() == turnOffButton)
-    mSettings.setValue("disableUpdater", true);
-
+  if (!reminder)
+    mSettings.setValue("options/disableUpdater", true);
 }
 
 // Aliases
@@ -605,15 +597,17 @@ void LightscreenWindow::createTrayIcon()
 
 void LightscreenWindow::checkForUpdates()
 {
-  if (mSettings.value("disableUpdater", false).toBool())
+  if (mSettings.value("options/disableUpdater", false).toBool())
     return;
 
   if (QSettings().value("lastUpdateCheck").toInt() + 7
       > QDate::currentDate().dayOfYear())
     return; // If 7 days have not passed since the last update check.
 
-  connect(Updater::instance(), SIGNAL(done(bool)), this, SLOT(updaterDone(bool)));
-  Updater::instance()->check();
+  connect(Updater::instance(), SIGNAL(checkDone(Updater::Result)), this, SLOT(updaterCheckDone(Updater::Result)));
+  connect(Updater::instance(), SIGNAL(canceled(bool)),             this, SLOT(updaterCanceled(bool)));
+
+  Updater::instance()->check(true);
 }
 
 // Event handling
@@ -628,7 +622,7 @@ bool LightscreenWindow::event(QEvent *event)
   if (event->type() == QEvent::Show)
   {
     os::aeroGlass(this);
-
+    
     if (!mSettings.value("position").toPoint().isNull())
       move(mSettings.value("position").toPoint());
   }

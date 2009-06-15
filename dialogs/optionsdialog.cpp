@@ -122,7 +122,7 @@ void OptionsDialog::browse()
 
 void OptionsDialog::checkUpdatesNow()
 {
-  Updater::instance()->checkWithFeedback();
+  Updater::instance()->check();
 }
 
 void OptionsDialog::dialogButtonClicked(QAbstractButton *button)

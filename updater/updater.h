@@ -3,27 +3,57 @@
 
 #include <QObject>
 #include <QHttp>
+#include <QFile>
+#include <QPointer>
 
+class UpdaterDialog;
 class Updater : public QObject
 {
   Q_OBJECT
-public:
-	Updater(QObject *parent = 0);
+
+public:  
+  enum State
+  {
+    Idle  = 0,
+    Check = 1,
+    VersionData = 2,
+    Download  = 3
+  };
+
+  enum Result
+  {
+    Error = 0,
+    NoVersion = 1,
+    NewVersion = 2,
+    MajorUpgrade = 3
+  };
+
+  Updater();
 
 	static Updater *instance();
 
 signals:
-  void done(bool result);
+  void checkDone(Updater::Result result);
+  void downloadDone(bool error);
+  void downloading(QString fileName);
+  void canceled(bool reminder);
 
 public slots:
-  void checkWithFeedback();
-  void check();
+  void check(bool silent = false);
+  void download();
+  void disable();
+  void cancel();
+  void abort();
 
 private slots:
-  void httpDone(bool result);
+  void httpDone(bool error);
 
 private:
   QHttp mHttp;
+  QFile mDownload;
+  State mState;
+  QString mHost;
+  QPointer<UpdaterDialog> mUpdaterDialog;
   static Updater* mInstance;
 
 };
