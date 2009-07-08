@@ -423,7 +423,7 @@ void LightscreenWindow::updaterCheckDone(Updater::Result result)
       mSettings.setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
     break;
     default:
-      setEnabled(false);
+      //setEnabled(false);
     break;
   }
 }
