@@ -109,12 +109,21 @@ void AreaSelector::drawRectangleSelector(QPainter &painter)
   magPainter.drawRect(magnified.rect());
   magPainter.drawText(magnified.rect().center()-QPoint(4, -4), "+"); //Center minus the 4 pixels wide and across of the "+"
 
-  QPoint drawPosition = mRect.bottomRight();
+  QPoint drawPosition = mPos;
 
-  if ((drawPosition.x()+200) > mCleanDesktop.rect().width() || (drawPosition.y()+200) > mCleanDesktop.rect().height())
-    drawPosition -= QPoint(200, 200);
+  if ((drawPosition.x()+200) > mCleanDesktop.rect().width())
+    drawPosition.setX(drawPosition.x()-200);
 
-  painter.drawPixmap(drawPosition, magnified);
+  if ((drawPosition.y()+200) > mCleanDesktop.rect().height())
+  {
+    drawPosition.setY(drawPosition.y()-200);
+
+    if ((drawPosition.x()+400) > mCleanDesktop.rect().width())
+      drawPosition.setY(drawPosition.y()-12);
+  }
+
+  if (mRect.topLeft() != mPos)
+    painter.drawPixmap(drawPosition, magnified);
 }
 
 // Protected event
