@@ -60,6 +60,7 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
 LightscreenWindow::~LightscreenWindow()
 {
   GlobalShortcutManager::instance()->clear();
+  delete mTrayIcon;
 }
 
 /*

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>356</width>
+    <width>376</width>
     <height>266</height>
    </rect>
   </property>
@@ -20,7 +20,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="generalTab">
       <attribute name="title">
@@ -89,7 +89,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../lightscreen.qrc">
+             <iconset>
               <normaloff>:/icons/OpenFolder</normaloff>:/icons/OpenFolder</iconset>
             </property>
             <property name="autoDefault">
@@ -150,7 +150,7 @@
           <item row="1" column="2">
            <widget class="QPushButton" name="flipPrefixPushButton">
             <property name="icon">
-             <iconset resource="../lightscreen.qrc">
+             <iconset>
               <normaloff>:/icons/PrefixLeft</normaloff>:/icons/PrefixLeft</iconset>
             </property>
             <property name="checkable">
@@ -609,62 +609,99 @@ Quality is related to file size and of course to readability and overall quality
         <number>6</number>
        </property>
        <item>
-        <widget class="QCheckBox" name="saveAsCheckBox">
-         <property name="text">
-          <string>Choose where and how to &amp;save each screenshot (&quot;&amp;Save as&quot;).</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="clipboardCheckBox">
-         <property name="text">
-          <string>&amp;Copy the screenshot to the clipboard.</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="cursorCheckBox">
-         <property name="text">
-          <string>Inc&amp;lude the cursor in the screenshot.</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="currentMonitorCheckBox">
-         <property name="text">
-          <string>&amp;Grab only the current monitor.</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="optiPngCheckBox">
-         <property name="toolTip">
-          <string>Opens a new process called OptiPNG which dramatically reduces the file size.</string>
-         </property>
-         <property name="text">
-          <string>O&amp;ptimize PNG screenshots.</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="warnHideCheckBox">
-         <property name="text">
-          <string>Warn when hiding without a tra&amp;y icon.</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="minimumSize">
           <size>
-           <width>20</width>
-           <height>1</height>
+           <width>340</width>
+           <height>0</height>
           </size>
          </property>
-        </spacer>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>324</width>
+            <height>164</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="spacing">
+            <number>5</number>
+           </property>
+           <property name="leftMargin">
+            <number>2</number>
+           </property>
+           <property name="topMargin">
+            <number>4</number>
+           </property>
+           <property name="rightMargin">
+            <number>2</number>
+           </property>
+           <property name="bottomMargin">
+            <number>4</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="saveAsCheckBox">
+             <property name="text">
+              <string>Choose where and how to &amp;save each screenshot (&quot;&amp;Save as&quot;).</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="clipboardCheckBox">
+             <property name="text">
+              <string>&amp;Copy the screenshot to the clipboard.</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="cursorCheckBox">
+             <property name="text">
+              <string>Inc&amp;lude the cursor in the screenshot.</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="currentMonitorCheckBox">
+             <property name="text">
+              <string>&amp;Grab only the current monitor.</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="optiPngCheckBox">
+             <property name="toolTip">
+              <string>Opens a new process called OptiPNG which dramatically reduces the file size.</string>
+             </property>
+             <property name="text">
+              <string>O&amp;ptimize PNG screenshots.</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="warnHideCheckBox">
+             <property name="text">
+              <string>Warn when hiding without a tra&amp;y icon.</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="animationsCheckBox">
+             <property name="text">
+              <string>Disable animations</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="advancedButtonLayout">
@@ -741,19 +778,11 @@ Quality is related to file size and of course to readability and overall quality
   <tabstop>messageCheckBox</tabstop>
   <tabstop>playSoundCheckBox</tabstop>
   <tabstop>qualitySlider</tabstop>
-  <tabstop>saveAsCheckBox</tabstop>
-  <tabstop>clipboardCheckBox</tabstop>
-  <tabstop>cursorCheckBox</tabstop>
-  <tabstop>currentMonitorCheckBox</tabstop>
-  <tabstop>optiPngCheckBox</tabstop>
-  <tabstop>warnHideCheckBox</tabstop>
   <tabstop>checkUpdatesPushButton</tabstop>
   <tabstop>aboutPushButton</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
- <resources>
-  <include location="../lightscreen.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

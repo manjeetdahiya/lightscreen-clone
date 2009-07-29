@@ -44,33 +44,34 @@ protected:
     void mouseDoubleClickEvent( QMouseEvent* );
     void keyPressEvent( QKeyEvent* e );
     void updateHandles();
+
     QRegion handleMask() const;
     QPoint limitPointToRect( const QPoint &p, const QRect &r ) const;
 
-    bool magnify;
-    QPoint mousePos;
-    QRect selection;
-    bool mouseDown;
-    bool newSelection;
-    const int handleSize;
-    QRect* mouseOverHandle;
-    QPoint dragStartPoint;
-    QRect  selectionBeforeDrag;
-    QTimer idleTimer;
-    QTimeLine animationTimeLine;
-    bool showHelp;
-    bool grabbing;
-    int overlayAlpha;
+    bool   mMagnify;
+    QPoint mMousePos;
+    QRect  mSelection;
+    bool   mMouseDown;
+    bool   mNewSelection;
+    const int mHandleSize;
+    QRect *mMouseOverHandle;
+    QPoint mDragStartPoint;
+    QRect  mSelectionBeforeDrag;
+    QTimer mIdleTimer;
+    QTimeLine mAnimationTimeLine;
+    bool mShowHelp;
+    bool mGrabbing;
+    int  mOverlayAlpha;
 
     // naming convention for handles
     // T top, B bottom, R Right, L left
     // 2 letters: a corner
     // 1 letter: the handle on the middle of the corresponding side
-    QRect TLHandle, TRHandle, BLHandle, BRHandle;
-    QRect LHandle, THandle, RHandle, BHandle;
+    QRect mTLHandle, mTRHandle, mBLHandle, mBRHandle;
+    QRect mLHandle, mTHandle, mRHandle, mBHandle;
 
-    QVector<QRect*> handles;
-    QWidget *acceptWidget;
+    QVector<QRect*> mHandles;
+    QWidget        *mAcceptWidget;
 };
 
 #endif

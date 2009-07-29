@@ -15,34 +15,34 @@
 #include <QTimeLine>
 
 AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
-  QDialog(parent), pixmap(pixmap),  magnify(magnify), selection(), mouseDown(false), newSelection(false),
-  handleSize(10), mouseOverHandle(0), idleTimer(),
-  showHelp(true), grabbing(false), overlayAlpha(1),
-  TLHandle(0,0,handleSize,handleSize), TRHandle(0,0,handleSize,handleSize),
-  BLHandle(0,0,handleSize,handleSize), BRHandle(0,0,handleSize,handleSize),
-  LHandle(0,0,handleSize,handleSize), THandle(0,0,handleSize,handleSize),
-  RHandle(0,0,handleSize,handleSize), BHandle(0,0,handleSize,handleSize)
+  QDialog(parent), pixmap(pixmap),  mMagnify(magnify), mSelection(), mMouseDown(false), mNewSelection(false),
+  mHandleSize(10), mMouseOverHandle(0), mIdleTimer(),
+  mShowHelp(true), mGrabbing(false), mOverlayAlpha(1),
+  mTLHandle(0, 0, mHandleSize, mHandleSize), mTRHandle(0, 0, mHandleSize, mHandleSize),
+  mBLHandle(0, 0, mHandleSize, mHandleSize), mBRHandle(0, 0, mHandleSize, mHandleSize),
+  mLHandle(0, 0, mHandleSize, mHandleSize), mTHandle(0, 0, mHandleSize, mHandleSize),
+  mRHandle(0, 0, mHandleSize, mHandleSize), mBHandle(0, 0, mHandleSize, mHandleSize)
 {
-  handles << &TLHandle << &TRHandle << &BLHandle << &BRHandle
-      << &LHandle << &THandle << &RHandle << &BHandle;
+  mHandles << &mTLHandle << &mTRHandle << &mBLHandle << &mBRHandle
+      << &mLHandle << &mTHandle << &mRHandle << &mBHandle;
   setMouseTracking(true);
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
   showFullScreen();
   resize(pixmap.size());
   move(0, 0);
   setCursor(Qt::CrossCursor);
-  connect(&idleTimer, SIGNAL(timeout()), this, SLOT(displayHelp()));
-  idleTimer.start(3000);
-  connect(&animationTimeLine, SIGNAL(frameChanged(int)), this, SLOT(animationTick(int)));
-  animationTimeLine.setFrameRange(0, 80);
-  animationTimeLine.setDuration(500);
-  animationTimeLine.start();
+  connect(&mIdleTimer, SIGNAL(timeout()), this, SLOT(displayHelp()));
+  mIdleTimer.start(3000);
+  connect(&mAnimationTimeLine, SIGNAL(frameChanged(int)), this, SLOT(animationTick(int)));
+  mAnimationTimeLine.setFrameRange(0, 80);
+  mAnimationTimeLine.setDuration(500); // Dont use the overlayAlpha, instead use frames
+  mAnimationTimeLine.start();
 
   // Creating accept widget:
-  acceptWidget = new QWidget(this);
-  acceptWidget->resize(110, 60);
-  acceptWidget->setWindowOpacity(0.4);
-  acceptWidget->setStyleSheet("QWidget { background: url(:/icons/AreaBackground); } QPushButton { background: transparent; border: none; height: 50px; color: white; padding: 0; } QPushButton:hover { image: url(:/icons/AreaHover) }");
+  mAcceptWidget = new QWidget(this);
+  mAcceptWidget->resize(110, 60);
+  mAcceptWidget->setWindowOpacity(0.4);
+  mAcceptWidget->setStyleSheet("QWidget { background: url(:/icons/AreaBackground); } QPushButton { background: transparent; border: none; height: 50px; color: white; padding: 0; } QPushButton:hover { image: url(:/icons/AreaHover) }");
 
   QPushButton *awAcceptButton = new QPushButton(QIcon(":/icons/AreaAccept"), "");
   connect(awAcceptButton, SIGNAL(clicked()), this, SLOT(grabRect()));
@@ -60,7 +60,7 @@ AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
   awLayout->setMargin(0);
   awLayout->setSpacing(0);
 
-  acceptWidget->setLayout(awLayout);
+  mAcceptWidget->setLayout(awLayout);
 }
 
 AreaSelector::~AreaSelector()
@@ -69,14 +69,15 @@ AreaSelector::~AreaSelector()
 
 void AreaSelector::displayHelp()
 {
-  showHelp = true;
+  mShowHelp = true;
   update();
 }
 
 void AreaSelector::paintEvent(QPaintEvent* e)
 {
   Q_UNUSED(e);
-  if (grabbing) // grabWindow() should just get the background
+
+  if (mGrabbing) // grabWindow() should just get the background
     return;
 
   QPainter painter(this);
@@ -85,13 +86,13 @@ void AreaSelector::paintEvent(QPaintEvent* e)
   QFont font   = QToolTip::font();
 
   QColor handleColor(255, 0, 0, 180);
-  QColor overlayColor(0, 0, 0, overlayAlpha);
+  QColor overlayColor(0, 0, 0, mOverlayAlpha);
   QColor textColor = pal.color(QPalette::Active, QPalette::Text);
   QColor textBackgroundColor = pal.color(QPalette::Active, QPalette::Base);
   painter.drawPixmap(0, 0, pixmap);
   painter.setFont(font);
 
-  QRect r = selection.normalized().adjusted(0, 0, -1, -1);
+  QRect r = mSelection.normalized().adjusted(0, 0, -1, -1);
 
   QRegion grey(rect());
   grey = grey.subtracted(r);
@@ -103,7 +104,7 @@ void AreaSelector::paintEvent(QPaintEvent* e)
   painter.setBrush(Qt::NoBrush);
   painter.drawRect(r);
 
-  if (showHelp && overlayAlpha == 80)
+  if (mShowHelp && mOverlayAlpha == 80)
   {
     //Drawing the explanatory text.
     QRect helpRect = qApp->desktop()->screenGeometry(qApp->desktop()->primaryScreen());
@@ -128,20 +129,21 @@ void AreaSelector::paintEvent(QPaintEvent* e)
     painter.drawText(helpRect, Qt::AlignCenter, helpTxt);
   }
 
-  if (selection.isNull())
+  if (mSelection.isNull())
   {
     return;
   }
+
   // The grabbed region is everything which is covered by the drawn
   // rectangles (border included). This means that there is no 0px
   // selection, since a 0px wide rectangle will always be drawn as a line.
-  QString txt = QString("%1x%2").arg(selection.width() == 0 ? 2 : selection.width())
-      .arg(selection.height() == 0 ? 2 : selection.height());
+  QString txt = QString("%1x%2").arg(mSelection.width() == 0 ? 2 : mSelection.width())
+      .arg(mSelection.height() == 0 ? 2 : mSelection.height());
   QRect textRect = painter.boundingRect(rect(), Qt::AlignLeft, txt);
   QRect boundingRect = textRect.adjusted(-4, 0, 0, 0);
 
-  if (textRect.width() < r.width() - 2*handleSize &&
-     textRect.height() < r.height() - 2*handleSize &&
+  if (textRect.width() < r.width() - 2*mHandleSize &&
+     textRect.height() < r.height() - 2*mHandleSize &&
      (r.width() > 100 && r.height() > 100)) // center, unsuitable for small selections
   {
     boundingRect.moveCenter(r.center());
@@ -175,8 +177,8 @@ void AreaSelector::paintEvent(QPaintEvent* e)
   painter.drawRect(boundingRect);
   painter.drawText(textRect, txt);
 
-  if ((r.height() > handleSize*2 && r.width() > handleSize*2)
-    || !mouseDown)
+  if ((r.height() > mHandleSize*2 && r.width() > mHandleSize*2)
+    || !mMouseDown)
   {
     updateHandles();
     painter.setPen(handleColor);
@@ -185,16 +187,16 @@ void AreaSelector::paintEvent(QPaintEvent* e)
     painter.drawRects(handleMask().rects());
   }
 
-  if (!mouseDown || !magnify)
+  if (!mMouseDown || !mMagnify)
   {
     return;
   }
 
   // Drawing the magnified version
-  QPoint magEnd   = mousePos;
+  QPoint magEnd   = mMousePos;
   magEnd   += QPoint(50, 50);
 
-  QPoint magStart =  mousePos;
+  QPoint magStart =  mMousePos;
   magStart -= QPoint(50, 50);
 
   QRect newRect = QRect(magStart, magEnd);
@@ -202,22 +204,21 @@ void AreaSelector::paintEvent(QPaintEvent* e)
   QPixmap magnified = pixmap.copy(newRect).scaled(QSize(200, 200));
 
   QPainter magPainter(&magnified);
-  magPainter.setPen(QPen(QBrush(QColor(255, 0, 0, 180)), 2)); // Same border pen
+  magPainter.setPen(QPen(QBrush(QColor(255, 0, 0)), 2)); // Same border pen
   magPainter.drawRect(magnified.rect());
   magPainter.drawText(magnified.rect().center()-QPoint(4, -4), "+"); //Center minus the 4 pixels wide and across of the "+"
 
-  QPoint drawPosition = selection.bottomRight();
+  QPoint drawPosition = mSelection.bottomRight();
 
   if ((drawPosition.x()+200) > pixmap.rect().width())
-  drawPosition.setX(drawPosition.x()-200);
+    drawPosition.setX(drawPosition.x()-200);
 
   if ((drawPosition.y()+200) > pixmap.rect().height())
-  {
-  drawPosition.setY(drawPosition.y()-200);
+    drawPosition.setY(drawPosition.y()-200);
 
-  if ((drawPosition.x()+400) > pixmap.rect().width())
-    drawPosition.setY(drawPosition.y()-12);
-  }
+  if (drawPosition.y() == mSelection.bottomRight().y()-200
+   && drawPosition.x() == mSelection.bottomRight().x()-200)
+    painter.setCompositionMode(QPainter::CompositionMode_Overlay);
 
   painter.drawPixmap(drawPosition, magnified);
 }
@@ -225,33 +226,35 @@ void AreaSelector::paintEvent(QPaintEvent* e)
 void AreaSelector::resizeEvent(QResizeEvent* e)
 {
   Q_UNUSED(e);
-  if (selection.isNull())
+
+  if (mSelection.isNull())
     return;
-  QRect r = selection;
+
+  QRect r = mSelection;
   r.setTopLeft(limitPointToRect(r.topLeft(), rect()));
   r.setBottomRight(limitPointToRect(r.bottomRight(), rect()));
 
   if (r.width() <= 1 || r.height() <= 1) //this just results in ugly drawing...
     r = QRect();
 
-  selection = r;
+  mSelection = r;
 }
 
 void AreaSelector::mousePressEvent(QMouseEvent* e)
 {
-  showHelp = false;
-  idleTimer.stop();
-  acceptWidget->hide();
+  mShowHelp = false;
+  mIdleTimer.stop();
+  mAcceptWidget->hide();
   if (e->button() == Qt::LeftButton)
   {
-    mouseDown = true;
-    dragStartPoint = e->pos();
-    selectionBeforeDrag = selection;
-    if (!selection.contains(e->pos()))
+    mMouseDown = true;
+    mDragStartPoint = e->pos();
+    mSelectionBeforeDrag = mSelection;
+    if (!mSelection.contains(e->pos()))
     {
-      newSelection = true;
-      selection = QRect();
-      showHelp = true;
+      mNewSelection = true;
+      mSelection = QRect();
+      mShowHelp = true;
     }
     else
     {
@@ -269,55 +272,56 @@ void AreaSelector::mousePressEvent(QMouseEvent* e)
 
 void AreaSelector::mouseMoveEvent(QMouseEvent* e)
 {
-  if (mouseDown)
+  if (mMouseDown)
   {
-    mousePos = e->pos();
-    if (newSelection)
+    mMousePos = e->pos();
+    if (mNewSelection)
     {
       QRect r = rect();
-      selection = QRect(dragStartPoint, limitPointToRect(mousePos, r)).normalized();
+      mSelection = QRect(mDragStartPoint, limitPointToRect(mMousePos, r)).normalized();
     }
-    else if (mouseOverHandle == 0) // moving the whole selection
+    else if (mMouseOverHandle == 0) // moving the whole selection
     {
-      QRect r = rect().normalized(), s = selectionBeforeDrag.normalized();
-      QPoint p = s.topLeft() + e->pos() - dragStartPoint;
+      QRect r = rect().normalized(), s = mSelectionBeforeDrag.normalized();
+      QPoint p = s.topLeft() + e->pos() - mDragStartPoint;
       r.setBottomRight(r.bottomRight() - QPoint(s.width(), s.height()));
 
       if (!r.isNull() && r.isValid())
-        selection.moveTo(limitPointToRect(p, r));
+        mSelection.moveTo(limitPointToRect(p, r));
     }
     else // dragging a handle
     {
-      QRect r = selectionBeforeDrag;
-      QPoint offset = e->pos() - dragStartPoint;
+      QRect r = mSelectionBeforeDrag;
+      QPoint offset = e->pos() - mDragStartPoint;
 
-      if (mouseOverHandle == &TLHandle || mouseOverHandle == &THandle
-       || mouseOverHandle == &TRHandle) // dragging one of the top handles
+      if (mMouseOverHandle == &mTLHandle || mMouseOverHandle == &mTHandle
+       || mMouseOverHandle == &mTRHandle) // dragging one of the top handles
       {
         r.setTop(r.top() + offset.y());
       }
 
-      if (mouseOverHandle == &TLHandle || mouseOverHandle == &LHandle
-       || mouseOverHandle == &BLHandle) // dragging one of the left handles
+      if (mMouseOverHandle == &mTLHandle || mMouseOverHandle == &mLHandle
+       || mMouseOverHandle == &mBLHandle) // dragging one of the left handles
       {
         r.setLeft(r.left() + offset.x());
       }
 
-      if (mouseOverHandle == &BLHandle || mouseOverHandle == &BHandle
-       || mouseOverHandle == &BRHandle) // dragging one of the bottom handles
+      if (mMouseOverHandle == &mBLHandle || mMouseOverHandle == &mBHandle
+       || mMouseOverHandle == &mBRHandle) // dragging one of the bottom handles
       {
         r.setBottom(r.bottom() + offset.y());
       }
 
-      if (mouseOverHandle == &TRHandle || mouseOverHandle == &RHandle
-       || mouseOverHandle == &BRHandle) // dragging one of the right handles
+      if (mMouseOverHandle == &mTRHandle || mMouseOverHandle == &mRHandle
+       || mMouseOverHandle == &mBRHandle) // dragging one of the right handles
       {
         r.setRight(r.right() + offset.x());
       }
+
       r = r.normalized();
       r.setTopLeft(limitPointToRect(r.topLeft(), rect()));
       r.setBottomRight(limitPointToRect(r.bottomRight(), rect()));
-      selection = r;
+      mSelection = r;
     }
 
     QPoint acceptPos = e->pos() + QPoint(5, 5);
@@ -328,19 +332,19 @@ void AreaSelector::mouseMoveEvent(QMouseEvent* e)
     if ((acceptPos.y()+70) > pixmap.rect().height())
       acceptPos.setY(acceptPos.y()-70);
 
-    acceptWidget->move(acceptPos);
+    mAcceptWidget->move(acceptPos);
     update();
   }
   else
   {
-    if (selection.isNull())
+    if (mSelection.isNull())
       return;
     bool found = false;
-    foreach(QRect* r, handles)
+    foreach(QRect* r, mHandles)
     {
       if (r->contains(e->pos()))
       {
-      mouseOverHandle = r;
+      mMouseOverHandle = r;
       found = true;
         break;
       }
@@ -348,23 +352,23 @@ void AreaSelector::mouseMoveEvent(QMouseEvent* e)
 
     if (!found)
     {
-      mouseOverHandle = 0;
-      if (selection.contains(e->pos()))
+      mMouseOverHandle = 0;
+      if (mSelection.contains(e->pos()))
         setCursor(Qt::OpenHandCursor);
-      else if (QRect(acceptWidget->mapToParent(acceptWidget->pos()), QSize(100, 60)).contains(e->pos()))
+      else if (QRect(mAcceptWidget->mapToParent(mAcceptWidget->pos()), QSize(100, 60)).contains(e->pos()))
         setCursor(Qt::PointingHandCursor);
       else
         setCursor(Qt::CrossCursor);
     }
     else
     {
-      if (mouseOverHandle == &TLHandle || mouseOverHandle == &BRHandle)
+      if (mMouseOverHandle == &mTLHandle || mMouseOverHandle == &mBRHandle)
         setCursor(Qt::SizeFDiagCursor);
-      if (mouseOverHandle == &TRHandle || mouseOverHandle == &BLHandle)
+      if (mMouseOverHandle == &mTRHandle || mMouseOverHandle == &mBLHandle)
         setCursor(Qt::SizeBDiagCursor);
-      if (mouseOverHandle == &LHandle || mouseOverHandle == &RHandle)
+      if (mMouseOverHandle == &mLHandle || mMouseOverHandle == &mRHandle)
         setCursor(Qt::SizeHorCursor);
-      if (mouseOverHandle == &THandle || mouseOverHandle == &BHandle)
+      if (mMouseOverHandle == &mTHandle || mMouseOverHandle == &mBHandle)
         setCursor(Qt::SizeVerCursor);
     }
   }
@@ -372,13 +376,13 @@ void AreaSelector::mouseMoveEvent(QMouseEvent* e)
 
 void AreaSelector::mouseReleaseEvent(QMouseEvent* e)
 {
-  if (!selection.isNull())
-    acceptWidget->show();
+  if (!mSelection.isNull())
+    mAcceptWidget->show();
 
-  mouseDown = false;
-  newSelection = false;
-  idleTimer.start();
-  if (mouseOverHandle == 0 && selection.contains(e->pos()))
+  mMouseDown = false;
+  mNewSelection = false;
+  mIdleTimer.start();
+  if (mMouseOverHandle == 0 && mSelection.contains(e->pos()))
     setCursor(Qt::OpenHandCursor);
   update();
 }
@@ -406,10 +410,10 @@ void AreaSelector::keyPressEvent(QKeyEvent* e)
 
 void AreaSelector::grabRect()
 {
-  QRect r = selection.normalized();
+  QRect r = mSelection.normalized();
   if (!r.isNull() && r.isValid())
   {
-    grabbing = true;
+    mGrabbing = true;
     pixmap = pixmap.copy(r);
     accept();
   }
@@ -423,33 +427,33 @@ void AreaSelector::cancel()
 
 void AreaSelector::animationTick(int frame)
 {
-  if (overlayAlpha != 80)
-    overlayAlpha = frame;
+  if (mOverlayAlpha != 80)
+    mOverlayAlpha = frame;
 
   update();
 }
 
 void AreaSelector::updateHandles()
 {
-  QRect r = selection.normalized().adjusted(0, 0, -1, -1);
-  int s2 = handleSize / 2;
+  QRect r = mSelection.normalized().adjusted(0, 0, -1, -1);
+  int s2 = mHandleSize / 2;
 
-  TLHandle.moveTopLeft(r.topLeft());
-  TRHandle.moveTopRight(r.topRight());
-  BLHandle.moveBottomLeft(r.bottomLeft());
-  BRHandle.moveBottomRight(r.bottomRight());
+  mTLHandle.moveTopLeft(r.topLeft());
+  mTRHandle.moveTopRight(r.topRight());
+  mBLHandle.moveBottomLeft(r.bottomLeft());
+  mBRHandle.moveBottomRight(r.bottomRight());
 
-  LHandle.moveTopLeft(QPoint(r.x(), r.y() + r.height() / 2 - s2));
-  THandle.moveTopLeft(QPoint(r.x() + r.width() / 2 - s2, r.y()));
-  RHandle.moveTopRight(QPoint(r.right(), r.y() + r.height() / 2 - s2));
-  BHandle.moveBottomLeft(QPoint(r.x() + r.width() / 2 - s2, r.bottom()));
+  mLHandle.moveTopLeft(QPoint(r.x(), r.y() + r.height() / 2 - s2));
+  mTHandle.moveTopLeft(QPoint(r.x() + r.width() / 2 - s2, r.y()));
+  mRHandle.moveTopRight(QPoint(r.right(), r.y() + r.height() / 2 - s2));
+  mBHandle.moveBottomLeft(QPoint(r.x() + r.width() / 2 - s2, r.bottom()));
 }
 
 QRegion AreaSelector::handleMask() const
 {
   // note: not normalized QRects are bad here, since they will not be drawn
   QRegion mask;
-  foreach(QRect* rect, handles) mask += QRegion(*rect);
+  foreach(QRect* rect, mHandles) mask += QRegion(*rect);
   return mask;
 }
 
