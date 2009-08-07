@@ -20,7 +20,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="generalTab">
       <attribute name="title">
@@ -89,7 +89,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../lightscreen.qrc">
               <normaloff>:/icons/OpenFolder</normaloff>:/icons/OpenFolder</iconset>
             </property>
             <property name="autoDefault">
@@ -150,7 +150,7 @@
           <item row="1" column="2">
            <widget class="QPushButton" name="flipPrefixPushButton">
             <property name="icon">
-             <iconset>
+             <iconset resource="../lightscreen.qrc">
               <normaloff>:/icons/PrefixLeft</normaloff>:/icons/PrefixLeft</iconset>
             </property>
             <property name="checkable">
@@ -453,16 +453,16 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="updaterCheckBox">
+        <widget class="QCheckBox" name="magnifyCheckBox">
          <property name="text">
-          <string>Periodically check for updates.</string>
+          <string>&amp;Magnify around the mouse in Area mode.</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="magnifyCheckBox">
+        <widget class="QCheckBox" name="previewCheckBox">
          <property name="text">
-          <string>&amp;Magnify around the mouse in Area mode.</string>
+          <string>View a preview of each screenshot.</string>
          </property>
         </widget>
        </item>
@@ -628,25 +628,23 @@ Quality is related to file size and of course to readability and overall quality
             <x>0</x>
             <y>0</y>
             <width>324</width>
-            <height>164</height>
+            <height>176</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <property name="spacing">
-            <number>5</number>
-           </property>
-           <property name="leftMargin">
-            <number>2</number>
-           </property>
-           <property name="topMargin">
             <number>4</number>
            </property>
-           <property name="rightMargin">
+           <property name="margin">
             <number>2</number>
            </property>
-           <property name="bottomMargin">
-            <number>4</number>
-           </property>
+           <item>
+            <widget class="QCheckBox" name="updaterCheckBox">
+             <property name="text">
+              <string>Periodically check for updates.</string>
+             </property>
+            </widget>
+           </item>
            <item>
             <widget class="QCheckBox" name="saveAsCheckBox">
              <property name="text">
@@ -694,6 +692,9 @@ Quality is related to file size and of course to readability and overall quality
            </item>
            <item>
             <widget class="QCheckBox" name="animationsCheckBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Disable animations</string>
              </property>
@@ -772,7 +773,6 @@ Quality is related to file size and of course to readability and overall quality
   <tabstop>startupCheckBox</tabstop>
   <tabstop>trayCheckBox</tabstop>
   <tabstop>hideCheckBox</tabstop>
-  <tabstop>updaterCheckBox</tabstop>
   <tabstop>magnifyCheckBox</tabstop>
   <tabstop>languageComboBox</tabstop>
   <tabstop>messageCheckBox</tabstop>
@@ -782,7 +782,9 @@ Quality is related to file size and of course to readability and overall quality
   <tabstop>aboutPushButton</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../lightscreen.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

@@ -222,6 +222,7 @@ void OptionsDialog::saveSettings()
   settings.setValue("magnify", ui.magnifyCheckBox->isChecked());
   settings.setValue("cursor", ui.cursorCheckBox->isChecked());
   settings.setValue("saveAs", ui.saveAsCheckBox->isChecked());
+  settings.setValue("preview", ui.previewCheckBox->isChecked());
 
   // Advanced
   settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
@@ -284,7 +285,7 @@ void OptionsDialog::loadSettings()
   ui.formatComboBox->setCurrentIndex(settings.value("format", 1).toInt());
   ui.prefixLineEdit->setText(settings.value("prefix", "screenshot.").toString());
   ui.namingComboBox->setCurrentIndex(settings.value("naming", 0).toInt());
-  ui.targetLineEdit->setText(settings.value("target", os::getDocumentsPath() + QDir::separator() + "screenshots").toString()); // Defaults to $HOME$/screenshots
+  ui.targetLineEdit->setText(settings.value("target", os::getDocumentsPath() + QDir::separator() + "Screenshots").toString()); // Defaults to $HOME$/screenshots
   ui.fileGroupBox->setChecked(settings.value("enabled", true).toBool());
   settings.endGroup();
 
@@ -302,6 +303,7 @@ void OptionsDialog::loadSettings()
   ui.magnifyCheckBox->setChecked(settings.value("magnify", false).toBool());
   ui.cursorCheckBox->setChecked(settings.value("cursor", false).toBool());
   ui.saveAsCheckBox->setChecked(settings.value("saveAs", false).toBool());
+  ui.previewCheckBox->setChecked(settings.value("preview", false).toBool());
 
   // Advanced
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", false).toBool());

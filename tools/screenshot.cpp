@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QSettings>
+#include <QDebug>
 
 #if defined(Q_WS_WIN)
   #include <windows.h>
@@ -16,17 +17,16 @@
 
 #include "os.h"
 
-Screenshot::Screenshot() {}
 Screenshot::Screenshot(Screenshot::Options options) :  mOptions(options) {}
 
-Screenshot::Options &Screenshot::options()
+Screenshot::Options Screenshot::options()
 {
   return mOptions;
 }
 
-void Screenshot::setOptions(Screenshot::Options options)
+QPixmap &Screenshot::pixmap()
 {
-  mOptions = options;
+  return mPixmap;
 }
 
 void Screenshot::activeWindow()
@@ -155,7 +155,7 @@ void Screenshot::grabDesktop()
   mPixmap = QPixmap::grabWindow(qApp->desktop()->winId(), geometry.x(), geometry.y(), geometry.width(), geometry.height());
 }
 
-bool Screenshot::take()
+void Screenshot::take()
 {
   switch (mOptions.mode)
   {
@@ -172,10 +172,30 @@ bool Screenshot::take()
     break;
   }
 
-  return !(mPixmap.isNull());
+
+  // Confirmation, confirmation. TODO
+  emit askConfirmation();
 }
 
-QString Screenshot::save()
+void Screenshot::confirm(bool result)
+{
+  qDebug() << "confirm!" << result;
+
+  if (result)
+    save();
+  else
+    mOptions.result = false;
+
+  mPixmap = QPixmap(); // Cleanup just in case.
+  emit finished();
+}
+
+void Screenshot::discard()
+{
+  confirm(false);
+}
+
+void Screenshot::save()
 {
   QString fileName = "";
   bool    action = false;
@@ -205,8 +225,13 @@ QString Screenshot::save()
 
   mPixmap = QPixmap();
 
+
   if (action)
-    return fileName;
+  {
+    mOptions.fileName = fileName;
+    mOptions.result   = true;
+  }
   else
-    return QString();
+    mOptions.result   = false;
+
 }

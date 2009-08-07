@@ -5,6 +5,7 @@
 #include <QString>
 #include <QDir>
 #include <QPixmap>
+#include <QVariantMap>
 
 class Screenshot : public QObject
 {
@@ -34,6 +35,9 @@ public:
 
   struct Options
   {
+    QString fileName;
+    bool result;
+
     int format;
     QString prefix;
     int naming;
@@ -50,15 +54,20 @@ public:
     bool saveAs;
   };
 
-  Screenshot();
   Screenshot(Screenshot::Options options);
 
-  Screenshot::Options &options();
-  void setOptions(Screenshot::Options options);
+  Screenshot::Options options();
+  QPixmap &pixmap();
 
 public slots:
-  bool take();
-  QString save();
+  void take();
+  void confirm(bool result = true);
+  void discard();
+  void save();
+
+signals:
+  void askConfirmation();
+  void finished();
 
 private:
   void    activeWindow();
@@ -69,8 +78,8 @@ private:
   void    grabDesktop();
 
 private:
-  QPixmap mPixmap;
   Screenshot::Options mOptions;
+  QPixmap mPixmap;
 
 };
 

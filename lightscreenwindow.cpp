@@ -16,21 +16,25 @@
 #include <QTimer>
 #include <QUrl>
 
+#include <QDebug>
+
 /*
  * Lightscreen includes
  */
 #include "lightscreenwindow.h"
 #include "dialogs/aboutdialog.h"
 #include "dialogs/optionsdialog.h"
+#include "dialogs/previewdialog.h"
 
 #include "tools/globalshortcut/globalshortcutmanager.h"
 #include "tools/os.h"
 #include "tools/screenshot.h"
+#include "tools/screenshotmanager.h"
 
 #include "updater/updater.h"
 
 LightscreenWindow::LightscreenWindow(QWidget *parent) :
-  QDialog(parent)
+  QDialog(parent), mReviveMain(false),  mDoCache(false), mWasHidden(false), mLastMode(-1)
 {
   os::aeroGlass(this);
   os::translate(mSettings.value("options/language").toString().toLower());
@@ -45,6 +49,9 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
   // Actions
   connect(ui.optionsPushButton, SIGNAL(clicked()), this, SLOT(showOptions()));
   connect(ui.hidePushButton   , SIGNAL(clicked()), this, SLOT(toggleVisibility()));
+  // Manager
+  connect(ScreenshotManager::instance(), SIGNAL(confirm(Screenshot*)), this, SLOT(preview(Screenshot*)));
+  connect(ScreenshotManager::instance(), SIGNAL(windowCleanup(Screenshot::Options)), this, SLOT(cleanup(Screenshot::Options)));
 
   createTrayIcon();
   createScreenshotButtonMenu();
@@ -121,6 +128,43 @@ bool LightscreenWindow::closingWithoutTray()
   return true; // Cancel
 }
 
+void LightscreenWindow::cleanup(Screenshot::Options options)
+{
+  qDebug() << options.fileName << options.result;
+
+  // Reversing settings
+  if (mSettings.value("options/hide").toBool())
+  {
+    if (mSettings.value("options/tray").toBool())
+      mTrayIcon->show();
+
+    if (!mWasHidden)
+      setVisible(true);
+  }
+
+  if (mSettings.value("options/tray").toBool())
+  {
+    showTrayNotifier(options.result);
+
+    if (mSettings.value("options/message").toBool())
+      showScreenshotMessage(options.result, options.fileName);
+  }
+
+  if (mSettings.value("options/playSound", false).toBool())
+  {
+    if (options.result)
+      QSound("sounds/ls.screenshot.wav").play();
+    else
+      QSound("sounds/ls.error.wav").play();
+  }
+
+  if (options.result
+   && mSettings.value("options/optipng").toBool()
+   && mSettings.value("file/format").toInt() == Screenshot::PNG)
+    compressPng(options.fileName);
+
+}
+
 void LightscreenWindow::goToFolder()
 {
   QString folder = mSettings.value("file/target").toString();
@@ -139,6 +183,14 @@ void LightscreenWindow::messageClicked()
   goToFolder();
 }
 
+void LightscreenWindow::preview(Screenshot* screenshot)
+{
+  if (screenshot->options().preview)
+    PreviewDialog::instance()->add(screenshot);
+  else
+    screenshot->confirm(true);
+}
+
 void LightscreenWindow::restoreSystemTrayNotifier()
 {
   mTrayIcon->setIcon(QIcon(":/icons/SystemTray"));
@@ -146,22 +198,23 @@ void LightscreenWindow::restoreSystemTrayNotifier()
 }
 
 void LightscreenWindow::screenshotAction(int mode)
-{
-  bool image  = false;
-  bool result = false;
-  QString fileName;
-  static int lastMode = -1;
-  int delayms = -1;
-  static bool wasHidden;
+{/*
+  if (ScreenshotManager::instance()->count() > 1)
+  {
+    qDebug() << "PROBLEMO WILL ROBINSONO";
+    return;
+  }*/
 
-  if (lastMode == -1)
-    wasHidden = !isVisible();
+  QString fileName;
+  int delayms = -1;
+
+  if (mLastMode == -1)
+    mWasHidden = !isVisible();
 
   bool optionsHide = mSettings.value("options/hide").toBool(); // Option cache, used a couple of times.
-  static Screenshot::Options options;
 
   // Applying pre-screenshot settings
-  if (optionsHide && !wasHidden)
+  if (optionsHide && !mWasHidden)
   {
     setVisible(false);
     mTrayIcon->hide();
@@ -186,19 +239,21 @@ void LightscreenWindow::screenshotAction(int mode)
   // which keeps the argument so a QTimer can call this function again.
   if (delayms > 0)
   {
-    if (lastMode < 0)
+    if (mLastMode < 0)
     {
-      lastMode = mode;
+      mLastMode = mode;
 
       QTimer::singleShot(delayms, this, SLOT(screenshotAction()));
       return;
     }
     else
     {
-      mode = lastMode;
-      lastMode = -1;
+      mode = mLastMode;
+      mLastMode = -1;
     }
   }
+
+  static Screenshot::Options options;
 
   if (!mDoCache)
   {
@@ -222,53 +277,7 @@ void LightscreenWindow::screenshotAction(int mode)
 
   options.mode = mode;
 
-  // Taking the screenshot and saving the result.
-  Screenshot screenshot(options);
-
-  image = screenshot.take();
-
-  if (image && options.file)
-  {
-    fileName = screenshot.save();
-    result   = !(fileName.isEmpty());
-  }
-  else
-  {
-    result = image;
-  }
-
-  // Reversing settings
-  if (mSettings.value("options/hide").toBool())
-  {
-    if (mSettings.value("options/tray").toBool())
-      mTrayIcon->show();
-
-    if (!wasHidden)
-      setVisible(true);
-  }
-
-  if (mSettings.value("options/tray").toBool())
-  {
-    showTrayNotifier(result);
-
-    if (mSettings.value("options/message").toBool())
-      showScreenshotMessage(result, fileName);
-  }
-
-  if (mSettings.value("options/playSound", false).toBool())
-  {
-    if (result)
-      QSound("sounds/ls.screenshot.wav").play();
-    else
-      QSound("sounds/ls.error.wav").play();
-  }
-
-  if (result
-   && mSettings.value("options/optipng").toBool()
-   && mSettings.value("file/format").toInt() == Screenshot::PNG)
-    compressPng(fileName);
-
-  lastMode = -1;
+  ScreenshotManager::instance()->take(options);
 }
 
 void LightscreenWindow::screenshotActionTriggered(QAction* action)

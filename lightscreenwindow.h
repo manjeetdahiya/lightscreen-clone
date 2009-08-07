@@ -7,10 +7,13 @@
 #include <QSettings>
 
 #include "updater/updater.h"
+#include "tools/screenshot.h"
+
 #include "ui_lightscreenwindow.h"
 
 class QHttp;
 class Updater;
+
 
 class LightscreenWindow : public QDialog
 {
@@ -24,9 +27,11 @@ public slots:
   void action(int mode = 3);
   void areaHotkey();
   bool closingWithoutTray();
+  void cleanup(Screenshot::Options options);
   void checkForUpdates();
   void goToFolder();
   void messageClicked();
+  void preview(Screenshot* screenshot);
   void restoreSystemTrayNotifier();
   void screenshotAction(int mode = 0);
   void screenshotActionTriggered(QAction* action);
@@ -53,6 +58,8 @@ protected:
 private:
   bool             mReviveMain;
   bool             mDoCache;
+  bool             mWasHidden;
+  int              mLastMode;
   QSettings        mSettings;
   QPointer<QSystemTrayIcon> mTrayIcon;
   Ui::LightscreenWindowClass ui;
