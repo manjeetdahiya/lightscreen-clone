@@ -8,8 +8,11 @@
 #include <QPixmap>
 #include <QTextEdit>
 #include <QTranslator>
+#include <QTimeLine>
 #include <QWidget>
 #include <string>
+
+#include <QDebug>
 
 #include <QMessageBox>
 
@@ -40,6 +43,38 @@ void os::addToRecentDocuments(QString fileName)
   SHAddToRecentDocs(SHARD_PATH, fileName.toAscii().data()); // Windows 7 jump lists use this.
 #else
   Q_UNUSED(fileName)
+#endif
+}
+
+bool os::aeroGlass(QWidget* target)
+{
+#if defined(Q_WS_WIN)
+
+  if (QSysInfo::WindowsVersion < QSysInfo::WV_VISTA)
+    return false;  // Glass frame only for Windows Vista and above.
+
+  QLibrary dwmapi("dwmapi");
+
+  pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)dwmapi.resolve("DwmIsCompositionEnabled");
+
+  BOOL enabled;
+  pDwmIsCompositionEnabled(&enabled);
+
+  if (enabled)
+  {
+    pDwmExtendFrameIntoClientArea = (PtrDwmExtendFrameIntoClientArea)dwmapi.resolve("DwmExtendFrameIntoClientArea");
+
+    MARGINS margins = { -1}; //setting it to -1 makes the glass available throughout the entire window
+
+    pDwmExtendFrameIntoClientArea(target->winId(), &margins);
+
+    target->setAttribute(Qt::WA_NoSystemBackground);
+  }
+
+  return enabled;
+#else
+  Q_UNUSED(target)
+  return false;
 #endif
 }
 
@@ -225,34 +260,14 @@ void os::translate(QString language)
   qApp->installTranslator(translator);
 }
 
-bool os::aeroGlass(QWidget* target)
+void os::effect(QObject* target, const char *slot, int frames, int duration)
 {
-#if defined(Q_WS_WIN)
+  QTimeLine* timeLine = new QTimeLine(duration);
+  timeLine->setFrameRange(0, frames);
 
-  if (QSysInfo::WindowsVersion < QSysInfo::WV_VISTA)
-    return false;  // Glass frame only for Windows Vista and above.
+  timeLine->connect(timeLine, SIGNAL(frameChanged(int)), target, slot);
+  timeLine->connect(timeLine, SIGNAL(finished()), timeLine, SLOT(deleteLater()));
 
-  QLibrary dwmapi("dwmapi");
-
-  pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)dwmapi.resolve("DwmIsCompositionEnabled");
-
-  BOOL enabled;
-  pDwmIsCompositionEnabled(&enabled);
-
-  if (enabled)
-  {
-    pDwmExtendFrameIntoClientArea = (PtrDwmExtendFrameIntoClientArea)dwmapi.resolve("DwmExtendFrameIntoClientArea");
-
-    MARGINS margins = { -1}; //setting it to -1 makes the glass available throughout the entire window
-
-    pDwmExtendFrameIntoClientArea(target->winId(), &margins);
-
-    target->setAttribute(Qt::WA_NoSystemBackground);
-  }
-
-  return enabled;
-#else
-  Q_UNUSED(target)
-  return false;
-#endif
+  timeLine->start();
 }
+

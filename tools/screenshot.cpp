@@ -17,7 +17,14 @@
 
 #include "os.h"
 
-Screenshot::Screenshot(Screenshot::Options options) :  mOptions(options) {}
+Screenshot::Screenshot(Screenshot::Options options) :  mOptions(options) {
+  qDebug() << "Screenshot object created";
+}
+
+Screenshot::~Screenshot() {
+  qDebug() << "Screenshot object destroyed";
+}
+
 
 Screenshot::Options Screenshot::options()
 {
@@ -172,19 +179,22 @@ void Screenshot::take()
     break;
   }
 
-
-  // Confirmation, confirmation. TODO
-  emit askConfirmation();
+  if (mPixmap.isNull())
+    confirm(false);
+  else
+    emit askConfirmation();
 }
 
 void Screenshot::confirm(bool result)
 {
-  qDebug() << "confirm!" << result;
-
   if (result)
+  {
     save();
+  }
   else
+  {
     mOptions.result = false;
+  }
 
   mPixmap = QPixmap(); // Cleanup just in case.
   emit finished();

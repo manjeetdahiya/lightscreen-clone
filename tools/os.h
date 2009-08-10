@@ -28,6 +28,9 @@ namespace os
   QPixmap grabWindow(WId winId);
   // Translates the ui to the given language name.
   void translate(QString language);
+
+  // Effects
+  void effect(QObject* target, const char* slot, int frames, int duration = 400);
 }
 
 

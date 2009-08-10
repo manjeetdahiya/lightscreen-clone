@@ -22,6 +22,7 @@ PreviewDialog::PreviewDialog(QWidget *parent) :
 
   QHBoxLayout *l = new QHBoxLayout;
   mStack = new QStackedLayout;
+  connect(mStack, SIGNAL(currentChanged(int)), this, SLOT(indexChanged(int)));
 
   mPrevButton = new QPushButton(QIcon(":/icons/arrowLeft"), "");
   connect(mPrevButton, SIGNAL(clicked()), this, SLOT(previous()));
@@ -48,12 +49,19 @@ PreviewDialog::PreviewDialog(QWidget *parent) :
   setLayout(l);
 }
 
+PreviewDialog::~PreviewDialog()
+{
+  qDebug() << "PreviewDialog destroyed";
+}
+
 void PreviewDialog::add(Screenshot *screenshot)
 {
   if (!isVisible())
     show();
 
   QLabel *widget = new QLabel(this);
+
+  connect(widget, SIGNAL(destroyed()), screenshot, SLOT(discard()));
 
   QSize size = screenshot->pixmap().size();
 
@@ -129,32 +137,40 @@ void PreviewDialog::closePreview()
   if (mStack->count() < 1)
   {
     close();
-    deleteLater();
+  }
+}
+
+void PreviewDialog::indexChanged(int i)
+{
+  mNextButton->setEnabled(true); //TODO: Fix enabling/disabling the buttons when deleting/confirming a screenshot
+
+  if (mStack->count() > mStack->currentIndex())
+  {
+    mNextButton->setEnabled(true);
+  }
+
+  mPrevButton->setEnabled(true);
+
+  if (mStack->currentIndex() <= mStack->count()-1)
+  {
+    mPrevButton->setEnabled(false);
   }
 }
 
 void PreviewDialog::previous()
-{  
-  mNextButton->setEnabled(true); //TODO: Fix enabling/disabling the buttons when deleting/confirming a screenshot
-
-  if (mStack->currentIndex() <= 1)
-  {
-    mPrevButton->setEnabled(false);
-  }
-
+{
   mStack->setCurrentIndex(mStack->currentIndex()-1);
 }
 
 void PreviewDialog::next()
 {
-  mPrevButton->setEnabled(true);
-
-  if (mStack->currentIndex() == mStack->count()-1)
-  {
-    mNextButton->setEnabled(false);
-  }
-
   mStack->setCurrentIndex(mStack->currentIndex()+1);
+}
+
+void PreviewDialog::closeEvent(QCloseEvent *event)
+{
+  mInstance = 0;
+  deleteLater();
 }
 
 // Singleton

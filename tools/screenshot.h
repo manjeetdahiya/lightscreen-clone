@@ -55,6 +55,7 @@ public:
   };
 
   Screenshot(Screenshot::Options options);
+  ~Screenshot();
 
   Screenshot::Options options();
   QPixmap &pixmap();

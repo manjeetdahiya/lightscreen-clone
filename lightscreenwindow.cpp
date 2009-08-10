@@ -198,13 +198,7 @@ void LightscreenWindow::restoreSystemTrayNotifier()
 }
 
 void LightscreenWindow::screenshotAction(int mode)
-{/*
-  if (ScreenshotManager::instance()->count() > 1)
-  {
-    qDebug() << "PROBLEMO WILL ROBINSONO";
-    return;
-  }*/
-
+{
   QString fileName;
   int delayms = -1;
 

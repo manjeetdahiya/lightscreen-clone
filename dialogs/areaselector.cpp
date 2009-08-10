@@ -4,6 +4,7 @@
  */
 
 #include "areaselector.h"
+#include "../tools/os.h"
 
 #include <QPainter>
 #include <QMouseEvent>
@@ -12,7 +13,6 @@
 #include <QToolTip>
 #include <QPushButton>
 #include <QHBoxLayout>
-#include <QTimeLine>
 
 AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
   QDialog(parent), pixmap(pixmap),  mMagnify(magnify), mSelection(), mMouseDown(false), mNewSelection(false),
@@ -27,16 +27,14 @@ AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
       << &mLHandle << &mTHandle << &mRHandle << &mBHandle;
   setMouseTracking(true);
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
-  showFullScreen();
-  resize(pixmap.size());
-  move(0, 0);
   setCursor(Qt::CrossCursor);
   connect(&mIdleTimer, SIGNAL(timeout()), this, SLOT(displayHelp()));
   mIdleTimer.start(3000);
-  connect(&mAnimationTimeLine, SIGNAL(frameChanged(int)), this, SLOT(animationTick(int)));
-  mAnimationTimeLine.setFrameRange(0, 80);
-  mAnimationTimeLine.setDuration(500); // Dont use the overlayAlpha, instead use frames
-  mAnimationTimeLine.start();
+
+  os::effect(this, SLOT(animationTick(int)), 80, 500);
+
+  resize(pixmap.size());
+  move(0, 0);
 
   // Creating accept widget:
   mAcceptWidget = new QWidget(this);
@@ -61,6 +59,7 @@ AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
   awLayout->setSpacing(0);
 
   mAcceptWidget->setLayout(awLayout);
+  mAcceptWidget->setVisible(false);
 }
 
 AreaSelector::~AreaSelector()
@@ -427,9 +426,7 @@ void AreaSelector::cancel()
 
 void AreaSelector::animationTick(int frame)
 {
-  if (mOverlayAlpha != 80)
-    mOverlayAlpha = frame;
-
+  mOverlayAlpha = frame;
   update();
 }
 

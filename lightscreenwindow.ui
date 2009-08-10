@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>167</width>
-    <height>89</height>
+    <width>163</width>
+    <height>81</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <number>4</number>
    </property>
    <property name="margin">
-    <number>2</number>
+    <number>1</number>
    </property>
    <item>
     <widget class="QToolButton" name="screenshotPushButton">
@@ -39,13 +39,19 @@
    <item>
     <layout class="QVBoxLayout" name="buttonLayout">
      <property name="spacing">
-      <number>0</number>
+      <number>4</number>
      </property>
      <property name="sizeConstraint">
       <enum>QLayout::SetMaximumSize</enum>
      </property>
      <item>
       <widget class="QPushButton" name="optionsPushButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="toolTip">
         <string>Configure Lightscreen</string>
        </property>
@@ -61,20 +67,13 @@
       </widget>
      </item>
      <item>
-      <spacer name="optionsHideSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <widget class="QPushButton" name="hidePushButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="toolTip">
         <string>Hide Lightscreen </string>
        </property>
@@ -93,20 +92,13 @@
       </widget>
      </item>
      <item>
-      <spacer name="hideQuitSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <widget class="QPushButton" name="quitPushButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="toolTip">
         <string/>
        </property>

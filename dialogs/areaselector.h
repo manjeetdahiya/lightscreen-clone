@@ -12,7 +12,6 @@
 #include <QVector>
 #include <QRect>
 #include <QTimer>
-#include <QTimeLine>
 
 class QPaintEvent;
 class QResizeEvent;
@@ -58,7 +57,6 @@ protected:
     QPoint mDragStartPoint;
     QRect  mSelectionBeforeDrag;
     QTimer mIdleTimer;
-    QTimeLine mAnimationTimeLine;
     bool mShowHelp;
     bool mGrabbing;
     int  mOverlayAlpha;

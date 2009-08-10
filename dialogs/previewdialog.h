@@ -12,6 +12,8 @@ class PreviewDialog : public QDialog
 
 public:
   PreviewDialog(QWidget *parent);
+  ~PreviewDialog();
+
   void add(Screenshot* screenshot);
 
   static PreviewDialog *instance();
@@ -21,6 +23,10 @@ private slots:
   void relocate();
   void previous();
   void next();
+  void indexChanged(int i);
+
+protected:
+  void closeEvent(QCloseEvent* event);
 
 private:
   static PreviewDialog* mInstance;
