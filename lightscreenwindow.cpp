@@ -456,6 +456,8 @@ void LightscreenWindow::applySettings()
 {
   mTrayIcon->setVisible(mSettings.value("options/tray").toBool());
 
+  ui.retranslateUi(this);
+
   connectHotkeys();
 
   mDoCache = false;

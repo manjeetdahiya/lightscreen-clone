@@ -31,7 +31,5 @@ CODECFORSRC = UTF-8
 QT += network \
     core \
     gui
-CONFIG -= debug
-CONFIG += release
 win32:LIBS += libgdi32
 include($$PWD/tools/globalshortcut/globalshortcut.pri)

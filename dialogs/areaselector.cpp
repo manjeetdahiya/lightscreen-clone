@@ -122,6 +122,8 @@ void AreaSelector::drawRectangleSelector(QPainter &painter)
       drawPosition.setY(drawPosition.y()-12);
   }
 
+  painter.setOpacity(0.7);
+
   if (mRect.topLeft() != mPos)
     painter.drawPixmap(drawPosition, magnified);
 }

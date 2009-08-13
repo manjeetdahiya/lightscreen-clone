@@ -31,8 +31,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
   }
 
 #if !defined(Q_WS_WIN)
-  ui.playSoundCheckBox->setVisible(false);
-  ui.playSoundCheckBox->setChecked(false);
   ui.cursorCheckBox->setVisible(false);
   ui.cursorCheckBox->setChecked(false);
 #endif

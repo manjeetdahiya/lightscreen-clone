@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
   QApplication application(argc, argv);
   application.setOrganizationName("K");
   application.setApplicationName ("Lightscreen");
-  application.setApplicationVersion("1.0");
+  application.setApplicationVersion("1.01");
   application.setQuitOnLastWindowClosed(false);
 
   os::singleInstance();
