@@ -72,9 +72,6 @@ void PreviewDialog::add(Screenshot *screenshot)
 
   QPixmap thumbnail = screenshot->pixmap().scaled(size);
 
-  //QPalette p = widget->palette();
-  //p.setBrush(QPalette::Window, QBrush(thumbnail));
-  //widget->setPalette(p);
   widget->setPixmap(thumbnail);
 
   widget->setMinimumSize(size);
@@ -117,11 +114,12 @@ void PreviewDialog::add(Screenshot *screenshot)
 
 void PreviewDialog::relocate()
 {
-  resize(sizeHint()); // Effected resize?
+  resize(sizeHint());
 
   QPoint where = QApplication::desktop()->availableGeometry(this).bottomRight();
   where.setX(where.x() - frameGeometry().width());
   where.setY(where.y() - frameGeometry().height());
+
   move(where);
 }
 
@@ -130,31 +128,42 @@ void PreviewDialog::closePreview()
   QLabel *widget = qobject_cast<QLabel*>(sender()->parent());
   mStack->removeWidget(widget);
   widget->hide();
-  widget->deleteLater(); // Effect, Fadeout?
+  widget->deleteLater();
 
-  relocate();
-
-  if (mStack->count() < 1)
-  {
+  if (mStack->count() == 0)
     close();
-  }
+  else
+    relocate();
 }
 
 void PreviewDialog::indexChanged(int i)
 {
-  mNextButton->setEnabled(true); //TODO: Fix enabling/disabling the buttons when deleting/confirming a screenshot
+  if (i == mStack->count()-1)
+  {
+    mNextButton->setEnabled(false);
+    mPrevButton->setEnabled(true);
+  }
 
-  if (mStack->count() > mStack->currentIndex())
+  if (i == 0 && mStack->count() > 1)
   {
     mNextButton->setEnabled(true);
-  }
-
-  mPrevButton->setEnabled(true);
-
-  if (mStack->currentIndex() <= mStack->count()-1)
-  {
     mPrevButton->setEnabled(false);
   }
+
+  if (i != 0 && i != mStack->count()-1)
+  {
+    mNextButton->setEnabled(true);
+    mPrevButton->setEnabled(true);
+  }
+
+  if (mStack->count() < 2)
+  {
+    mNextButton->setVisible(false);
+    mPrevButton->setVisible(false);
+  }
+
+  if (mStack->widget(i))
+    mStack->widget(i)->setFocus();
 }
 
 void PreviewDialog::previous()

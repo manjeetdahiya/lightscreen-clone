@@ -5,6 +5,7 @@
 
 #include "areaselector.h"
 #include "../tools/os.h"
+#include "../tools/screenshot.h"
 
 #include <QPainter>
 #include <QMouseEvent>
@@ -14,8 +15,8 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 
-AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
-  QDialog(parent), pixmap(pixmap),  mMagnify(magnify), mSelection(), mMouseDown(false), mNewSelection(false),
+AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, Screenshot::Options options) :
+  QDialog(parent), pixmap(pixmap),  mScreenshotOptions(options), mSelection(), mMouseDown(false), mNewSelection(false),
   mHandleSize(10), mMouseOverHandle(0), mIdleTimer(),
   mShowHelp(true), mGrabbing(false), mOverlayAlpha(1),
   mTLHandle(0, 0, mHandleSize, mHandleSize), mTRHandle(0, 0, mHandleSize, mHandleSize),
@@ -30,11 +31,6 @@ AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify) :
   setCursor(Qt::CrossCursor);
   connect(&mIdleTimer, SIGNAL(timeout()), this, SLOT(displayHelp()));
   mIdleTimer.start(3000);
-
-  os::effect(this, SLOT(animationTick(int)), 80, 500);
-
-  resize(pixmap.size());
-  move(0, 0);
 
   // Creating accept widget:
   mAcceptWidget = new QWidget(this);
@@ -186,7 +182,7 @@ void AreaSelector::paintEvent(QPaintEvent* e)
     painter.drawRects(handleMask().rects());
   }
 
-  if (!mMouseDown || !mMagnify)
+  if (!mMouseDown || !mScreenshotOptions.magnify)
   {
     return;
   }
@@ -217,7 +213,7 @@ void AreaSelector::paintEvent(QPaintEvent* e)
 
   if (drawPosition.y() == mSelection.bottomRight().y()-200
    && drawPosition.x() == mSelection.bottomRight().x()-200)
-    painter.setCompositionMode(QPainter::CompositionMode_Overlay);
+    painter.setOpacity(0.7);
 
   painter.drawPixmap(drawPosition, magnified);
 }
@@ -381,8 +377,10 @@ void AreaSelector::mouseReleaseEvent(QMouseEvent* e)
   mMouseDown = false;
   mNewSelection = false;
   mIdleTimer.start();
+
   if (mMouseOverHandle == 0 && mSelection.contains(e->pos()))
     setCursor(Qt::OpenHandCursor);
+
   update();
 }
 
@@ -405,6 +403,17 @@ void AreaSelector::keyPressEvent(QKeyEvent* e)
   {
     e->ignore();
   }
+}
+
+void AreaSelector::showEvent(QShowEvent* e)
+{
+  resize(pixmap.size());
+  move(0, 0);
+
+  if (mScreenshotOptions.animations)
+    os::effect(this, SLOT(animationTick(int)), 80, 500);
+  else
+    animationTick(80);
 }
 
 void AreaSelector::grabRect()

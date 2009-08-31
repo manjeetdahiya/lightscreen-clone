@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>376</width>
-    <height>266</height>
+    <width>356</width>
+    <height>262</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,6 @@
   <layout class="QVBoxLayout" name="optionsLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -604,108 +601,74 @@ Quality is related to file size and of course to readability and overall quality
       <attribute name="title">
        <string>&amp;Advanced</string>
       </attribute>
-      <layout class="QVBoxLayout" name="advancedLayout">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <property name="margin">
         <number>6</number>
        </property>
        <item>
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="minimumSize">
-          <size>
-           <width>340</width>
-           <height>0</height>
-          </size>
+        <widget class="QCheckBox" name="saveAsCheckBox">
+         <property name="text">
+          <string>Choose where and how to &amp;save each screenshot (&quot;&amp;Save as&quot;).</string>
          </property>
-         <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>324</width>
-            <height>176</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="spacing">
-            <number>4</number>
-           </property>
-           <property name="margin">
-            <number>2</number>
-           </property>
-           <item>
-            <widget class="QCheckBox" name="updaterCheckBox">
-             <property name="text">
-              <string>Periodically check for updates.</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="saveAsCheckBox">
-             <property name="text">
-              <string>Choose where and how to &amp;save each screenshot (&quot;&amp;Save as&quot;).</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="clipboardCheckBox">
-             <property name="text">
-              <string>&amp;Copy the screenshot to the clipboard.</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="cursorCheckBox">
-             <property name="text">
-              <string>Inc&amp;lude the cursor in the screenshot.</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="currentMonitorCheckBox">
-             <property name="text">
-              <string>&amp;Grab only the current monitor.</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="optiPngCheckBox">
-             <property name="toolTip">
-              <string>Opens a new process called OptiPNG which dramatically reduces the file size.</string>
-             </property>
-             <property name="text">
-              <string>O&amp;ptimize PNG screenshots.</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="warnHideCheckBox">
-             <property name="text">
-              <string>Warn when hiding without a tra&amp;y icon.</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="animationsCheckBox">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Disable animations</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="advancedButtonLayout">
+        <widget class="QCheckBox" name="clipboardCheckBox">
+         <property name="text">
+          <string>&amp;Copy the screenshot to the clipboard.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="cursorCheckBox">
+         <property name="text">
+          <string>Inc&amp;lude the cursor in the screenshot.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="currentMonitorCheckBox">
+         <property name="text">
+          <string>&amp;Grab only the current monitor.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="optiPngCheckBox">
+         <property name="toolTip">
+          <string>Opens a new process called OptiPNG which dramatically reduces the file size.</string>
+         </property>
+         <property name="text">
+          <string>O&amp;ptimize PNG screenshots.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="warnHideCheckBox">
+         <property name="text">
+          <string>Warn when hiding without a tra&amp;y icon.</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="animationsCheckBox">
+         <property name="text">
+          <string>Enable interface animations.</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="updateTab">
+      <attribute name="title">
+       <string>Update</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="updateLayout">
+       <property name="margin">
+        <number>6</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QPushButton" name="checkUpdatesPushButton">
            <property name="text">
@@ -714,26 +677,60 @@ Quality is related to file size and of course to readability and overall quality
           </widget>
          </item>
          <item>
-          <spacer name="advancedButtonSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="aboutPushButton">
+          <widget class="QCheckBox" name="updaterCheckBox">
            <property name="text">
-            <string>About Lightscreen</string>
+            <string>Check automatically every 7 days.</string>
            </property>
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="updaterGroupBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="title">
+          <string>Updater</string>
+         </property>
+         <layout class="QVBoxLayout" name="_2">
+          <item>
+           <widget class="QTextBrowser" name="updaterBrowser">
+            <property name="openExternalLinks">
+             <bool>true</bool>
+            </property>
+            <property name="openLinks">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QProgressBar" name="updaterProgressBar">
+              <property name="value">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="updateButton">
+              <property name="text">
+               <string>Update</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="updateCancelButton">
+              <property name="text">
+               <string>Cancel</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -778,8 +775,6 @@ Quality is related to file size and of course to readability and overall quality
   <tabstop>messageCheckBox</tabstop>
   <tabstop>playSoundCheckBox</tabstop>
   <tabstop>qualitySlider</tabstop>
-  <tabstop>checkUpdatesPushButton</tabstop>
-  <tabstop>aboutPushButton</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>

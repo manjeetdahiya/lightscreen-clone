@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QTextEdit>
 #include <QTranslator>
+#include <QTimer>
 #include <QTimeLine>
 #include <QWidget>
 #include <string>
@@ -148,8 +149,11 @@ QPixmap os::grabWindow(WId winId)
 #if defined(Q_WS_WIN)
   HDC hdcScreen = GetDC(NULL);
 
+  BringWindowToTop(winId);
+
   RECT rcWindow;
   GetWindowRect(winId, &rcWindow);
+
 
   if (IsZoomed(winId))
   {
@@ -260,13 +264,18 @@ void os::translate(QString language)
   qApp->installTranslator(translator);
 }
 
-void os::effect(QObject* target, const char *slot, int frames, int duration)
+void os::effect(QObject* target, const char *slot, int frames, int duration, const char* cleanup)
 {
   QTimeLine* timeLine = new QTimeLine(duration);
   timeLine->setFrameRange(0, frames);
 
   timeLine->connect(timeLine, SIGNAL(frameChanged(int)), target, slot);
+
+  if (cleanup != 0)
+    timeLine->connect(timeLine, SIGNAL(finished()), target, SLOT(cleanup()));
+
   timeLine->connect(timeLine, SIGNAL(finished()), timeLine, SLOT(deleteLater()));
+
 
   timeLine->start();
 }

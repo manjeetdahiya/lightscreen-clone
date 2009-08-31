@@ -18,6 +18,10 @@ public:
 
   static PreviewDialog *instance();
 
+public slots:
+  void setWidth(int w)  { resize(w, height()); }
+  void setHeight(int h) { resize(width(), h);  }
+
 private slots:
   void closePreview();
   void relocate();

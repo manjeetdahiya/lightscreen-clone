@@ -2,6 +2,7 @@
 #define OPTIONSDIALOG_H
 
 #include <QtGui/QDialog>
+#include "../updater/updater.h"
 #include "ui_optionsdialog.h"
 
 class QAbstractButton;
@@ -22,6 +23,18 @@ public slots:
   void link(QString url);
   void rejected();
   void saveSettings();
+  // Updater
+  void updaterCheckDone(Updater::Result result);
+  void updaterDownloadDone(bool error);
+  void updaterDownloading(QString file);
+  void updaterProgressBar(int value, int maximum);
+  void updaterCleanup();
+
+signals:
+  void updaterCancel();
+  void updaterDisable();
+  void updaterFinished(int);
+  void updaterDownload();
 
 protected:
   bool event(QEvent *event);

@@ -18,30 +18,31 @@ Updater::Updater() :
   connect(&mHttp, SIGNAL(done(bool)), this, SLOT(httpDone(bool)));
 }
 
-void Updater::check(bool silent)
+void Updater::check()
 {
-  qDebug() << mUpdaterDialog;
-
-  if (!mUpdaterDialog)
-    mUpdaterDialog = new UpdaterDialog(silent);
-
-  connect(this  , SIGNAL(checkDone(Updater::Result)), mUpdaterDialog, SLOT(checkDone(Updater::Result)));
-  connect(this  , SIGNAL(downloadDone(bool)),         mUpdaterDialog, SLOT(downloadDone(bool)));
-  connect(this  , SIGNAL(downloading(QString)),       mUpdaterDialog, SLOT(downloading(QString)));
-  connect(&mHttp, SIGNAL(dataReadProgress(int, int)), mUpdaterDialog, SLOT(progressBar(int, int)));
-
-  connect(mUpdaterDialog, SIGNAL(cancel())     , this, SLOT(cancel()));
-  connect(mUpdaterDialog, SIGNAL(disable())    , this, SLOT(disable()));
-
-  connect(mUpdaterDialog, SIGNAL(finished(int)), this, SLOT(abort()));
-  connect(mUpdaterDialog, SIGNAL(download())   , this, SLOT(download()));
-
   mHttp.setHost(mHost);
   mHttp.get("/version");
   mState = Updater::Check;
+  //TODO: Show the options dialog when sucessful
+}
 
-  if (!silent)
-   mUpdaterDialog->show(); //TODO: Show it later (on sucess)
+void Updater::check(QObject* controller)
+{
+  if (!controller)
+    return;
+
+  connect(this  , SIGNAL(checkDone(Updater::Result)), controller, SLOT(updaterCheckDone(Updater::Result)));
+  connect(this  , SIGNAL(downloadDone(bool)),         controller, SLOT(updaterDownloadDone(bool)));
+  connect(this  , SIGNAL(downloading(QString)),       controller, SLOT(updaterDownloading(QString)));
+  connect(&mHttp, SIGNAL(dataReadProgress(int, int)), controller, SLOT(updaterProgressBar(int, int)));
+
+  connect(controller, SIGNAL(updaterCancel())     , this, SLOT(cancel()));
+  connect(controller, SIGNAL(updaterDisable())    , this, SLOT(disable()));
+
+  connect(controller, SIGNAL(updaterFinished(int)), this, SLOT(abort()));
+  connect(controller, SIGNAL(updaterDownload())   , this, SLOT(download()));
+
+  check();
 }
 
 void Updater::download()
@@ -53,7 +54,8 @@ void Updater::download()
 
 void Updater::httpDone(bool error)
 {
-  qDebug() << "httoDone(" << error << ") " << mState;
+  qDebug() << "updaterHttp(error=" << error << ", state=" << mState << ")";
+
   switch (mState)
   {
     case Updater::Check:

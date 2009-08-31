@@ -13,6 +13,8 @@
 #include <QRect>
 #include <QTimer>
 
+#include "../tools/screenshot.h"
+
 class QPaintEvent;
 class QResizeEvent;
 class QMouseEvent;
@@ -21,7 +23,7 @@ class AreaSelector : public QDialog
 {
     Q_OBJECT
 public:
-    AreaSelector(QWidget* parent, QPixmap pixmap, bool magnify);
+    AreaSelector(QWidget* parent, QPixmap pixmap, Screenshot::Options options);
     ~AreaSelector();
     QPixmap pixmap;
 
@@ -42,12 +44,14 @@ protected:
     void mouseReleaseEvent( QMouseEvent* e );
     void mouseDoubleClickEvent( QMouseEvent* );
     void keyPressEvent( QKeyEvent* e );
+    void showEvent( QShowEvent* e );
+
     void updateHandles();
 
     QRegion handleMask() const;
     QPoint limitPointToRect( const QPoint &p, const QRect &r ) const;
 
-    bool   mMagnify;
+    Screenshot::Options mScreenshotOptions;
     QPoint mMousePos;
     QRect  mSelection;
     bool   mMouseDown;
@@ -60,6 +64,7 @@ protected:
     bool mShowHelp;
     bool mGrabbing;
     int  mOverlayAlpha;
+
 
     // naming convention for handles
     // T top, B bottom, R Right, L left

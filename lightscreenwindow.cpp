@@ -252,19 +252,20 @@ void LightscreenWindow::screenshotAction(int mode)
   if (!mDoCache)
   {
     // Populating the option object that will then be passed to the screenshot engine
-    options.file          = mSettings.value("file/enabled").toBool();
-    options.format        = mSettings.value("file/format").toInt();
-    options.prefix        = mSettings.value("file/prefix").toString();
-    options.directory     = QDir(mSettings.value("file/target").toString());
-    options.naming        = mSettings.value("file/naming").toInt();
-    options.flipNaming    = mSettings.value("options/flip", false).toBool();
-    options.quality       = mSettings.value("options/quality", 100).toInt();
-    options.currentMonitor= mSettings.value("options/currentMonitor", false).toBool();
-    options.clipboard     = mSettings.value("options/clipboard", true).toBool();
-    options.preview       = mSettings.value("options/preview", false).toBool();
-    options.magnify       = mSettings.value("options/magnify", false).toBool();
-    options.cursor        = mSettings.value("options/cursor" , false).toBool();
-    options.saveAs        = mSettings.value("options/saveAs" , false).toBool();
+    options.file           = mSettings.value("file/enabled").toBool();
+    options.format         = mSettings.value("file/format").toInt();
+    options.prefix         = mSettings.value("file/prefix").toString();
+    options.directory      = QDir(mSettings.value("file/target").toString());
+    options.naming         = mSettings.value("file/naming").toInt();
+    options.flipNaming     = mSettings.value("options/flip", false).toBool();
+    options.quality        = mSettings.value("options/quality", 100).toInt();
+    options.currentMonitor = mSettings.value("options/currentMonitor", false).toBool();
+    options.clipboard      = mSettings.value("options/clipboard", true).toBool();
+    options.preview        = mSettings.value("options/preview", false).toBool();
+    options.magnify        = mSettings.value("options/magnify", false).toBool();
+    options.cursor         = mSettings.value("options/cursor" , false).toBool();
+    options.saveAs         = mSettings.value("options/saveAs" , false).toBool();
+    options.animations     = mSettings.value("options/animations" , true).toBool();
 
     mDoCache = true;
   }
@@ -517,8 +518,11 @@ void LightscreenWindow::createScreenshotButtonMenu()
   QAction *screenAction = new QAction(tr("&Screen"), this);
   screenAction->setData(QVariant(0));
 
-  QAction *windowAction = new QAction(tr("&Window"), this);
+  QAction *windowAction = new QAction(tr("Active &Window"), this);
   windowAction->setData(QVariant(1));
+
+  QAction *windowPickerAction = new QAction(tr("&Pick Window"), this);
+  windowPickerAction->setData(QVariant(3));
 
   QAction *areaAction = new QAction(tr("&Area"), this);
   areaAction->setData(QVariant(2));
@@ -529,6 +533,7 @@ void LightscreenWindow::createScreenshotButtonMenu()
   QActionGroup *screenshotGroup = new QActionGroup(this);
   screenshotGroup->addAction(screenAction);
   screenshotGroup->addAction(windowAction);
+  screenshotGroup->addAction(windowPickerAction);
   screenshotGroup->addAction(areaAction);
 
   connect(screenshotGroup, SIGNAL(triggered(QAction*)), this, SLOT(screenshotActionTriggered(QAction*)));
@@ -537,6 +542,7 @@ void LightscreenWindow::createScreenshotButtonMenu()
   buttonMenu->addAction(screenAction);
   buttonMenu->addAction(areaAction);
   buttonMenu->addAction(windowAction);
+  buttonMenu->addAction(windowPickerAction);
   buttonMenu->addSeparator();
   buttonMenu->addAction(goAction);
 
@@ -556,16 +562,20 @@ void LightscreenWindow::createTrayIcon()
   QAction *screenAction = new QAction(tr("&Screen"), mTrayIcon);
   screenAction->setData(QVariant(0));
 
-  QAction *windowAction = new QAction(tr("&Window"), mTrayIcon);
+  QAction *windowAction = new QAction(tr("Active &Window"), this);
   windowAction->setData(QVariant(1));
+
+  QAction *windowPickerAction = new QAction(tr("&Pick Window"), this);
+  windowPickerAction->setData(QVariant(3));
 
   QAction *areaAction = new QAction(tr("&Area"), mTrayIcon);
   areaAction->setData(QVariant(2));
 
   QActionGroup *screenshotGroup = new QActionGroup(mTrayIcon);
   screenshotGroup->addAction(screenAction);
-  screenshotGroup->addAction(windowAction);
   screenshotGroup->addAction(areaAction);
+  screenshotGroup->addAction(windowAction);
+  screenshotGroup->addAction(windowPickerAction);
 
   connect(screenshotGroup, SIGNAL(triggered(QAction*)), this, SLOT(screenshotActionTriggered(QAction*)));
 
@@ -582,9 +592,10 @@ void LightscreenWindow::createTrayIcon()
   connect(quitAction, SIGNAL(triggered()), this, SLOT(accept()));
 
   QMenu* screenshotMenu = new QMenu("Screenshot");
-  screenshotMenu->addAction(screenAction);
-  screenshotMenu->addAction(windowAction);
+  screenshotMenu->addAction(screenAction);  
   screenshotMenu->addAction(areaAction);
+  screenshotMenu->addAction(windowAction);
+  screenshotMenu->addAction(windowPickerAction);
 
   QMenu * trayIconMenu = new QMenu;
   trayIconMenu->addAction(hideAction);
@@ -611,7 +622,7 @@ void LightscreenWindow::checkForUpdates()
   connect(Updater::instance(), SIGNAL(checkDone(Updater::Result)), this, SLOT(updaterCheckDone(Updater::Result)));
   connect(Updater::instance(), SIGNAL(canceled(bool)),             this, SLOT(updaterCanceled(bool)));
 
-  Updater::instance()->check(true);
+  Updater::instance()->check();
 }
 
 // Event handling

@@ -13,11 +13,12 @@
 #endif
 
 #include "../dialogs/areaselector.h"
+#include "windowpicker.h"
 #include "screenshot.h"
 
 #include "os.h"
 
-Screenshot::Screenshot(Screenshot::Options options) :  mOptions(options) {
+Screenshot::Screenshot(Screenshot::Options options) :  mOptions(options), mPixmapDelay(false) {
   qDebug() << "Screenshot object created";
 }
 
@@ -131,12 +132,25 @@ void Screenshot::selectedArea()
   if (mPixmap.isNull())
     return;
 
-  AreaSelector selector(0, mPixmap, mOptions.magnify);
+  AreaSelector selector(0, mPixmap, mOptions);
   selector.exec();
 
   alreadySelecting = false;
 
   mPixmap = selector.pixmap;
+}
+
+
+void Screenshot::selectedWindow()
+{
+#if defined(Q_WS_WIN)
+  WindowPicker* windowPicker = new WindowPicker;
+  mPixmapDelay = true;
+
+  connect(windowPicker, SIGNAL(pixmap(QPixmap)), this, SLOT(setPixmap(QPixmap)));
+#else
+  wholeScreen();
+#endif
 }
 
 void Screenshot::wholeScreen()
@@ -177,7 +191,14 @@ void Screenshot::take()
   case Screenshot::ActiveWindow:
     activeWindow();
     break;
+
+  case Screenshot::SelectedWindow:
+    selectedWindow();
+    break;
   }
+
+  if (mPixmapDelay)
+    return;
 
   if (mPixmap.isNull())
     confirm(false);
@@ -244,4 +265,17 @@ void Screenshot::save()
   else
     mOptions.result   = false;
 
+}
+
+void Screenshot::setPixmap(QPixmap pixmap)
+{
+  mPixmap = pixmap;
+  pixmap = QPixmap(); // ??
+
+  qDebug() << "Pixmap arrived: " << pixmap.isNull();
+
+  if (mPixmap.isNull())
+    emit confirm(false);
+  else
+    emit askConfirmation();
 }

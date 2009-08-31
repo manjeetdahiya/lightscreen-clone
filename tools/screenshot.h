@@ -30,7 +30,8 @@ public:
   {
     WholeScreen  = 0,
     ActiveWindow = 1,
-    SelectedArea = 2
+    SelectedArea = 2,
+    SelectedWindow = 3
   };
 
   struct Options
@@ -52,6 +53,7 @@ public:
     bool magnify;
     bool cursor;
     bool saveAs;
+    bool animations;
   };
 
   Screenshot(Screenshot::Options options);
@@ -65,6 +67,7 @@ public slots:
   void confirm(bool result = true);
   void discard();
   void save();
+  void setPixmap(QPixmap pixmap);
 
 signals:
   void askConfirmation();
@@ -75,12 +78,14 @@ private:
   QString newFileName();
   QString extension();
   void    selectedArea();
+  void    selectedWindow();
   void    wholeScreen();
   void    grabDesktop();
 
 private:
   Screenshot::Options mOptions;
   QPixmap mPixmap;
+  bool mPixmapDelay;
 
 };
 

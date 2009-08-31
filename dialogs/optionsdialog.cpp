@@ -8,6 +8,8 @@
 #include <QSettings>
 #include <QUrl>
 
+#include <QDebug>
+
 #if defined(Q_WS_WIN)
   #include <windows.h>
 #endif
@@ -29,6 +31,8 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     layout()->setMargin(3);
     resize(minimumSizeHint());
   }
+
+  ui.updateCancelButton->setVisible(false);
 
 #if !defined(Q_WS_WIN)
   ui.cursorCheckBox->setVisible(false);
@@ -68,7 +72,7 @@ void OptionsDialog::initConnections()
   connect(ui.buttonBox              , SIGNAL(rejected())               , this    , SLOT(rejected()));
   connect(ui.flipPrefixPushButton   , SIGNAL(toggled(bool))            , this    , SLOT(flipButtonToggled(bool)));
   connect(ui.browsePushButton       , SIGNAL(clicked())                , this    , SLOT(browse()));
-  connect(ui.aboutPushButton        , SIGNAL(clicked())                , parent(), SLOT(showAbout()));
+  //connect(ui.aboutPushButton        , SIGNAL(clicked())                , parent(), SLOT(showAbout()));
   connect(ui.checkUpdatesPushButton , SIGNAL(clicked())                , this    , SLOT(checkUpdatesNow()));
 
   connect(ui.screenCheckBox   , SIGNAL(toggled(bool)), ui.screenHotkeyWidget   , SLOT(setEnabled(bool)));
@@ -82,6 +86,10 @@ void OptionsDialog::initConnections()
   connect(ui.startupCheckBox  , SIGNAL(toggled(bool)), ui.startupHideCheckBox  , SLOT(setEnabled(bool)));
   connect(ui.qualitySlider    , SIGNAL(valueChanged(int)), ui.qualityValueLabel, SLOT(setNum(int)));
   connect(ui.trayCheckBox     , SIGNAL(toggled(bool)), ui.messageCheckBox      , SLOT(setEnabled(bool)));
+
+  // Updater
+  connect(ui.updateButton            , SIGNAL(clicked()), this, SIGNAL(updaterDownload()));
+  connect(ui.updateCancelButton      , SIGNAL(clicked()), this, SIGNAL(updaterCancel()));
 
   connect(ui.moreInformationLabel, SIGNAL(linkActivated(QString))      , this, SLOT(link(QString)));
   connect(ui.languageComboBox    , SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
@@ -120,7 +128,9 @@ void OptionsDialog::browse()
 
 void OptionsDialog::checkUpdatesNow()
 {
-  Updater::instance()->check();
+  ui.checkUpdatesPushButton->setEnabled(false);
+  ui.updaterGroupBox->setTitle(tr("Checking..."));
+  Updater::instance()->check(this);
 }
 
 void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
@@ -223,6 +233,7 @@ void OptionsDialog::saveSettings()
   settings.setValue("cursor", ui.cursorCheckBox->isChecked());
   settings.setValue("saveAs", ui.saveAsCheckBox->isChecked());
   settings.setValue("preview", ui.previewCheckBox->isChecked());
+  settings.setValue("animations", ui.animationsCheckBox->isChecked());
 
   // Advanced
   settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
@@ -304,6 +315,7 @@ void OptionsDialog::loadSettings()
   ui.cursorCheckBox->setChecked(settings.value("cursor", false).toBool());
   ui.saveAsCheckBox->setChecked(settings.value("saveAs", false).toBool());
   ui.previewCheckBox->setChecked(settings.value("preview", false).toBool());
+  ui.animationsCheckBox->setChecked(settings.value("animations", true).toBool());
 
   // Advanced
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", false).toBool());
@@ -472,6 +484,94 @@ bool OptionsDialog::hotkeyCollision()
 
   return false;
 }
+
+// Updater
+void OptionsDialog::updaterCheckDone(Updater::Result result)
+{
+  qDebug() << "Result: " << result;
+
+  ui.updaterGroupBox->setEnabled(true);
+
+  switch (result)
+  {
+    case Updater::NewVersion:
+      ui.updaterGroupBox->setTitle(tr("Update found:"));
+
+      ui.updaterBrowser->setText(tr("There's a <a href=\"http://lightscreen.sourceforge.net/new-version\">new Lightscreen version</a> available.<br><b>Changelog:</b>"));
+      //TODO: Append changelog here.
+
+      ui.updaterProgressBar->setMaximum(1);
+      ui.updaterProgressBar->setValue(0);
+    break;
+    case Updater::MajorUpgrade:
+      ui.updaterGroupBox->setTitle(tr("Major updater available:"));
+      ui.updaterBrowser->setText(tr("There's a new version available,<br> please see <a href=\"http://lightscreen.sourceforge.net/new-version\">the Lighscreen website</a>."));
+      ui.updateButton->setEnabled(false);
+    break;
+    case Updater::NoVersion:   
+      ui.updaterBrowser->setText(tr("No new versions available"));
+      updaterCleanup();
+    break;
+    case Updater::Error:
+      ui.updaterBrowser->setText(tr("Update check failed"));
+    break;
+  }
+}
+
+void OptionsDialog::updaterDownloading(QString file)
+{
+  if (file.isEmpty())
+  {
+    updaterDownloadDone(true);
+    return;
+  }
+
+  setUpdatesEnabled(false);
+  ui.updateButton->hide();
+  ui.updateCancelButton->show();
+
+  ui.updaterGroupBox->setTitle(tr("Downloading ") + file);
+  setUpdatesEnabled(true);
+}
+
+void OptionsDialog::updaterDownloadDone(bool error)
+{
+  if (error)
+    ui.updaterBrowser->setText(tr("Download failed or was canceled"));
+  else
+    ui.updaterBrowser->setText(tr("Download complete.. launching installer."));
+
+  updaterCleanup();
+}
+
+void OptionsDialog::updaterProgressBar(int value, int maximum)
+{
+  if (maximum < 500 && value > 0)
+  {
+    ui.updaterProgressBar->setMaximum(0);
+    return; // Too small, is probably just the changelog/version
+  }
+
+  //double mbValue   = value/1048576.0;
+  //double mbMaximum = maximum/1048576.0;
+
+  ui.updaterProgressBar->setMaximum(maximum);
+  ui.updaterProgressBar->setValue(value);
+}
+
+void OptionsDialog::updaterCleanup()
+{
+  setUpdatesEnabled(false);
+  ui.updaterGroupBox->setTitle(tr("Updater"));
+  ui.updaterGroupBox->setEnabled(false);
+  ui.checkUpdatesPushButton->setEnabled(false);
+  ui.updateButton->show();
+  ui.updateCancelButton->hide();
+  ui.updaterProgressBar->setMaximum(0);
+  ui.checkUpdatesPushButton->setEnabled(true);
+  setUpdatesEnabled(true);
+}
+
 
 bool OptionsDialog::event(QEvent* event)
 {

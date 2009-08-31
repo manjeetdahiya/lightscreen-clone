@@ -30,7 +30,7 @@ namespace os
   void translate(QString language);
 
   // Effects
-  void effect(QObject* target, const char* slot, int frames, int duration = 400);
+  void effect(QObject* target, const char* slot, int frames, int duration = 400, const char* cleanup = 0);
 }
 
 

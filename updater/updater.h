@@ -4,9 +4,7 @@
 #include <QObject>
 #include <QHttp>
 #include <QFile>
-#include <QPointer>
 
-class UpdaterDialog;
 class Updater : public QObject
 {
   Q_OBJECT
@@ -39,7 +37,8 @@ signals:
   void canceled(bool reminder);
 
 public slots:
-  void check(bool silent = false);
+  void check();
+  void check(QObject *receiver);
   void download();
   void disable();
   void cancel();
@@ -53,7 +52,6 @@ private:
   QFile mDownload;
   State mState;
   QString mHost;
-  QPointer<UpdaterDialog> mUpdaterDialog;
   static Updater* mInstance;
 
 };
