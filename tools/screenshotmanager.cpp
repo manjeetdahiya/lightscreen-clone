@@ -32,7 +32,6 @@ void ScreenshotManager::cleanup()
 }
 
 // Singleton
-
 ScreenshotManager* ScreenshotManager::mInstance = 0;
 
 ScreenshotManager *ScreenshotManager::instance()

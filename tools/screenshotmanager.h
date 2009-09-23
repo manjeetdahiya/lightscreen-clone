@@ -18,7 +18,6 @@ public:
     Disabled  = 2
   };
 
-
 public:
   ScreenshotManager(QObject *parent);
   static ScreenshotManager *instance();

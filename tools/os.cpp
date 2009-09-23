@@ -13,27 +13,17 @@
 #include <QWidget>
 #include <string>
 
+#include <QPointer>
+
 #include <QDebug>
 
 #include <QMessageBox>
 
+#include "qtwin.h"
+
 #if defined(Q_WS_WIN)
   #include <windows.h>
   #include <shlobj.h>
-
-  typedef struct
-  {
-    int cxLeftWidth;
-    int cxRightWidth;
-    int cyTopHeight;
-    int cyBottomHeight;
-  } MARGINS;
-
-  typedef HRESULT (WINAPI *PtrDwmExtendFrameIntoClientArea)(HWND hWnd, const MARGINS *margins);
-  static PtrDwmExtendFrameIntoClientArea pDwmExtendFrameIntoClientArea = 0;
-
-  typedef HRESULT (WINAPI *PtrDwmIsCompositionEnabled)(BOOL *pfEnabled);
-  static PtrDwmIsCompositionEnabled pDwmIsCompositionEnabled = 0;
 #endif
 
 #include "os.h"
@@ -49,34 +39,13 @@ void os::addToRecentDocuments(QString fileName)
 
 bool os::aeroGlass(QWidget* target)
 {
-#if defined(Q_WS_WIN)
-
-  if (QSysInfo::WindowsVersion < QSysInfo::WV_VISTA)
-    return false;  // Glass frame only for Windows Vista and above.
-
-  QLibrary dwmapi("dwmapi");
-
-  pDwmIsCompositionEnabled = (PtrDwmIsCompositionEnabled)dwmapi.resolve("DwmIsCompositionEnabled");
-
-  BOOL enabled;
-  pDwmIsCompositionEnabled(&enabled);
-
-  if (enabled)
+  if (QtWin::isCompositionEnabled())
   {
-    pDwmExtendFrameIntoClientArea = (PtrDwmExtendFrameIntoClientArea)dwmapi.resolve("DwmExtendFrameIntoClientArea");
-
-    MARGINS margins = { -1}; //setting it to -1 makes the glass available throughout the entire window
-
-    pDwmExtendFrameIntoClientArea(target->winId(), &margins);
-
-    target->setAttribute(Qt::WA_NoSystemBackground);
+    QtWin::extendFrameIntoClientArea(target);
+    return true;
   }
 
-  return enabled;
-#else
-  Q_UNUSED(target)
   return false;
-#endif
 }
 
 void os::setStartup(bool startup, bool hide)
@@ -245,7 +214,7 @@ void os::singleInstance()
 
 void os::translate(QString language)
 {
-  static QTranslator *translator = 0;
+  static QPointer<QTranslator> translator;
 
   if (translator)
   {

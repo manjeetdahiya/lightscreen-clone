@@ -8,10 +8,10 @@ HEADERS += tools/os.h \
     widgets/hotkeywidget.h \
     lightscreenwindow.h \
     tools/screenshot.h \
-    dialogs/updaterdialog.h \
     dialogs/previewdialog.h \
     tools/screenshotmanager.h \
-    tools/windowpicker.h
+    tools/windowpicker.h \
+    tools/qtwin.h
 SOURCES += tools/os.cpp \
     updater/updater.cpp \
     dialogs/areaselector.cpp \
@@ -21,10 +21,10 @@ SOURCES += tools/os.cpp \
     main.cpp \
     lightscreenwindow.cpp \
     tools/screenshot.cpp \
-    dialogs/updaterdialog.cpp \
     dialogs/previewdialog.cpp \
     tools/screenshotmanager.cpp \
-    tools/windowpicker.cpp
+    tools/windowpicker.cpp \
+    tools/qtwin.cpp
 FORMS += dialogs/optionsdialog.ui \
     dialogs/aboutdialog.ui \
     lightscreenwindow.ui

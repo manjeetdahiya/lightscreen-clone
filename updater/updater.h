@@ -2,9 +2,11 @@
 #define UPDATER_H_
 
 #include <QObject>
-#include <QHttp>
+#include <QPointer>
+#include <QNetworkAccessManager>
 #include <QFile>
 
+class QNetworkReply;
 class Updater : public QObject
 {
   Q_OBJECT
@@ -15,7 +17,8 @@ public:
     Idle  = 0,
     Check = 1,
     VersionData = 2,
-    Download  = 3
+    Redirect = 3,
+    Download  = 4
   };
 
   enum Result
@@ -28,6 +31,7 @@ public:
 
   Updater();
 
+  QString changelog();
 	static Updater *instance();
 
 signals:
@@ -40,18 +44,20 @@ public slots:
   void check();
   void check(QObject *receiver);
   void download();
-  void disable();
-  void cancel();
   void abort();
 
 private slots:
-  void httpDone(bool error);
+  void requestFinished(QNetworkReply* reply);
+  void downloadFinished();
+  void downloadReadyRead();
 
 private:
-  QHttp mHttp;
-  QFile mDownload;
+  QPointer<QNetworkAccessManager> mNetwork;
+  QPointer<QObject> mController;
+  QPointer<QNetworkReply> mDownload;
+  QFile mDownloadFile;
+
   State mState;
-  QString mHost;
   static Updater* mInstance;
 
 };

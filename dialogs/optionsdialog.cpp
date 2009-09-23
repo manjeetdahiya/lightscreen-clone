@@ -8,6 +8,8 @@
 #include <QSettings>
 #include <QUrl>
 
+#include <QDate>
+
 #include <QDebug>
 
 #if defined(Q_WS_WIN)
@@ -128,6 +130,7 @@ void OptionsDialog::browse()
 
 void OptionsDialog::checkUpdatesNow()
 {
+  ui.tabWidget->setCurrentIndex(4); // For when it's called from outside
   ui.checkUpdatesPushButton->setEnabled(false);
   ui.updaterGroupBox->setTitle(tr("Checking..."));
   Updater::instance()->check(this);
@@ -497,11 +500,13 @@ void OptionsDialog::updaterCheckDone(Updater::Result result)
     case Updater::NewVersion:
       ui.updaterGroupBox->setTitle(tr("Update found:"));
 
-      ui.updaterBrowser->setText(tr("There's a <a href=\"http://lightscreen.sourceforge.net/new-version\">new Lightscreen version</a> available.<br><b>Changelog:</b>"));
+      ui.updaterBrowser->setText(tr("There's a <a href=\"http://lightscreen.sourceforge.net/new-version\">new Lightscreen version</a> available.<hr><b>Changelog:</b>"));
       //TODO: Append changelog here.
 
       ui.updaterProgressBar->setMaximum(1);
       ui.updaterProgressBar->setValue(0);
+
+      QSettings().setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
     break;
     case Updater::MajorUpgrade:
       ui.updaterGroupBox->setTitle(tr("Major updater available:"));
@@ -510,10 +515,12 @@ void OptionsDialog::updaterCheckDone(Updater::Result result)
     break;
     case Updater::NoVersion:   
       ui.updaterBrowser->setText(tr("No new versions available"));
+      QSettings().setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
       updaterCleanup();
     break;
     case Updater::Error:
-      ui.updaterBrowser->setText(tr("Update check failed"));
+      ui.updaterBrowser->setText(tr("An error ocurred, make sure you are connected and try again later."));
+      updaterCleanup();
     break;
   }
 }
@@ -536,15 +543,28 @@ void OptionsDialog::updaterDownloading(QString file)
 
 void OptionsDialog::updaterDownloadDone(bool error)
 {
+
   if (error)
-    ui.updaterBrowser->setText(tr("Download failed or was canceled"));
+  {
+    if (ui.updateCancelButton->isChecked())
+    {
+       ui.updaterBrowser->setText(tr("Update canceled."));
+    }
+    else
+    {
+       ui.updaterBrowser->setText(tr("The update has failed, please try again later."));
+    }
+
+  }
   else
-    ui.updaterBrowser->setText(tr("Download complete.. launching installer."));
+  {
+    ui.updaterBrowser->setText(tr("Download complete."));
+  }
 
   updaterCleanup();
 }
 
-void OptionsDialog::updaterProgressBar(int value, int maximum)
+void OptionsDialog::updaterProgressBar(qint64 value, qint64 maximum)
 {
   if (maximum < 500 && value > 0)
   {
@@ -552,8 +572,8 @@ void OptionsDialog::updaterProgressBar(int value, int maximum)
     return; // Too small, is probably just the changelog/version
   }
 
-  //double mbValue   = value/1048576.0;
-  //double mbMaximum = maximum/1048576.0;
+  //int mbValue   = qRound(value/1048576.0);
+  //int mbMaximum = qRound(maximum/1048576.0);
 
   ui.updaterProgressBar->setMaximum(maximum);
   ui.updaterProgressBar->setValue(value);
@@ -567,11 +587,11 @@ void OptionsDialog::updaterCleanup()
   ui.checkUpdatesPushButton->setEnabled(false);
   ui.updateButton->show();
   ui.updateCancelButton->hide();
-  ui.updaterProgressBar->setMaximum(0);
+  ui.updaterProgressBar->setValue(0);
+  ui.updaterProgressBar->setMaximum(1);
   ui.checkUpdatesPushButton->setEnabled(true);
   setUpdatesEnabled(true);
 }
-
 
 bool OptionsDialog::event(QEvent* event)
 {
@@ -579,6 +599,10 @@ bool OptionsDialog::event(QEvent* event)
   {
     ui.retranslateUi(this);
     resize(minimumSizeHint());
+  }
+  if (event->type() == QEvent::Close)
+  {
+    Updater::instance()->abort();
   }
 
   return QDialog::event(event);

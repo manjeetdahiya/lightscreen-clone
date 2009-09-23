@@ -27,12 +27,11 @@ public slots:
   void updaterCheckDone(Updater::Result result);
   void updaterDownloadDone(bool error);
   void updaterDownloading(QString file);
-  void updaterProgressBar(int value, int maximum);
+  void updaterProgressBar(qint64 value, qint64 maximum);
   void updaterCleanup();
 
 signals:
   void updaterCancel();
-  void updaterDisable();
   void updaterFinished(int);
   void updaterDownload();
 

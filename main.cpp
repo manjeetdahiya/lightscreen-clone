@@ -24,4 +24,3 @@ int main(int argc, char *argv[])
   QObject::connect(&lightscreen, SIGNAL(finished(int)), &application, SLOT(quit()));
   return application.exec();
 }
-

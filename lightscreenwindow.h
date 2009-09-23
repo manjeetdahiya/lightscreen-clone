@@ -37,8 +37,9 @@ public slots:
   void screenshotActionTriggered(QAction* action);
   void showAbout();
   void showHotkeyError(QStringList hotkeys);
-  void showOptions();
+  void showOptions(bool updater = false);
   void showScreenshotMessage(bool result, QString fileName);
+  void showScreenshotMenu();
   void showTrayNotifier(bool result);
   void toggleVisibility(QSystemTrayIcon::ActivationReason reason = QSystemTrayIcon::DoubleClick);
   void updaterCheckDone(Updater::Result result);
@@ -49,7 +50,6 @@ private:
   void applySettings();
   void compressPng(QString fileName);
   void connectHotkeys();
-  void createScreenshotButtonMenu();
   void createTrayIcon();
 
 protected:

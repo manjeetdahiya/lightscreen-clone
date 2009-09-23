@@ -1,27 +1,22 @@
 <RCC>
-    <qresource prefix="/icons" >
-        <file alias="Application" >images/LS.ico</file>
-        <file alias="SystemTray" >images/LSSmall.png</file>
-        <file alias="OpenFolder" >images/document-open-folder.png</file>
-        <file alias="Play" >images/media-playback-start.png</file>
-        <file alias="Bad" >images/bad.png</file>
-        <file alias="Good" >images/good.png</file>
-        <file alias="SystemTrayFailure" >images/LS.systemtray.bad.png</file>
-        <file alias="SystemTraySucess" >images/LS.systemtray.good.png</file>
-        <file alias="Configure" >images/configure.png</file>
-        <file alias="Help" >images/help.png</file>
-        <file alias="PrefixLeft" >images/left.png</file>
-        <file alias="PrefixRight" >images/right.png</file>
-        <file alias="AreaAccept" >images/area-accept.png</file>
-        <file alias="AreaCancel" >images/area-cancel.png</file>
-        <file alias="AreaHover" >images/area-hover.png</file>
-        <file alias="AreaBackground" >images/area-background.png</file>
-        <file alias="arrowLeft" >images/previewArrowLeft.png</file>
-        <file alias="arrowRight" >images/previewArrowRight.png</file>
-    </qresource>
-    <qresource prefix="/logo" >
-        <file alias="big" >images/LSBig.png</file>
-        <file alias="small" >images/LSLSmall.png</file>
-        <file alias="mid" >images/LSMid.png</file>
+    <qresource prefix="/icons">
+        <file alias="Application">images/LS.ico</file>
+        <file alias="SystemTray">images/LSSmall.png</file>
+        <file alias="OpenFolder">images/document-open-folder.png</file>
+        <file alias="Play">images/media-playback-start.png</file>
+        <file alias="Bad">images/bad.png</file>
+        <file alias="Good">images/good.png</file>
+        <file alias="SystemTrayFailure">images/LS.systemtray.bad.png</file>
+        <file alias="SystemTraySucess">images/LS.systemtray.good.png</file>
+        <file alias="Configure">images/configure.png</file>
+        <file alias="Help">images/help.png</file>
+        <file alias="PrefixLeft">images/left.png</file>
+        <file alias="PrefixRight">images/right.png</file>
+        <file alias="AreaAccept">images/area-accept.png</file>
+        <file alias="AreaCancel">images/area-cancel.png</file>
+        <file alias="AreaHover">images/area-hover.png</file>
+        <file alias="AreaBackground">images/area-background.png</file>
+        <file alias="arrowLeft">images/previewArrowLeft.png</file>
+        <file alias="arrowRight">images/previewArrowRight.png</file>
     </qresource>
 </RCC>
