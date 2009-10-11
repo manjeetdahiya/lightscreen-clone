@@ -33,6 +33,7 @@ public slots:
   void showHotkeyError(QStringList hotkeys);
   void showOptions();
   void showScreenshotMessage(bool result, QString fileName);
+  void showScreenshotMenu();
   void showTrayNotifier(bool result);
   void toggleVisibility(QSystemTrayIcon::ActivationReason reason = QSystemTrayIcon::DoubleClick);
   void updaterDone(bool result);

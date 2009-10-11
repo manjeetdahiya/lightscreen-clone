@@ -48,8 +48,7 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
   connect(ui.optionsPushButton, SIGNAL(clicked()), this, SLOT(showOptions()));
   connect(ui.hidePushButton   , SIGNAL(clicked()), this, SLOT(toggleVisibility()));
 
-  createTrayIcon();
-  createScreenshotButtonMenu();
+  connect(ui.screenshotPushButton, SIGNAL(clicked()), this, SLOT(showScreenshotMenu()));
 
   if (!mSettings.contains("file/format"))
     showOptions(); // There are no options (or the options config is invalid or incomplete)
@@ -142,7 +141,9 @@ void LightscreenWindow::messageClicked()
 
 void LightscreenWindow::restoreSystemTrayNotifier()
 {
-  mTrayIcon->setIcon(QIcon(":/icons/SystemTray"));
+  if (mTrayIcon)
+    mTrayIcon->setIcon(QIcon(":/icons/SystemTray"));
+
   setWindowTitle(tr("Lightscreen"));
 }
 
@@ -165,7 +166,9 @@ void LightscreenWindow::screenshotAction(int mode)
   if (optionsHide && !wasHidden)
   {
     setVisible(false);
-    mTrayIcon->hide();
+
+    if (mTrayIcon)
+      mTrayIcon->hide();
   }
 
   // Screenshot delay
@@ -317,6 +320,40 @@ void LightscreenWindow::showScreenshotMessage(bool result, QString fileName)
   mTrayIcon->showMessage(title, message);
 }
 
+void LightscreenWindow::showScreenshotMenu()
+{
+ QMenu *buttonMenu = new QMenu;
+ buttonMenu->setAttribute(Qt::WA_DeleteOnClose);
+
+ QAction *screenAction = new QAction(tr("&Screen"), buttonMenu);
+ screenAction->setData(QVariant(0));
+
+ QAction *windowAction = new QAction(tr("Active &Window"), buttonMenu);
+ windowAction->setData(QVariant(1));
+
+ QAction *areaAction = new QAction(tr("&Area"), buttonMenu);
+ areaAction->setData(QVariant(2));
+
+ QAction *goAction = new QAction(tr("&Go to Folder"), buttonMenu);
+ connect(goAction, SIGNAL(triggered()), this, SLOT(goToFolder()));
+
+ QActionGroup *screenshotGroup = new QActionGroup(buttonMenu);
+ screenshotGroup->addAction(screenAction);
+ screenshotGroup->addAction(windowAction);
+ screenshotGroup->addAction(areaAction);
+
+ connect(screenshotGroup, SIGNAL(triggered(QAction*)), this, SLOT(screenshotActionTriggered(QAction*)));
+
+ buttonMenu->addAction(screenAction);
+ buttonMenu->addAction(areaAction);
+ buttonMenu->addAction(windowAction);
+ buttonMenu->addSeparator();
+ buttonMenu->addAction(goAction);
+
+ ui.screenshotPushButton->setMenu(buttonMenu);
+ ui.screenshotPushButton->showMenu();
+}
+
 void LightscreenWindow::showTrayNotifier(bool result)
 {
   if (result)
@@ -454,7 +491,13 @@ void LightscreenWindow::areaHotkey()   { screenshotAction(2); }
 
 void LightscreenWindow::applySettings()
 {
-  mTrayIcon->setVisible(mSettings.value("options/tray").toBool());
+  if (mSettings.value("options/tray").toBool() && !mTrayIcon) {
+    createTrayIcon();
+    mTrayIcon->show();
+  }
+  else if (!mSettings.value("options/tray").toBool() && mTrayIcon) {
+    mTrayIcon->deleteLater();
+  }
 
   ui.retranslateUi(this);
 
@@ -518,37 +561,6 @@ void LightscreenWindow::connectHotkeys()
     showHotkeyError(failed);
 }
 
-void LightscreenWindow::createScreenshotButtonMenu()
-{
-  QAction *screenAction = new QAction(tr("&Screen"), this);
-  screenAction->setData(QVariant(0));
-
-  QAction *windowAction = new QAction(tr("&Window"), this);
-  windowAction->setData(QVariant(1));
-
-  QAction *areaAction = new QAction(tr("&Area"), this);
-  areaAction->setData(QVariant(2));
-
-  QAction *goAction = new QAction(tr("&Go to Folder"), this);
-  connect(goAction, SIGNAL(triggered()), this, SLOT(goToFolder()));
-
-  QActionGroup *screenshotGroup = new QActionGroup(this);
-  screenshotGroup->addAction(screenAction);
-  screenshotGroup->addAction(windowAction);
-  screenshotGroup->addAction(areaAction);
-
-  connect(screenshotGroup, SIGNAL(triggered(QAction*)), this, SLOT(screenshotActionTriggered(QAction*)));
-
-  QMenu *buttonMenu = new QMenu;
-  buttonMenu->addAction(screenAction);
-  buttonMenu->addAction(areaAction);
-  buttonMenu->addAction(windowAction);
-  buttonMenu->addSeparator();
-  buttonMenu->addAction(goAction);
-
-  ui.screenshotPushButton->setMenu(buttonMenu);
-}
-
 void LightscreenWindow::createTrayIcon()
 {
   mTrayIcon = new QSystemTrayIcon(QIcon(":/icons/SystemTray"), this);
@@ -592,7 +604,7 @@ void LightscreenWindow::createTrayIcon()
   screenshotMenu->addAction(windowAction);
   screenshotMenu->addAction(areaAction);
 
-  QMenu * trayIconMenu = new QMenu;
+  QMenu* trayIconMenu = new QMenu;
   trayIconMenu->addAction(hideAction);
   trayIconMenu->addSeparator();
   trayIconMenu->addMenu(screenshotMenu);
@@ -607,7 +619,7 @@ void LightscreenWindow::createTrayIcon()
 
 void LightscreenWindow::checkForUpdates()
 {
-  if (mSettings.value("disableUpdater", false).toBool())
+  if (mSettings.value("options/disableUpdater", false).toBool())
     return;
 
   if (QSettings().value("lastUpdateCheck").toInt() + 7
