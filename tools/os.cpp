@@ -22,7 +22,7 @@
 #include "qtwin.h"
 
 #if defined(Q_WS_WIN)
-  #include <windows.h>
+  #include <qt_windows.h>
   #include <shlobj.h>
 #endif
 
@@ -30,8 +30,12 @@
 
 void os::addToRecentDocuments(QString fileName)
 {
-#if defined(Q_WS_WIN)
-  SHAddToRecentDocs(SHARD_PATH, fileName.toAscii().data()); // Windows 7 jump lists use this.
+#ifdef Q_WS_WIN
+  QT_WA ( {
+      SHAddToRecentDocs (0x00000003, QDir::convertSeparators(fileName).utf16());
+    } , {
+      SHAddToRecentDocs (0x00000002, QDir::convertSeparators(fileName).toLocal8Bit().data());
+  } ); // QT_WA
 #else
   Q_UNUSED(fileName)
 #endif
@@ -55,7 +59,7 @@ QString lightscreen = QDir::toNativeSeparators(qApp->applicationFilePath());
 if (hide)
   lightscreen.append(" -h");
 
-#if defined(Q_WS_WIN)
+#ifdef Q_WS_WIN
   // Windows startup settings
   QSettings init("Microsoft", "Windows");
   init.beginGroup("CurrentVersion");
@@ -92,8 +96,7 @@ if (hide)
 
 QString os::getDocumentsPath()
 {
-#if defined(Q_WS_WIN)
-
+#ifdef Q_WS_WIN
   TCHAR szPath[MAX_PATH];
 
   if(SUCCEEDED(SHGetFolderPath(NULL,
@@ -104,7 +107,7 @@ QString os::getDocumentsPath()
   {
     std::wstring path(szPath);
 
-    return QString::fromStdWString(path);
+    return QString::fromWCharArray(path.c_str());
   }
 
   return QDir::homePath() + QDir::separator() + "My Documents";
@@ -115,7 +118,7 @@ QString os::getDocumentsPath()
 
 QPixmap os::grabWindow(WId winId)
 {
-#if defined(Q_WS_WIN)
+#ifdef Q_WS_WIN
   HDC hdcScreen = GetDC(NULL);
 
   BringWindowToTop(winId);
@@ -163,7 +166,7 @@ QPixmap os::grabWindow(WId winId)
 
 void os::setForegroundWindow(QWidget *window)
 {
-#if defined(Q_WS_WIN)
+#ifdef Q_WS_WIN
   ShowWindow(window->winId(), SW_RESTORE);
   SetForegroundWindow(window->winId());
 #else
@@ -173,7 +176,7 @@ void os::setForegroundWindow(QWidget *window)
 
 QPixmap os::cursor()
 {
-#if defined(Q_WS_WIN)
+#ifdef Q_WS_WIN
   // Get the icon info
   ICONINFO iconInfo;
   GetIconInfo(GetCursor(), &iconInfo);
@@ -197,14 +200,14 @@ QPixmap os::cursor()
 void os::singleInstance()
 {
 #ifdef Q_WS_WIN
-  WCHAR* mutexName = (WCHAR*)QApplication::applicationName().toAscii().data();
+  WCHAR* mutexName = new WCHAR[QApplication::applicationName().size()+1];
+  QApplication::applicationName().toWCharArray(mutexName);
 
   ::CreateMutex(NULL, FALSE, mutexName);
 
   if (::GetLastError() == ERROR_ALREADY_EXISTS)
   {
-    std::wstring str = QString("Lightscreen").toStdWString();
-    HWND hLsWnd = ::FindWindow(NULL, str.c_str());
+    HWND hLsWnd = ::FindWindow(NULL, mutexName);
 
     if (hLsWnd)
       ::PostMessage(hLsWnd, WM_QUIT, 0, 0);

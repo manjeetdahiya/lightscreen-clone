@@ -15,8 +15,8 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 
-AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, Screenshot::Options options) :
-  QDialog(parent), pixmap(pixmap),  mScreenshotOptions(options), mSelection(), mMouseDown(false), mNewSelection(false),
+AreaSelector::AreaSelector(Screenshot *screenshot) :
+  QDialog(0), mScreenshot(screenshot), mMouseDown(false), mNewSelection(false),
   mHandleSize(10), mMouseOverHandle(0), mIdleTimer(),
   mShowHelp(true), mGrabbing(false), mOverlayAlpha(1),
   mTLHandle(0, 0, mHandleSize, mHandleSize), mTRHandle(0, 0, mHandleSize, mHandleSize),
@@ -36,7 +36,7 @@ AreaSelector::AreaSelector(QWidget* parent, QPixmap pixmap, Screenshot::Options 
   mAcceptWidget = new QWidget(this);
   mAcceptWidget->resize(110, 60);
   mAcceptWidget->setWindowOpacity(0.4);
-  mAcceptWidget->setStyleSheet("QWidget { background: url(:/icons/AreaBackground); } QPushButton { background: transparent; border: none; height: 50px; color: white; padding: 0; } QPushButton:hover { image: url(:/icons/AreaHover) }");
+  mAcceptWidget->setStyleSheet("QWidget { background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(140, 140, 140, 230), stop:1 rgba(80, 80, 80, 230)); padding: 6px 10px; border: 1px solid rgba(0, 0, 0, 240); border-radius: 8px; } QPushButton { background: transparent; border: none; height: 50px; color: white; padding: 0; } QPushButton:hover { cursor: hand; }");
 
   QPushButton *awAcceptButton = new QPushButton(QIcon(":/icons/AreaAccept"), "");
   connect(awAcceptButton, SIGNAL(clicked()), this, SLOT(grabRect()));
@@ -62,6 +62,11 @@ AreaSelector::~AreaSelector()
 {
 }
 
+QRect AreaSelector::resultRect()
+{
+  return mSelection;
+}
+
 void AreaSelector::displayHelp()
 {
   mShowHelp = true;
@@ -84,7 +89,7 @@ void AreaSelector::paintEvent(QPaintEvent* e)
   QColor overlayColor(0, 0, 0, mOverlayAlpha);
   QColor textColor = pal.color(QPalette::Active, QPalette::Text);
   QColor textBackgroundColor = pal.color(QPalette::Active, QPalette::Base);
-  painter.drawPixmap(0, 0, pixmap);
+  painter.drawPixmap(0, 0, mScreenshot->pixmap());
   painter.setFont(font);
 
   QRect r = mSelection.normalized().adjusted(0, 0, -1, -1);
@@ -182,7 +187,7 @@ void AreaSelector::paintEvent(QPaintEvent* e)
     painter.drawRects(handleMask().rects());
   }
 
-  if (!mMouseDown || !mScreenshotOptions.magnify)
+  if (!mMouseDown || !mScreenshot->options().magnify)
   {
     return;
   }
@@ -196,7 +201,7 @@ void AreaSelector::paintEvent(QPaintEvent* e)
 
   QRect newRect = QRect(magStart, magEnd);
 
-  QPixmap magnified = pixmap.copy(newRect).scaled(QSize(200, 200));
+  QPixmap magnified = mScreenshot->pixmap().copy(newRect).scaled(QSize(200, 200));
 
   QPainter magPainter(&magnified);
   magPainter.setPen(QPen(QBrush(QColor(255, 0, 0)), 2)); // Same border pen
@@ -205,10 +210,10 @@ void AreaSelector::paintEvent(QPaintEvent* e)
 
   QPoint drawPosition = mSelection.bottomRight();
 
-  if ((drawPosition.x()+200) > pixmap.rect().width())
+  if ((drawPosition.x()+200) > mScreenshot->pixmap().rect().width())
     drawPosition.setX(drawPosition.x()-200);
 
-  if ((drawPosition.y()+200) > pixmap.rect().height())
+  if ((drawPosition.y()+200) > mScreenshot->pixmap().rect().height())
     drawPosition.setY(drawPosition.y()-200);
 
   if (drawPosition.y() == mSelection.bottomRight().y()-200
@@ -321,10 +326,10 @@ void AreaSelector::mouseMoveEvent(QMouseEvent* e)
 
     QPoint acceptPos = e->pos() + QPoint(5, 5);
 
-    if ((acceptPos.x()+120) > pixmap.rect().width())
+    if ((acceptPos.x()+120) > mScreenshot->pixmap().rect().width())
       acceptPos.setX(acceptPos.x()-120);
 
-    if ((acceptPos.y()+70) > pixmap.rect().height())
+    if ((acceptPos.y()+70) > mScreenshot->pixmap().rect().height())
       acceptPos.setY(acceptPos.y()-70);
 
     mAcceptWidget->move(acceptPos);
@@ -407,13 +412,17 @@ void AreaSelector::keyPressEvent(QKeyEvent* e)
 
 void AreaSelector::showEvent(QShowEvent* e)
 {
-  resize(pixmap.size());
+  resize(mScreenshot->pixmap().size());
   move(0, 0);
 
-  if (mScreenshotOptions.animations)
+  if (mScreenshot->options().animations)
+  {
     os::effect(this, SLOT(animationTick(int)), 80, 500);
+  }
   else
+  {
     animationTick(80);
+  }
 }
 
 void AreaSelector::grabRect()
@@ -422,14 +431,12 @@ void AreaSelector::grabRect()
   if (!r.isNull() && r.isValid())
   {
     mGrabbing = true;
-    pixmap = pixmap.copy(r);
     accept();
   }
 }
 
 void AreaSelector::cancel()
 {
-  pixmap = QPixmap();
   reject();
 }
 

@@ -132,12 +132,19 @@ void Screenshot::selectedArea()
   if (mPixmap.isNull())
     return;
 
-  AreaSelector selector(0, mPixmap, mOptions);
-  selector.exec();
+  AreaSelector selector(this);
+  int result = selector.exec();
 
   alreadySelecting = false;
 
-  mPixmap = selector.pixmap;
+  if (result == QDialog::Accepted)
+  {
+    mPixmap = mPixmap.copy(selector.resultRect());
+  }
+  else
+  {
+    mPixmap = QPixmap();
+  }
 }
 
 

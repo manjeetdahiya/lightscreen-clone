@@ -15,8 +15,10 @@ public:
   ~PreviewDialog();
 
   void add(Screenshot* screenshot);
+  int count();
 
   static PreviewDialog *instance();
+  static bool isActive();
 
 public slots:
   void setWidth(int w)  { resize(w, height()); }

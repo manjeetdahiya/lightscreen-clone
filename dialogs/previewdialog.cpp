@@ -31,10 +31,10 @@ PreviewDialog::PreviewDialog(QWidget *parent) :
   connect(mNextButton, SIGNAL(clicked()), this, SLOT(next()));
 
   mPrevButton->setFlat(true);
-  mPrevButton->setIconSize(QSize(30, 50));
+  mPrevButton->setIconSize(QSize(24, 24));
 
   mNextButton->setFlat(true);
-  mNextButton->setIconSize(QSize(30, 50));
+  mNextButton->setIconSize(QSize(24, 24));
 
   mNextButton->setVisible(false);
   mPrevButton->setVisible(false);
@@ -74,12 +74,23 @@ void PreviewDialog::add(Screenshot *screenshot)
 
   widget->setPixmap(thumbnail);
 
+  if (size.height() < 80 && size.width() < 80)
+  {
+    size = QSize(80, 80);
+  }
+
   widget->setMinimumSize(size);
   widget->setMaximumSize(size);
   widget->resize(size);
 
   QPushButton *confirmPushButton = new QPushButton(QIcon(":/icons/Good"), "", widget);
   QPushButton *discardPushButton = new QPushButton(QIcon(":/icons/Bad"), "", widget);
+
+  confirmPushButton->setFlat(true);
+  confirmPushButton->setIconSize(QSize(24, 24));
+
+  discardPushButton->setFlat(true);
+  discardPushButton->setIconSize(QSize(24, 24));
 
   connect(confirmPushButton, SIGNAL(clicked()), screenshot, SLOT(confirm()));
   connect(confirmPushButton, SIGNAL(clicked()), this, SLOT(closePreview()));
@@ -91,10 +102,12 @@ void PreviewDialog::add(Screenshot *screenshot)
   wlayout->addWidget(confirmPushButton);
   wlayout->addStretch();
   wlayout->addWidget(discardPushButton);
+  wlayout->setMargin(0);
 
   QVBoxLayout *wl = new QVBoxLayout;
   wl->addLayout(wlayout);
   wl->addStretch();
+  wl->setMargin(0);
 
   widget->setLayout(wl);
 
@@ -112,8 +125,14 @@ void PreviewDialog::add(Screenshot *screenshot)
   relocate();
 }
 
+int PreviewDialog::count()
+{
+  return mStack->count();
+}
+
 void PreviewDialog::relocate()
 {
+  updateGeometry();
   resize(sizeHint());
 
   QPoint where = QApplication::desktop()->availableGeometry(this).bottomRight();
@@ -130,10 +149,16 @@ void PreviewDialog::closePreview()
   widget->hide();
   widget->deleteLater();
 
+  qDebug() << "Stack count" << mStack->count();
+
   if (mStack->count() == 0)
+  {
     close();
+  }
   else
+  {
     relocate();
+  }
 }
 
 void PreviewDialog::indexChanged(int i)
@@ -158,8 +183,8 @@ void PreviewDialog::indexChanged(int i)
 
   if (mStack->count() < 2)
   {
-    mNextButton->setVisible(false);
-    mPrevButton->setVisible(false);
+    mNextButton->setEnabled(false);
+    mPrevButton->setEnabled(false);
   }
 
   if (mStack->widget(i))
@@ -192,4 +217,12 @@ PreviewDialog *PreviewDialog::instance()
     mInstance = new PreviewDialog(0);
 
   return mInstance;
+}
+
+bool PreviewDialog::isActive()
+{
+  if (mInstance)
+    return true;
+
+  return false;
 }

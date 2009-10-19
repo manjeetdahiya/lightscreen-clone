@@ -29,7 +29,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   if (os::aeroGlass(this))
   {
-    ui.tabWidget->setStyleSheet("QTabWidget::pane { padding: 3px; border: 1px solid #898c95; border-radius: 5px; background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0.988636, y2:0.608, stop:0 rgba(235, 235, 235, 255), stop:1 rgba(255, 255, 255, 255)); }  QTabWidget::tab-bar { left: 5px; }");
+    ui.tabWidget->setStyleSheet("QTabWidget::pane { border: 1px solid #898c95; border-radius: 5px; background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0.988636, y2:0.608, stop:0 rgba(235, 235, 235, 255), stop:1 rgba(255, 255, 255, 255)); }  QTabWidget::tab-bar { left: 5px; }");
     layout()->setMargin(3);
     resize(minimumSizeHint());
   }
@@ -77,17 +77,18 @@ void OptionsDialog::initConnections()
   //connect(ui.aboutPushButton        , SIGNAL(clicked())                , parent(), SLOT(showAbout()));
   connect(ui.checkUpdatesPushButton , SIGNAL(clicked())                , this    , SLOT(checkUpdatesNow()));
 
-  connect(ui.screenCheckBox   , SIGNAL(toggled(bool)), ui.screenHotkeyWidget   , SLOT(setEnabled(bool)));
-  connect(ui.areaCheckBox     , SIGNAL(toggled(bool)), ui.areaHotkeyWidget     , SLOT(setEnabled(bool)));
-  connect(ui.windowCheckBox   , SIGNAL(toggled(bool)), ui.windowHotkeyWidget   , SLOT(setEnabled(bool)));
-  connect(ui.openCheckBox     , SIGNAL(toggled(bool)), ui.openHotkeyWidget     , SLOT(setEnabled(bool)));
-  connect(ui.directoryCheckBox, SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
-  connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.targetLineEdit       , SLOT(setDisabled(bool)));
-  connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.browsePushButton     , SLOT(setDisabled(bool)));
-  connect(ui.saveAsCheckBox   , SIGNAL(toggled(bool)), ui.directoryLabel       , SLOT(setDisabled(bool)));
-  connect(ui.startupCheckBox  , SIGNAL(toggled(bool)), ui.startupHideCheckBox  , SLOT(setEnabled(bool)));
-  connect(ui.qualitySlider    , SIGNAL(valueChanged(int)), ui.qualityValueLabel, SLOT(setNum(int)));
-  connect(ui.trayCheckBox     , SIGNAL(toggled(bool)), ui.messageCheckBox      , SLOT(setEnabled(bool)));
+  connect(ui.screenCheckBox      , SIGNAL(toggled(bool)), ui.screenHotkeyWidget   , SLOT(setEnabled(bool)));
+  connect(ui.areaCheckBox        , SIGNAL(toggled(bool)), ui.areaHotkeyWidget     , SLOT(setEnabled(bool)));
+  connect(ui.windowCheckBox      , SIGNAL(toggled(bool)), ui.windowHotkeyWidget   , SLOT(setEnabled(bool)));
+  connect(ui.windowPickerCheckBox, SIGNAL(toggled(bool)), ui.windowPickerHotkeyWidget, SLOT(setEnabled(bool)));
+  connect(ui.openCheckBox        , SIGNAL(toggled(bool)), ui.openHotkeyWidget     , SLOT(setEnabled(bool)));
+  connect(ui.directoryCheckBox   , SIGNAL(toggled(bool)), ui.directoryHotkeyWidget, SLOT(setEnabled(bool)));
+  connect(ui.saveAsCheckBox      , SIGNAL(toggled(bool)), ui.targetLineEdit       , SLOT(setDisabled(bool)));
+  connect(ui.saveAsCheckBox      , SIGNAL(toggled(bool)), ui.browsePushButton     , SLOT(setDisabled(bool)));
+  connect(ui.saveAsCheckBox      , SIGNAL(toggled(bool)), ui.directoryLabel       , SLOT(setDisabled(bool)));
+  connect(ui.startupCheckBox     , SIGNAL(toggled(bool)), ui.startupHideCheckBox  , SLOT(setEnabled(bool)));
+  connect(ui.qualitySlider       , SIGNAL(valueChanged(int)), ui.qualityValueLabel, SLOT(setNum(int)));
+  connect(ui.trayCheckBox        , SIGNAL(toggled(bool)), ui.messageCheckBox      , SLOT(setEnabled(bool)));
 
   // Updater
   connect(ui.updateButton            , SIGNAL(clicked()), this, SIGNAL(updaterDownload()));
@@ -262,6 +263,11 @@ void OptionsDialog::saveSettings()
   settings.setValue("hotkey", ui.windowHotkeyWidget->hotkey());
   settings.endGroup();
 
+  settings.beginGroup("windowPicker");
+  settings.setValue("enabled", ui.windowPickerCheckBox->isChecked());
+  settings.setValue("hotkey", ui.windowPickerHotkeyWidget->hotkey());
+  settings.endGroup();
+
   settings.beginGroup("open");
   settings.setValue("enabled", ui.openCheckBox->isChecked());
   settings.setValue("hotkey", ui.openHotkeyWidget->hotkey());
@@ -354,6 +360,7 @@ void OptionsDialog::loadSettings()
   ui.screenCheckBox->toggle();
   ui.areaCheckBox->toggle();
   ui.windowCheckBox->toggle();
+  ui.windowPickerCheckBox->toggle();
   ui.openCheckBox->toggle();
   ui.directoryCheckBox->toggle();
 
@@ -370,6 +377,11 @@ void OptionsDialog::loadSettings()
   settings.beginGroup("window");
   ui.windowCheckBox->setChecked(settings.value("enabled").toBool());
   ui.windowHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::ALT + Qt::Key_Print)).value<QKeySequence> ());
+  settings.endGroup();
+
+  settings.beginGroup("windowPicker");
+  ui.windowPickerCheckBox->setChecked(settings.value("enabled").toBool());
+  ui.windowPickerHotkeyWidget->setHotkey(settings.value("hotkey", QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Print)).value<QKeySequence> ());
   settings.endGroup();
 
   settings.beginGroup("open");
@@ -399,6 +411,10 @@ bool OptionsDialog::hotkeyCollision()
         && ui.windowCheckBox->isChecked())
       return true;
 
+    if (ui.screenHotkeyWidget->hotkey() == ui.windowPickerHotkeyWidget->hotkey()
+        && ui.windowPickerCheckBox->isChecked())
+      return true;
+
     if (ui.screenHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey()
         && ui.openCheckBox->isChecked())
       return true;
@@ -416,6 +432,10 @@ bool OptionsDialog::hotkeyCollision()
 
     if (ui.areaHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey()
         && ui.windowCheckBox->isChecked())
+      return true;
+
+    if (ui.areaHotkeyWidget->hotkey() == ui.windowPickerHotkeyWidget->hotkey()
+        && ui.windowPickerCheckBox->isChecked())
       return true;
 
     if (ui.areaHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey()
@@ -437,6 +457,10 @@ bool OptionsDialog::hotkeyCollision()
         && ui.areaCheckBox->isChecked())
       return true;
 
+    if (ui.windowHotkeyWidget->hotkey() == ui.windowPickerHotkeyWidget->hotkey()
+        && ui.windowPickerCheckBox->isChecked())
+      return true;
+
     if (ui.windowHotkeyWidget->hotkey() == ui.openHotkeyWidget->hotkey()
         && ui.openCheckBox->isChecked())
       return true;
@@ -454,6 +478,10 @@ bool OptionsDialog::hotkeyCollision()
 
     if (ui.openHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey()
         && ui.areaCheckBox->isChecked())
+      return true;
+
+    if (ui.openHotkeyWidget->hotkey() == ui.windowPickerHotkeyWidget->hotkey()
+        && ui.windowPickerCheckBox->isChecked())
       return true;
 
     if (ui.openHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey()
@@ -474,6 +502,10 @@ bool OptionsDialog::hotkeyCollision()
 
     if (ui.directoryHotkeyWidget->hotkey() == ui.areaHotkeyWidget->hotkey()
         && ui.areaCheckBox->isChecked())
+      return true;
+
+    if (ui.directoryHotkeyWidget->hotkey() == ui.windowPickerHotkeyWidget->hotkey()
+        && ui.windowPickerCheckBox->isChecked())
       return true;
 
     if (ui.directoryHotkeyWidget->hotkey() == ui.windowHotkeyWidget->hotkey()

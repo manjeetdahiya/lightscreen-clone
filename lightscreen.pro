@@ -34,8 +34,10 @@ TRANSLATIONS += translations/spanish.ts \
     translations/untranslated.ts
 RC_FILE += lightscreen.rc
 CODECFORSRC = UTF-8
+LIBS += libgcc
 QT += network \
     core \
     gui
 win32:LIBS += libgdi32
 include($$PWD/tools/globalshortcut/globalshortcut.pri)
+OTHER_FILES += TODO.txt

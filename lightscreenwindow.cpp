@@ -34,7 +34,7 @@
 #include "updater/updater.h"
 
 LightscreenWindow::LightscreenWindow(QWidget *parent) :
-  QDialog(parent), mReviveMain(false),  mDoCache(false), mWasHidden(false), mLastMode(-1)
+  QDialog(parent), mReviveMain(false),  mDoCache(false), mLastMode(-1)
 {
   os::aeroGlass(this);
   os::translate(mSettings.value("options/language").toString().toLower());
@@ -130,7 +130,7 @@ bool LightscreenWindow::closingWithoutTray()
 
 void LightscreenWindow::cleanup(Screenshot::Options options)
 {
-  qDebug() << options.fileName << options.result;
+  qDebug() << "cleanup: " << options.fileName << " - " << options.result;
 
   // Reversing settings
   if (mSettings.value("options/hide").toBool())
@@ -138,8 +138,15 @@ void LightscreenWindow::cleanup(Screenshot::Options options)
     if (mSettings.value("options/tray").toBool() && mTrayIcon)
       mTrayIcon->show();
 
-    if (!mWasHidden)
+    if (PreviewDialog::isActive())
+    {
+      if (PreviewDialog::instance()->count() <= 1)
+        setVisible(true);
+    }
+    else
+    {
       setVisible(true);
+    }
   }
 
   if (mSettings.value("options/tray").toBool() && mTrayIcon)
@@ -204,13 +211,10 @@ void LightscreenWindow::screenshotAction(int mode)
   QString fileName;
   int delayms = -1;
 
-  if (mLastMode == -1)
-    mWasHidden = !isVisible();
-
   bool optionsHide = mSettings.value("options/hide").toBool(); // Option cache, used a couple of times.
 
   // Applying pre-screenshot settings
-  if (optionsHide && !mWasHidden)
+  if (optionsHide)
   {
     setVisible(false);
 
@@ -476,8 +480,12 @@ void LightscreenWindow::updaterCheckDone(Updater::Result result)
       mSettings.setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
     break;
     case Updater::NewVersion:
+    case Updater::MajorUpgrade:
       disconnect(Updater::instance(), SIGNAL(checkDone(Updater::Result)), this, SLOT(updaterCheckDone(Updater::Result)));
       showOptions(true);
+    break;
+    case Updater::Error:
+    // Fail silently
     break;
   }
 }
@@ -493,6 +501,7 @@ void LightscreenWindow::updaterCanceled(bool reminder)
 
 // Aliases
 void LightscreenWindow::windowHotkey() { screenshotAction(1); }
+void LightscreenWindow::windowPickerHotkey() { screenshotAction(3); }
 void LightscreenWindow::areaHotkey()   { screenshotAction(2); }
 
 /*
@@ -549,6 +558,10 @@ void LightscreenWindow::connectHotkeys()
   if (mSettings.value("actions/window/enabled").toBool())
     window = GlobalShortcutManager::instance()->connect(mSettings.value(
         "actions/window/hotkey").value<QKeySequence> (), this, SLOT(windowHotkey()));
+
+  if (mSettings.value("actions/windowPicker/enabled").toBool())
+    window = GlobalShortcutManager::instance()->connect(mSettings.value(
+        "actions/windowPicker/hotkey").value<QKeySequence> (), this, SLOT(windowPickerHotkey()));
 
   if (mSettings.value("actions/open/enabled").toBool())
     open   = GlobalShortcutManager::instance()->connect(mSettings.value(

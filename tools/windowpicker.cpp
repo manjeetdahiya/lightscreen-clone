@@ -103,5 +103,6 @@ void WindowPicker::closeEvent(QCloseEvent*)
 
 void WindowPicker::focusOutEvent(QFocusEvent*)
 {
+  qDebug() << "WindowPicker::focusOutEvent";
   close();
 }

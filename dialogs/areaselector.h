@@ -13,19 +13,18 @@
 #include <QRect>
 #include <QTimer>
 
-#include "../tools/screenshot.h"
-
 class QPaintEvent;
 class QResizeEvent;
 class QMouseEvent;
+class Screenshot;
 
 class AreaSelector : public QDialog
 {
     Q_OBJECT
 public:
-    AreaSelector(QWidget* parent, QPixmap pixmap, Screenshot::Options options);
+    AreaSelector(Screenshot* screenshot);
     ~AreaSelector();
-    QPixmap pixmap;
+    QRect resultRect();
 
 protected slots:
     void displayHelp();
@@ -51,7 +50,7 @@ protected:
     QRegion handleMask() const;
     QPoint limitPointToRect( const QPoint &p, const QRect &r ) const;
 
-    Screenshot::Options mScreenshotOptions;
+    Screenshot *mScreenshot;
     QPoint mMousePos;
     QRect  mSelection;
     bool   mMouseDown;

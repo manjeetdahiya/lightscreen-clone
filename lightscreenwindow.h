@@ -45,6 +45,8 @@ public slots:
   void updaterCheckDone(Updater::Result result);
   void updaterCanceled(bool reminder);
   void windowHotkey();
+  void windowPickerHotkey();
+
 
 private:
   void applySettings();
