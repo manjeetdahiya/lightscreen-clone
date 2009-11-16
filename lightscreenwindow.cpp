@@ -32,7 +32,7 @@
 #include "updater/updater.h"
 
 LightscreenWindow::LightscreenWindow(QWidget *parent) :
-  QDialog(parent)
+    QDialog(parent), mReviveMain(false),  mDoCache(false), mTrayIcon(0)
 {
   os::aeroGlass(this);
   os::translate(mSettings.value("options/language").toString().toLower());
@@ -328,7 +328,7 @@ void LightscreenWindow::showScreenshotMenu()
  QAction *screenAction = new QAction(tr("&Screen"), buttonMenu);
  screenAction->setData(QVariant(0));
 
- QAction *windowAction = new QAction(tr("Active &Window"), buttonMenu);
+ QAction *windowAction = new QAction(tr("&Window"), buttonMenu);
  windowAction->setData(QVariant(1));
 
  QAction *areaAction = new QAction(tr("&Area"), buttonMenu);

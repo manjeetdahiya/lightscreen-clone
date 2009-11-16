@@ -176,7 +176,8 @@ QPixmap os::cursor()
 void os::singleInstance()
 {
 #ifdef Q_WS_WIN
-  WCHAR* mutexName = L"Lightscreen";
+  WCHAR* mutexName = new WCHAR[QApplication::applicationName().size()+1];
+  QApplication::applicationName().toWCharArray(mutexName);
 
   ::CreateMutex(NULL, FALSE, mutexName);
 
