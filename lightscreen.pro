@@ -4,19 +4,18 @@ HEADERS += tools/os.h \
     updater/updater.h \
     dialogs/areaselector.h \
     dialogs/optionsdialog.h \
-    dialogs/aboutdialog.h \
     widgets/hotkeywidget.h \
     lightscreenwindow.h \
     tools/screenshot.h \
     dialogs/previewdialog.h \
     tools/screenshotmanager.h \
     tools/windowpicker.h \
-    tools/qtwin.h
+    tools/qtwin.h \
+    dialogs/updaterdialog.h
 SOURCES += tools/os.cpp \
     updater/updater.cpp \
     dialogs/areaselector.cpp \
     dialogs/optionsdialog.cpp \
-    dialogs/aboutdialog.cpp \
     widgets/hotkeywidget.cpp \
     main.cpp \
     lightscreenwindow.cpp \
@@ -24,7 +23,8 @@ SOURCES += tools/os.cpp \
     dialogs/previewdialog.cpp \
     tools/screenshotmanager.cpp \
     tools/windowpicker.cpp \
-    tools/qtwin.cpp
+    tools/qtwin.cpp \
+    dialogs/updaterdialog.cpp
 FORMS += dialogs/optionsdialog.ui \
     dialogs/aboutdialog.ui \
     lightscreenwindow.ui
@@ -40,4 +40,5 @@ QT += network \
     gui
 win32:LIBS += libgdi32
 include($$PWD/tools/globalshortcut/globalshortcut.pri)
-OTHER_FILES += TODO.txt
+OTHER_FILES += TODO.txt \
+    TODO.txt

@@ -4,7 +4,7 @@
 #include <QWidget>
 
 class QLabel;
-class QRubberBand;
+class QRect;
 class WindowPicker : public QWidget
 {
   Q_OBJECT
@@ -16,14 +16,19 @@ signals:
     void pixmap(QPixmap pixmap);
 
 protected:
+    void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void closeEvent(QCloseEvent*);
     void focusOutEvent(QFocusEvent*);
 
 private:
+    QPixmap mCrosshair;
     QLabel *mWindowLabel;
-    QRubberBand *mIndicator;
+    QLabel *mWindowIcon;
+    QLabel *mCrosshairLabel;
+    bool mTaken;
+
 };
 
 #endif // WINDOWPICKER_H

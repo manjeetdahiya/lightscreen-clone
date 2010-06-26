@@ -65,9 +65,9 @@ void PreviewDialog::add(Screenshot *screenshot)
 
   QSize size = screenshot->pixmap().size();
 
-  if (!(size.width() < 200 && size.height() < 200))
+  if (!(size.width() < 300 && size.height() < 300))
   { // Scale the image when it's witdth or height exceed 200
-    size.scale(200, 200, Qt::KeepAspectRatio);
+    size.scale(300, 300, Qt::KeepAspectRatio);
   }
 
   QPixmap thumbnail = screenshot->pixmap().scaled(size);
@@ -205,6 +205,11 @@ void PreviewDialog::closeEvent(QCloseEvent *event)
 {
   mInstance = 0;
   deleteLater();
+}
+
+void PreviewDialog::mouseDoubleClickEvent(QMouseEvent *event)
+{
+  //TODO: Enlarge (new window?)
 }
 
 // Singleton

@@ -22,7 +22,6 @@
  * Lightscreen includes
  */
 #include "lightscreenwindow.h"
-#include "dialogs/aboutdialog.h"
 #include "dialogs/optionsdialog.h"
 #include "dialogs/previewdialog.h"
 
@@ -57,7 +56,7 @@ LightscreenWindow::LightscreenWindow(QWidget *parent) :
   connect(ScreenshotManager::instance(), SIGNAL(windowCleanup(Screenshot::Options)), this, SLOT(cleanup(Screenshot::Options)));
 
   if (!mSettings.contains("file/format"))
-    showOptions(); // There are no options (or the options config is invalid or incomplete)
+    showOptions();  // There are no options (or the options config is invalid or incomplete)
 
   applySettings();
 
@@ -208,7 +207,6 @@ void LightscreenWindow::restoreSystemTrayNotifier()
 
 void LightscreenWindow::screenshotAction(int mode)
 {
-  QString fileName;
   int delayms = -1;
 
   bool optionsHide = mSettings.value("options/hide").toBool(); // Option cache, used a couple of times.
@@ -388,13 +386,6 @@ void LightscreenWindow::showTrayNotifier(bool result)
   QTimer::singleShot(1500, this, SLOT(restoreSystemTrayNotifier()));
 }
 
-void LightscreenWindow::showAbout()
-{
-  QPointer<AboutDialog> aboutDialog = new AboutDialog(this);
-  aboutDialog->exec();
-  aboutDialog->deleteLater();
-}
-
 void LightscreenWindow::showHotkeyError(QStringList hotkeys)
 {
    static bool dontShow = false;
@@ -469,33 +460,6 @@ void LightscreenWindow::toggleVisibility(QSystemTrayIcon::ActivationReason reaso
   else
   {
     show();
-  }
-}
-
-void LightscreenWindow::updaterCheckDone(Updater::Result result)
-{
-  switch (result)
-  {
-    case Updater::NoVersion:
-      mSettings.setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
-    break;
-    case Updater::NewVersion:
-    case Updater::MajorUpgrade:
-      disconnect(Updater::instance(), SIGNAL(checkDone(Updater::Result)), this, SLOT(updaterCheckDone(Updater::Result)));
-      showOptions(true);
-    break;
-    case Updater::Error:
-    // Fail silently
-    break;
-  }
-}
-
-void LightscreenWindow::updaterCanceled(bool reminder)
-{
-  setEnabled(true);
-
-  if (!reminder) {
-    mSettings.setValue("options/disableUpdater", true);
   }
 }
 
@@ -618,9 +582,6 @@ void LightscreenWindow::createTrayIcon()
   QAction *goAction = new QAction(tr("&Go to Folder"), mTrayIcon);
   connect(goAction, SIGNAL(triggered()), this, SLOT(goToFolder()));
 
-  QAction *aboutAction = new QAction(tr("&About Lightscreen"), mTrayIcon);
-  connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAbout()));
-
   QAction *quitAction = new QAction(tr("&Quit"), mTrayIcon);
   connect(quitAction, SIGNAL(triggered()), this, SLOT(accept()));
 
@@ -637,7 +598,6 @@ void LightscreenWindow::createTrayIcon()
   trayIconMenu->addAction(optionsAction);
   trayIconMenu->addAction(goAction);
   trayIconMenu->addSeparator();
-  trayIconMenu->addAction(aboutAction);
   trayIconMenu->addAction(quitAction);
 
   mTrayIcon->setContextMenu(trayIconMenu);
@@ -652,8 +612,35 @@ void LightscreenWindow::checkForUpdates()
       > QDate::currentDate().dayOfYear())
     return; // If 7 days have not passed since the last update check.
 
-  connect(Updater::instance(), SIGNAL(checkDone(Updater::Result)), this, SLOT(updaterCheckDone(Updater::Result)));
+  connect(Updater::instance(), SIGNAL(done(bool)), this, SLOT(updaterDone(bool)));
   Updater::instance()->check();
+}
+
+
+void LightscreenWindow::updaterDone(bool result)
+{
+  mSettings.setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
+
+  if (!result)
+    return;
+
+  QMessageBox msgBox;
+  msgBox.setWindowTitle(tr("Lightscreen"));
+  msgBox.setText(tr("There's a new version of Lightscreen available.<br>Would you like to see more information?<br>(<em>You can turn this notification off</em>)"));
+  msgBox.setIcon(QMessageBox::Information);
+
+  QPushButton *yesButton     = msgBox.addButton(QMessageBox::Yes);
+  QPushButton *turnOffButton = msgBox.addButton(tr("Turn Off"), QMessageBox::ActionRole);
+  QPushButton *remindButton  = msgBox.addButton(tr("Remind Me Later"), QMessageBox::RejectRole);
+
+  Q_UNUSED(remindButton);
+
+  msgBox.exec();
+
+  if (msgBox.clickedButton() == yesButton)
+    QDesktopServices::openUrl(QUrl("http://lightscreen.sourceforge.net/new-version"));
+  else if (msgBox.clickedButton() == turnOffButton)
+    mSettings.setValue("disableUpdater", true);
 }
 
 // Event handling

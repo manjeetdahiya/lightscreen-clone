@@ -3,7 +3,6 @@
         <file alias="Application">images/LS.ico</file>
         <file alias="SystemTray">images/LSSmall.png</file>
         <file alias="OpenFolder">images/document-open-folder.png</file>
-        <file alias="Play">images/media-playback-start.png</file>
         <file alias="Bad">images/bad.png</file>
         <file alias="Good">images/good.png</file>
         <file alias="SystemTrayFailure">images/LS.systemtray.bad.png</file>
@@ -16,5 +15,6 @@
         <file alias="AreaCancel">images/area-cancel.png</file>
         <file alias="arrowLeft">images/previewArrowLeft.png</file>
         <file alias="arrowRight">images/previewArrowRight.png</file>
+        <file alias="picker">images/picker.png</file>
     </qresource>
 </RCC>

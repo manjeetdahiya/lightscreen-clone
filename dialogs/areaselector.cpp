@@ -25,7 +25,7 @@ AreaSelector::AreaSelector(Screenshot *screenshot) :
   mRHandle(0, 0, mHandleSize, mHandleSize), mBHandle(0, 0, mHandleSize, mHandleSize)
 {
   mHandles << &mTLHandle << &mTRHandle << &mBLHandle << &mBRHandle
-      << &mLHandle << &mTHandle << &mRHandle << &mBHandle;
+           << &mLHandle << &mTHandle << &mRHandle << &mBHandle;
   setMouseTracking(true);
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint);
   setCursor(Qt::CrossCursor);
@@ -38,17 +38,17 @@ AreaSelector::AreaSelector(Screenshot *screenshot) :
   mAcceptWidget->setWindowOpacity(0.4);
   mAcceptWidget->setStyleSheet("QWidget { background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(140, 140, 140, 230), stop:1 rgba(80, 80, 80, 230)); padding: 6px 10px; border: 1px solid rgba(0, 0, 0, 240); border-radius: 8px; } QPushButton { background: transparent; border: none; height: 50px; color: white; padding: 0; } QPushButton:hover { cursor: hand; }");
 
-  QPushButton *awAcceptButton = new QPushButton(QIcon(":/icons/AreaAccept"), "");
+  QPushButton *awAcceptButton = new QPushButton(QIcon(":/icons/AreaAccept"), "", this);
   connect(awAcceptButton, SIGNAL(clicked()), this, SLOT(grabRect()));
   awAcceptButton->setCursor(Qt::PointingHandCursor);
   awAcceptButton->setIconSize(QSize(48, 48));
 
-  QPushButton *awRejectButton = new QPushButton(QIcon(":/icons/AreaCancel"), "");
+  QPushButton *awRejectButton = new QPushButton(QIcon(":/icons/AreaCancel"), "", this);
   connect(awRejectButton, SIGNAL(clicked()), this, SLOT(cancel()));
   awRejectButton->setCursor(Qt::PointingHandCursor);
   awRejectButton->setIconSize(QSize(48, 48));
 
-  QHBoxLayout *awLayout = new QHBoxLayout;
+  QHBoxLayout *awLayout = new QHBoxLayout(this);
   awLayout->addWidget(awAcceptButton);
   awLayout->addWidget(awRejectButton);
   awLayout->setMargin(0);
@@ -81,6 +81,7 @@ void AreaSelector::paintEvent(QPaintEvent* e)
     return;
 
   QPainter painter(this);
+  //TODO: Cache overlay?
 
   QPalette pal = palette();
   QFont font   = QToolTip::font();
@@ -417,11 +418,11 @@ void AreaSelector::showEvent(QShowEvent* e)
 
   if (mScreenshot->options().animations)
   {
-    os::effect(this, SLOT(animationTick(int)), 80, 500);
+    os::effect(this, SLOT(animationTick(int)), 85, 500);
   }
   else
   {
-    animationTick(80);
+    animationTick(85);
   }
 }
 

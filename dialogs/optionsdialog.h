@@ -21,19 +21,10 @@ public slots:
   void flipButtonToggled(bool checked);
   void languageChange(QString language);
   void link(QString url);
+  void openUrl(QString url);
   void rejected();
   void saveSettings();
-  // Updater
-  void updaterCheckDone(Updater::Result result);
-  void updaterDownloadDone(bool error);
-  void updaterDownloading(QString file);
-  void updaterProgressBar(qint64 value, qint64 maximum);
-  void updaterCleanup();
-
-signals:
-  void updaterCancel();
-  void updaterFinished(int);
-  void updaterDownload();
+  void updatePreview();
 
 protected:
   bool event(QEvent *event);

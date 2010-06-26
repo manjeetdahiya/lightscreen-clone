@@ -176,10 +176,13 @@ void Screenshot::grabDesktop()
   QRect geometry;
 
   if (mOptions.currentMonitor)
-      geometry = qApp->desktop()->screenGeometry(QCursor::pos());
+  {
+    geometry = qApp->desktop()->screenGeometry(QCursor::pos());
+  }
   else
-      geometry = qApp->desktop()->geometry();
-
+  {
+    geometry = qApp->desktop()->geometry();
+  }
   mPixmap = QPixmap::grabWindow(qApp->desktop()->winId(), geometry.x(), geometry.y(), geometry.width(), geometry.height());
 }
 
@@ -243,15 +246,20 @@ void Screenshot::save()
     fileName = newFileName();
 
     fileName = fileName + extension();
-  } else if (mOptions.file && mOptions.saveAs)
+  }
+  else if (mOptions.file && mOptions.saveAs)
   {
     fileName = QFileDialog::getSaveFileName(0, tr("Save as.."), newFileName(), "*"+extension());
   }
 
   if (fileName.isEmpty())
-      action = false;
-    else
-      action = mPixmap.save(fileName, 0, mOptions.quality);
+  {
+    action = false;
+  }
+  else
+  {
+    action = mPixmap.save(fileName, 0, mOptions.quality);
+  }
 
   if (mOptions.file)
   { // Windows only
@@ -259,8 +267,14 @@ void Screenshot::save()
   }
 
   if (mOptions.clipboard)
+  {
     QApplication::clipboard()->setPixmap(mPixmap, QClipboard::Clipboard);
 
+    if (!mOptions.file)
+    {
+      action = true;
+    }
+  }
   mPixmap = QPixmap();
 
 
@@ -270,7 +284,9 @@ void Screenshot::save()
     mOptions.result   = true;
   }
   else
+  {
     mOptions.result   = false;
+  }
 
 }
 

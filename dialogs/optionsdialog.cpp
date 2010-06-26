@@ -1,4 +1,5 @@
 #include <QCompleter>
+#include <QDate>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDirModel>
@@ -7,8 +8,6 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QUrl>
-
-#include <QDate>
 
 #include <QDebug>
 
@@ -29,12 +28,15 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
   if (os::aeroGlass(this))
   {
-    ui.tabWidget->setStyleSheet("QTabWidget::pane { border: 1px solid #898c95; border-radius: 5px; background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:0.988636, y2:0.608, stop:0 rgba(235, 235, 235, 255), stop:1 rgba(255, 255, 255, 255)); }  QTabWidget::tab-bar { left: 5px; }");
     layout()->setMargin(3);
     resize(minimumSizeHint());
   }
 
-  ui.updateCancelButton->setVisible(false);
+  ui.versionLabel->setText(tr("Version %1").arg(qApp->applicationVersion()));
+
+  QPalette optionsPalette = ui.optionsScrollArea->palette();
+  optionsPalette.setColor(QPalette::Window,  ui.tabWidget->palette().color(QPalette::Base));
+  ui.optionsScrollArea->setPalette(optionsPalette);
 
 #if !defined(Q_WS_WIN)
   ui.cursorCheckBox->setVisible(false);
@@ -73,8 +75,13 @@ void OptionsDialog::initConnections()
   connect(ui.buttonBox              , SIGNAL(accepted())               , this    , SLOT(accepted()));
   connect(ui.buttonBox              , SIGNAL(rejected())               , this    , SLOT(rejected()));
   connect(ui.flipPrefixPushButton   , SIGNAL(toggled(bool))            , this    , SLOT(flipButtonToggled(bool)));
+
+  connect(ui.flipPrefixPushButton   , SIGNAL(clicked())                , this    , SLOT(updatePreview()));
+  connect(ui.prefixLineEdit         , SIGNAL(textChanged(QString))     , this    , SLOT(updatePreview()));
+  connect(ui.formatComboBox         , SIGNAL(currentIndexChanged(int)) , this    , SLOT(updatePreview()));
+  connect(ui.namingComboBox         , SIGNAL(currentIndexChanged(int)) , this    , SLOT(updatePreview()));
+
   connect(ui.browsePushButton       , SIGNAL(clicked())                , this    , SLOT(browse()));
-  //connect(ui.aboutPushButton        , SIGNAL(clicked())                , parent(), SLOT(showAbout()));
   connect(ui.checkUpdatesPushButton , SIGNAL(clicked())                , this    , SLOT(checkUpdatesNow()));
 
   connect(ui.screenCheckBox      , SIGNAL(toggled(bool)), ui.screenHotkeyWidget   , SLOT(setEnabled(bool)));
@@ -90,12 +97,11 @@ void OptionsDialog::initConnections()
   connect(ui.qualitySlider       , SIGNAL(valueChanged(int)), ui.qualityValueLabel, SLOT(setNum(int)));
   connect(ui.trayCheckBox        , SIGNAL(toggled(bool)), ui.messageCheckBox      , SLOT(setEnabled(bool)));
 
-  // Updater
-  connect(ui.updateButton            , SIGNAL(clicked()), this, SIGNAL(updaterDownload()));
-  connect(ui.updateCancelButton      , SIGNAL(clicked()), this, SIGNAL(updaterCancel()));
-
   connect(ui.moreInformationLabel, SIGNAL(linkActivated(QString))      , this, SLOT(link(QString)));
   connect(ui.languageComboBox    , SIGNAL(currentIndexChanged(QString)), this, SLOT(languageChange(QString)));
+
+  connect(ui.mainLabel ,    SIGNAL(linkActivated(QString)), this, SLOT(openUrl(QString)));
+  connect(ui.linksLabel,    SIGNAL(linkActivated(QString)), this, SLOT(openUrl(QString)));
 }
 /*
  * Slots
@@ -131,10 +137,7 @@ void OptionsDialog::browse()
 
 void OptionsDialog::checkUpdatesNow()
 {
-  ui.tabWidget->setCurrentIndex(4); // For when it's called from outside
-  ui.checkUpdatesPushButton->setEnabled(false);
-  ui.updaterGroupBox->setTitle(tr("Checking..."));
-  Updater::instance()->check(this);
+  Updater::instance()->checkWithFeedback();
 }
 
 void OptionsDialog::dialogButtonClicked(QAbstractButton *button)
@@ -202,6 +205,18 @@ void OptionsDialog::link(QString url)
   QDesktopServices::openUrl(url);
 }
 
+void OptionsDialog::openUrl(QString url)
+{
+  if (url == "#aboutqt")
+  {
+    qApp->aboutQt();
+  }
+  else
+  {
+    QDesktopServices::openUrl(QUrl(url));
+  }
+}
+
 void OptionsDialog::rejected()
 {
   languageChange(QSettings().value("options/language").toString()); // Revert language to default.
@@ -237,7 +252,7 @@ void OptionsDialog::saveSettings()
   settings.setValue("cursor", ui.cursorCheckBox->isChecked());
   settings.setValue("saveAs", ui.saveAsCheckBox->isChecked());
   settings.setValue("preview", ui.previewCheckBox->isChecked());
-  settings.setValue("animations", ui.animationsCheckBox->isChecked());
+  //settings.setValue("animations", ui.animationsCheckBox->isChecked());
 
   // Advanced
   settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
@@ -324,7 +339,7 @@ void OptionsDialog::loadSettings()
   ui.cursorCheckBox->setChecked(settings.value("cursor", false).toBool());
   ui.saveAsCheckBox->setChecked(settings.value("saveAs", false).toBool());
   ui.previewCheckBox->setChecked(settings.value("preview", false).toBool());
-  ui.animationsCheckBox->setChecked(settings.value("animations", true).toBool());
+  //ui.animationsCheckBox->setChecked(settings.value("animations", true).toBool());
 
   // Advanced
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", false).toBool());
@@ -520,109 +535,39 @@ bool OptionsDialog::hotkeyCollision()
   return false;
 }
 
-// Updater
-void OptionsDialog::updaterCheckDone(Updater::Result result)
+void OptionsDialog::updatePreview()
 {
-  qDebug() << "Result: " << result;
+    QString prefix, suffix, format;
 
-  ui.updaterGroupBox->setEnabled(true);
+    format = ui.formatComboBox->currentText().toLower();
 
-  switch (result)
-  {
-    case Updater::NewVersion:
-      ui.updaterGroupBox->setTitle(tr("Update found:"));
-
-      ui.updaterBrowser->setText(tr("There's a <a href=\"http://lightscreen.sourceforge.net/new-version\">new Lightscreen version</a> available.<hr><b>Changelog:</b>"));
-      //TODO: Append changelog here.
-
-      ui.updaterProgressBar->setMaximum(1);
-      ui.updaterProgressBar->setValue(0);
-
-      QSettings().setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
-    break;
-    case Updater::MajorUpgrade:
-      ui.updaterGroupBox->setTitle(tr("Major updater available:"));
-      ui.updaterBrowser->setText(tr("There's a new version available,<br> please see <a href=\"http://lightscreen.sourceforge.net/new-version\">the Lighscreen website</a>."));
-      ui.updateButton->setEnabled(false);
-    break;
-    case Updater::NoVersion:   
-      ui.updaterBrowser->setText(tr("No new versions available"));
-      QSettings().setValue("lastUpdateCheck", QDate::currentDate().dayOfYear());
-      updaterCleanup();
-    break;
-    case Updater::Error:
-      ui.updaterBrowser->setText(tr("An error ocurred, make sure you are connected and try again later."));
-      updaterCleanup();
-    break;
-  }
-}
-
-void OptionsDialog::updaterDownloading(QString file)
-{
-  if (file.isEmpty())
-  {
-    updaterDownloadDone(true);
-    return;
-  }
-
-  setUpdatesEnabled(false);
-  ui.updateButton->hide();
-  ui.updateCancelButton->show();
-
-  ui.updaterGroupBox->setTitle(tr("Downloading ") + file);
-  setUpdatesEnabled(true);
-}
-
-void OptionsDialog::updaterDownloadDone(bool error)
-{
-
-  if (error)
-  {
-    if (ui.updateCancelButton->isChecked())
+    if (ui.namingComboBox->currentIndex() == 0)
     {
-       ui.updaterBrowser->setText(tr("Update canceled."));
+        suffix = "1";
     }
     else
     {
-       ui.updaterBrowser->setText(tr("The update has failed, please try again later."));
+        suffix = "1995-05-30";
     }
 
-  }
-  else
-  {
-    ui.updaterBrowser->setText(tr("Download complete."));
-  }
+    if (ui.flipPrefixPushButton->isChecked())
+    {
+        prefix = suffix;
+        suffix = ui.prefixLineEdit->text();
+    }
+    else
+    {
+        prefix = ui.prefixLineEdit->text();
+    }
 
-  updaterCleanup();
-}
+    QString text = tr("%1%2.%3").arg(prefix).arg(suffix).arg(format);
 
-void OptionsDialog::updaterProgressBar(qint64 value, qint64 maximum)
-{
-  if (maximum < 500 && value > 0)
-  {
-    ui.updaterProgressBar->setMaximum(0);
-    return; // Too small, is probably just the changelog/version
-  }
+    if (text.length() >= 40) {
+        text.truncate(37);
+        text.append("...");
+    }
 
-  //int mbValue   = qRound(value/1048576.0);
-  //int mbMaximum = qRound(maximum/1048576.0);
-
-  ui.updaterProgressBar->setMaximum(maximum);
-  ui.updaterProgressBar->setValue(value);
-}
-
-void OptionsDialog::updaterCleanup()
-{
-  setUpdatesEnabled(false);
-  ui.updaterGroupBox->setTitle(tr("Updater"));
-  ui.updaterGroupBox->setEnabled(false);
-  ui.checkUpdatesPushButton->setEnabled(false);
-  ui.updateButton->show();
-  ui.updateCancelButton->hide();
-  ui.updaterProgressBar->setValue(0);
-  ui.updaterProgressBar->setMaximum(1);
-  ui.checkUpdatesPushButton->setEnabled(true);
-  setUpdatesEnabled(true);
+    ui.previewLabel->setText(text);
 }
 
 bool OptionsDialog::event(QEvent* event)
@@ -631,10 +576,6 @@ bool OptionsDialog::event(QEvent* event)
   {
     ui.retranslateUi(this);
     resize(minimumSizeHint());
-  }
-  if (event->type() == QEvent::Close)
-  {
-    Updater::instance()->abort();
   }
 
   return QDialog::event(event);
