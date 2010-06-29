@@ -56,11 +56,12 @@ public:
     bool animations;
   };
 
-  Screenshot(Screenshot::Options options);
+  Screenshot(QObject *parent, Screenshot::Options options);
   ~Screenshot();
 
   Screenshot::Options options();
   QPixmap &pixmap();
+  QString newFileName();
 
 public slots:
   void take();
@@ -75,7 +76,7 @@ signals:
 
 private:
   void    activeWindow();
-  QString newFileName();
+
   QString extension();
   void    selectedArea();
   void    selectedWindow();

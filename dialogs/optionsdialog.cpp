@@ -252,7 +252,10 @@ void OptionsDialog::saveSettings()
   settings.setValue("cursor", ui.cursorCheckBox->isChecked());
   settings.setValue("saveAs", ui.saveAsCheckBox->isChecked());
   settings.setValue("preview", ui.previewCheckBox->isChecked());
-  //settings.setValue("animations", ui.animationsCheckBox->isChecked());
+  settings.setValue("previewSize", ui.previewSizeSpinBox->value());
+  settings.setValue("previewPosition", ui.previewPositionComboBox->currentIndex());
+  settings.setValue("previewAutoclose", ui.previewAutocloseCheckBox->isChecked());
+  settings.setValue("previewAutocloseTime", ui.previewAutocloseTimeSpinBox->value());
 
   // Advanced
   settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
@@ -339,7 +342,10 @@ void OptionsDialog::loadSettings()
   ui.cursorCheckBox->setChecked(settings.value("cursor", false).toBool());
   ui.saveAsCheckBox->setChecked(settings.value("saveAs", false).toBool());
   ui.previewCheckBox->setChecked(settings.value("preview", false).toBool());
-  //ui.animationsCheckBox->setChecked(settings.value("animations", true).toBool());
+  ui.previewSizeSpinBox->setValue(settings.value("previewSize", 300).toInt());
+  ui.previewPositionComboBox->setCurrentIndex(settings.value("previewPosition", 3).toInt());
+  ui.previewAutocloseCheckBox->setChecked(settings.value("previewAutoclose", false).toBool());
+  ui.previewAutocloseTimeSpinBox->setValue(settings.value("previewAutocloseTime", 15).toInt());
 
   // Advanced
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", false).toBool());
@@ -547,7 +553,7 @@ void OptionsDialog::updatePreview()
     }
     else
     {
-        suffix = "1995-05-30";
+        suffix = "2006-6-6";
     }
 
     if (ui.flipPrefixPushButton->isChecked())

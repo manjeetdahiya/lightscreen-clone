@@ -16,5 +16,7 @@
         <file alias="arrowLeft">images/previewArrowLeft.png</file>
         <file alias="arrowRight">images/previewArrowRight.png</file>
         <file alias="picker">images/picker.png</file>
+        <file alias="zoomIn">images/zoom-in.png</file>
+        <file alias="zoomOut">images/zoom-out.png</file>
     </qresource>
 </RCC>

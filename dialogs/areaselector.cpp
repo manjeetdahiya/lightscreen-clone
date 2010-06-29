@@ -202,7 +202,7 @@ void AreaSelector::paintEvent(QPaintEvent* e)
 
   QRect newRect = QRect(magStart, magEnd);
 
-  QPixmap magnified = mScreenshot->pixmap().copy(newRect).scaled(QSize(200, 200));
+  QPixmap magnified = mScreenshot->pixmap().copy(newRect).scaled(QSize(200, 200), Qt::KeepAspectRatioByExpanding);
 
   QPainter magPainter(&magnified);
   magPainter.setPen(QPen(QBrush(QColor(255, 0, 0)), 2)); // Same border pen

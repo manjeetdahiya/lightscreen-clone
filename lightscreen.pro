@@ -11,7 +11,8 @@ HEADERS += tools/os.h \
     tools/screenshotmanager.h \
     tools/windowpicker.h \
     tools/qtwin.h \
-    dialogs/updaterdialog.h
+    dialogs/updaterdialog.h \
+    dialogs/screenshotdialog.h
 SOURCES += tools/os.cpp \
     updater/updater.cpp \
     dialogs/areaselector.cpp \
@@ -24,7 +25,8 @@ SOURCES += tools/os.cpp \
     tools/screenshotmanager.cpp \
     tools/windowpicker.cpp \
     tools/qtwin.cpp \
-    dialogs/updaterdialog.cpp
+    dialogs/updaterdialog.cpp \
+    dialogs/screenshotdialog.cpp
 FORMS += dialogs/optionsdialog.ui \
     dialogs/aboutdialog.ui \
     lightscreenwindow.ui

@@ -18,7 +18,7 @@
 
 #include "os.h"
 
-Screenshot::Screenshot(Screenshot::Options options) :  mOptions(options), mPixmapDelay(false) {
+Screenshot::Screenshot(QObject *parent, Screenshot::Options options) :  QObject(parent), mOptions(options), mPixmapDelay(false) {
   qDebug() << "Screenshot object created";
 }
 

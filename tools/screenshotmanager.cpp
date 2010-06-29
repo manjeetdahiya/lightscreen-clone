@@ -10,7 +10,7 @@ ScreenshotManager::ScreenshotManager(QObject *parent = 0) : QObject(parent), mCo
 
 void ScreenshotManager::take(Screenshot::Options options)
 {
-  Screenshot* newScreenshot = new Screenshot(options);
+  Screenshot* newScreenshot = new Screenshot(this, options);
 
   connect(newScreenshot, SIGNAL(askConfirmation()), this, SLOT(askConfirmation()));
   connect(newScreenshot, SIGNAL(finished())       , this, SLOT(cleanup()));

@@ -24,19 +24,28 @@ public slots:
   void setWidth(int w)  { resize(w, height()); }
   void setHeight(int h) { resize(width(), h);  }
 
+signals:
+  void acceptAll();
+
 private slots:
   void closePreview();
   void relocate();
   void previous();
   void next();
   void indexChanged(int i);
+  void enlargePreview();
 
 protected:
   void closeEvent(QCloseEvent* event);
   void mouseDoubleClickEvent(QMouseEvent *event);
+  void timerEvent(QTimerEvent *event);
 
 private:
   static PreviewDialog* mInstance;
+  int mSize;
+  int mPosition; //0: top left, 1: top right, 2: bottom left, 3: bottom rigth (default)
+  int mAutoclose;
+  int mAutocloseReset;
   QStackedLayout* mStack;
   QPushButton*    mNextButton;
   QPushButton*    mPrevButton;

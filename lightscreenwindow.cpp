@@ -141,6 +141,8 @@ void LightscreenWindow::cleanup(Screenshot::Options options)
     {
       if (PreviewDialog::instance()->count() <= 1)
         setVisible(true);
+
+      PreviewDialog::instance()->setVisible(true);
     }
     else
     {
@@ -234,6 +236,12 @@ void LightscreenWindow::screenshotAction(int mode)
       delayms += 200;
   }
 #endif
+
+  if (optionsHide && PreviewDialog::isActive())
+  {
+    if (PreviewDialog::instance()->count() >= 1)
+      PreviewDialog::instance()->setVisible(false);
+  }
 
   // The delayed functions works using the static variable lastMode
   // which keeps the argument so a QTimer can call this function again.
