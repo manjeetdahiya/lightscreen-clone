@@ -259,6 +259,7 @@ void OptionsDialog::saveSettings()
 
   // Advanced
   settings.setValue("disableHideAlert", !ui.warnHideCheckBox->isChecked());
+  settings.setValue("minimizeToTrayOnEsc", ui.minimizeToTrayOnEscCheckBox->isChecked());
   settings.setValue("clipboard", ui.clipboardCheckBox->isChecked());
   settings.setValue("optipng", ui.optiPngCheckBox->isChecked());
   settings.setValue("currentMonitor", ui.currentMonitorCheckBox->isChecked());
@@ -351,6 +352,7 @@ void OptionsDialog::loadSettings()
   ui.clipboardCheckBox->setChecked(settings.value("clipboard", false).toBool());
   ui.optiPngCheckBox->setChecked(settings.value("optipng", true).toBool());
   ui.warnHideCheckBox->setChecked(!settings.value("disableHideAlert", false).toBool());
+  ui.minimizeToTrayOnEscCheckBox->setChecked(settings.value("minimizeToTrayOnEsc", false).toBool());
   ui.currentMonitorCheckBox->setChecked(settings.value("currentMonitor", false).toBool());
 
 #if defined(Q_WS_WIN)

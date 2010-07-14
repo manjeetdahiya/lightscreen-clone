@@ -15,6 +15,7 @@
 #include <QSystemTrayIcon>
 #include <QTimer>
 #include <QUrl>
+#include <QKeyEvent>
 
 #include <QDebug>
 
@@ -671,5 +672,27 @@ bool LightscreenWindow::event(QEvent *event)
   return QDialog::event(event);
 }
 
+void LightscreenWindow::keyPressEvent(QKeyEvent *e)
+{
+    bool minimize = mSettings.value("options/minimizeToTrayOnEsc").toBool();
+#ifdef Q_WS_MAC
+    if(minimize && e->modifiers() == Qt::ControlModifier && e->key() == Qt::Key_Period)
+    {
+        e->ignore();
+        if(isVisible())
+            toggleVisibility();
+    } else
+#endif
+    if (minimize && !e->modifiers() && e->key() == Qt::Key_Escape)
+    {
+        e->ignore();
+        if(isVisible())
+            toggleVisibility();
+    }
+    else
+    {
+        QDialog::keyPressEvent(e);
+    }
+}
 
 

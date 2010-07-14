@@ -53,6 +53,7 @@ private:
 
 protected:
   bool event(QEvent *event);
+  void keyPressEvent(QKeyEvent *e);
 
 private:
   bool mReviveMain;

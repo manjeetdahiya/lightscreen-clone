@@ -540,8 +540,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>358</width>
-            <height>545</height>
+            <width>359</width>
+            <height>570</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -589,6 +589,13 @@
                <widget class="QCheckBox" name="warnHideCheckBox">
                 <property name="text">
                  <string>Warn when hiding without a tra&amp;y icon.</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="minimizeToTrayOnEscCheckBox">
+                <property name="text">
+                 <string>Minimize to tray on Escape keypress.</string>
                 </property>
                </widget>
               </item>
